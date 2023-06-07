@@ -1,0 +1,8 @@
+Week 1 Project Diary
+
+We formed/created the group and selected the Scrum Master (Mani). Mani created
+the Jira site and together we decided on Project 5 Car Space Rental. We
+discussed our preferred languages and libraries and decided on a Python backend
+and React/JavaScript frontend. We also discussed initial ideas for novel
+functionalities (including a map). We decided on a weekly date to meet up and
+created the document for the project proposal.
