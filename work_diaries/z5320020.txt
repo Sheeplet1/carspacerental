@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+WEEK 1
+
+DURING LAB
+- Group formed and named.
+- Scrum Master selected.
+- Basic setups following Moodle
+- Decided on project topic with other group members, decided to go with Topic 5
+Car Space Rental system.
+- Brainstorming on novel features
+- Discussed what software tools and libraries we can use and allocated everyone
+to their comfort zones
+
+OUTSIDE OF LAB
+- Researched other examples on the car space rental system and made notes on their 
+colour schemes and overall functionality flow such as how user registration progressed, 
+or listing cars progressed.
+- Created user stories for features that I determined to be apart of the minimum 
+viable product for the first/second sprint. Also included acceptance criterias 
+for these too.
+- Started looking at storyboarding for these features too.
+-------------------------------------------------------------------------------
