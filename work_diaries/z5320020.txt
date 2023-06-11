@@ -16,7 +16,20 @@ OUTSIDE OF LAB
 colour schemes and overall functionality flow such as how user registration progressed, 
 or listing cars progressed.
 - Created user stories for features that I determined to be apart of the minimum 
-viable product for the first/second sprint. Also included acceptance criterias 
+viable product for the first/second sprint. Also included acceptance criteria 
 for these too.
-- Started looking at storyboarding for these features too.
--------------------------------------------------------------------------------
+- Started looking at storyboards for these features too.
+------------------------------------------------------------------------------
+WEEK 2
+
+DURING LAB
+- Organised workload, rough draft of sprints, starting to flesh out the project
+proposal
+
+OUTSIDE OF LAB
+- Finished the user stories and categorised each user story into the separate
+sprints.
+- Finished a rough draft of the storyboards, pretty sure everything has been
+covered.
+- Researching MongoDB and made rough schema on how each collection of data
+would interact with each other.
