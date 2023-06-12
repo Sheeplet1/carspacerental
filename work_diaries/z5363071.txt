@@ -1,0 +1,17 @@
+Week 1:
+    -> Formed group
+    -> Chose group name
+    -> Selected scrum master
+    -> Picked Car Space Rental System (Project 5) as our project
+    -> Finished all the intitial Jira Setup and added all group members
+    -> Familarised ourselves with the project specification
+    -> Brainstorming what novel features we can add to the project
+    -> Discussed what stack everyone is comfortable with, and assigned roles accordingly
+
+Week 2:
+    -> Made the initial template for the report in overleaf
+    -> Assigned everyone parts of the proposal to work on
+    -> Finished background section of the report
+    -> Finished competitors analysis for other car space rental systems in the market
+    -> Slowly adding all the parts that other group members worked on to the final report
+    -> Formatting the report according to the specs
