@@ -15,3 +15,14 @@ Week 2:
     -> Finished competitors analysis for other car space rental systems in the market
     -> Slowly adding all the parts that other group members worked on to the final report
     -> Formatting the report according to the specs
+
+Week 3:
+    -> Finished User Stories
+    -> Finished Acceptence Criteria
+    -> Inputted all user stories in Jira
+    -> User stories added to report
+    -> Interface done
+    -> Flow Diagram done
+    -> System Architecture diagram done
+    -> Started adding child issues to tickets
+    -> Submitted Report
