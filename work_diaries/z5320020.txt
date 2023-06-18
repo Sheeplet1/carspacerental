@@ -33,3 +33,14 @@ sprints.
 covered.
 - Researching MongoDB and made rough schema on how each collection of data
 would interact with each other.
+------------------------------------------------------------------------------
+WEEK 3
+
+- Started researching and discussing MongoDB with backend 
+    - Concurrency and any other issues that may arise with MongoDB from other
+    people's experiences on the internet.
+- API Endpoints
+- Planning todos for certain backend functions
+- Help with proposal
+- Starting developing user_registration functionality and tests
+    - Playing around with mongomock 
