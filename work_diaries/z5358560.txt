@@ -13,3 +13,10 @@ We assigned work for the proposal together. I created all the issues in Jira
 and organised them into specific epics for each of our functionalities. I also
 created the system architecture diagram and wrote short descriptions for each
 section as well as the external actors for the proposal.
+
+Week 3
+
+We finished off writing the proposal and Anthony and I started scaffolding the
+backend. I did some research into how MongoDB worked with Python and set up an
+Atlas cluster for our project development. I also did some research into how
+Flask Blueprints work so that our file structure can be more modular

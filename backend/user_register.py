@@ -1,9 +1,9 @@
 from bson import ObjectId
-from backend.get_database import get_database
 from backend import helpers
+from backend.db.db import get_database
 
 def user_register(email: str, password: str, db=get_database()) -> bool:
-    collection = db["users"]
+    collection = db["UserAccount"]
     if not helpers.is_valid_email(email) or collection.find_one({"email": email}):
         return False
     
@@ -18,5 +18,3 @@ def user_register(email: str, password: str, db=get_database()) -> bool:
     
     collection.insert_one(userDoc)
     return True
-
-user_register("spam123@gmail.com", "passowrd1")
