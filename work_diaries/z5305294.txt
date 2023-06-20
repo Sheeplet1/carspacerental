@@ -1,0 +1,5 @@
+Week 3
+
+- Worked on UI Interface Design on Figma for group report
+- Decided to use NextJs and Tailwind CSS for frontend
+- Was assigned to do Login page
