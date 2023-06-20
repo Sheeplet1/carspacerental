@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend.db.user_register import user_register
+from backend.db.user import user_register
 from backend.db.db import get_database
 from backend.helpers import is_valid_email
 
