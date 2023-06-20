@@ -66,7 +66,7 @@ def test_successful_registration(client):
     assert profile["first_name"] == TEST_FIRST_NAME
     assert profile["last_name"] == TEST_LAST_NAME
     assert profile["phone_number"] == [TEST_PN]
-    assert profile["payment_information"] == ""
+    assert profile["payment_information"] == {}
     assert profile["current_bookings"] == []
     assert profile["completed_bookings"] == []
     assert profile["reviews"] == []
