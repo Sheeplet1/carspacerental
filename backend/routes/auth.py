@@ -12,7 +12,6 @@ def register():
     
     db = get_database()
     collection = db["UserAccount"]
-    print(collection)
     
     if not is_valid_email(email) or collection.find_one({"email": email}):
         response = {"success": False, "message": "Invalid email or email already registered"}
