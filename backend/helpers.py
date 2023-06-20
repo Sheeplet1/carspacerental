@@ -1,5 +1,4 @@
 import re
-import phonenumbers
 
 def is_valid_email(email: str):
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
