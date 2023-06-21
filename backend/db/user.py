@@ -1,31 +1,27 @@
 from bson import ObjectId
-from backend.db.db import get_database
+from ..db import db
 
 
 def user_register(email: str, password: str) -> ObjectId:
-    db = get_database()
-    collection = db["UserAccount"] 
-    
+    data = db.get_database()
+    collection = data["UserAccount"]
+
     id = ObjectId()
     userDoc = {
         "_id": id,
         "email": email,
         "password": password
     }
-    
+
     collection.insert_one(userDoc)
     return id
 
 
-def user_create_profile(id, email: str, password: str, first_name: str, 
+def user_create_profile(id: ObjectId, email: str, password: str, first_name: str, 
                         last_name: str, phone_number: str) -> None:
-    '''
-    full name, car details, contact information, payment information, bookings,
-    ratings/reviews, car listings
-    '''
-    db = get_database()
-    collection = db["UserProfile"]
-    
+    data = db.get_database()
+    collection = data["UserProfile"]
+
     userProfile = {
         "_id": id,
         "email": email,
@@ -39,5 +35,16 @@ def user_create_profile(id, email: str, password: str, first_name: str,
         "reviews": [],
         "listings": []
     }
-    
+
     collection.insert_one(userProfile)
+    
+
+def user_login(email: str, password: str) -> ObjectId:
+    data = db.get_database()
+    collection = data["UserAccount"]
+    user = collection.find_one({"email": email, "password": password})
+    id = None
+    if user:
+        id = str(user["_id"])
+    
+    return id 
