@@ -5,4 +5,4 @@ Week 3
 - Was assigned to do Login page
 
 Week 4
-- Did pages: Main Login, Forget Password
+- Did pages: Main Login, Forgot Password
