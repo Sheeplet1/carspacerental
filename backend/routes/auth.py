@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from ..db import user, db
 from .. import helpers
 
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['POST'])
@@ -35,3 +36,17 @@ def register():
     user.user_create_profile(id, email, password, first_name, last_name, phone_number)
     response = {"success": True, "message": "User registered successfully"}
     return jsonify(response), 200
+
+
+@bp.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    
+    user_id = user.user_login(email, password)
+    if user_id:
+        response = {"success": True, "message": "Login successful", 'user_id': str(user_id)}
+        return jsonify(response), 200
+    else:
+        response = {"success": False, "message": "Invalid email or password"}
+        return jsonify(response), 400
