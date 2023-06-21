@@ -1,6 +1,6 @@
-from db import get_database
+from ..db import db
 
-mydb = get_database()
+mydb = db.get_database()
 mycol = mydb["UserAccount"]
 
 mycol.delete_many({})
