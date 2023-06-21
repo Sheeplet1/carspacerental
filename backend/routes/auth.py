@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
-import backend.db.user as user
-from backend.db.db import get_database
-from backend import helpers
+from ..db import user, db
+from .. import helpers
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -12,26 +11,26 @@ def register():
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
     phone_number = request.form.get("phone_number")
-    
-    db = get_database()
-    collection = db["UserAccount"]
-    
+
+    data = db.get_database()
+    collection = data["UserAccount"]
+
     if not helpers.is_valid_email(email) or collection.find_one({"email": email}):
         response = {"success": False, "message": "Invalid email or email already registered"}
         return jsonify(response), 400
-   
+
     if not password:
         response = {"success": False, "message": "Password is required"}
         return jsonify(response), 400
-    
+
     if not first_name or not last_name:
         response = {"success": False, "message": "Name is required"}
         return jsonify(response), 400
-    
+
     if not helpers.is_valid_phone_number(phone_number):
         response = {"success": False, "message": "Phone number is required"}
         return jsonify(response), 400
-    
+
     id = user.user_register(email, password)
     user.user_create_profile(id, email, password, first_name, last_name, phone_number)
     response = {"success": True, "message": "User registered successfully"}

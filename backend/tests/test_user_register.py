@@ -3,9 +3,7 @@ import mongomock
 import os
 from flask import Flask
 from unittest.mock import patch
-
-
-from backend.routes.auth import bp
+from ..routes import auth
 
 
 TEST_EMAIL = "spam123@gmail.com"
@@ -22,15 +20,14 @@ BAD_REQUEST = 400
 def client():
     # create test flask client
     app = Flask(__name__)
-    app.register_blueprint(bp)
+    app.register_blueprint(auth.bp)
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
-    
+
     # create mock mongodb database
     mock_db = mongomock.MongoClient().db
-    
-    with patch('backend.routes.auth.get_database', return_value=mock_db), \
-         patch('backend.db.user.get_database', return_value=mock_db):
+
+    with patch('backend.db.db.get_database', return_value=mock_db):
             client.db = mock_db
             yield client
 
@@ -43,20 +40,20 @@ def test_successful_registration(client):
     """
     response = client.post('/auth/register', data={'email': TEST_EMAIL, 'password': TEST_PW,
                                                    'first_name': TEST_FIRST_NAME, 'last_name': TEST_LAST_NAME,
-                                                   'phone_number': TEST_PN})    
+                                                   'phone_number': TEST_PN})
     assert response.status_code == OK
     assert response.json == {
         "success": True,
         "message": "User registered successfully"
     }
-    
+
     # check if user was inserted into the mock database
     user = client.db['UserAccount'].find_one()
     id = user["_id"]
     assert user is not None
     assert user["email"] == TEST_EMAIL
     assert user["password"] == TEST_PW
-    
+
     # check if user profile was created in the mock database
     profile = client.db['UserProfile'].find_one()
     assert profile is not None
@@ -103,7 +100,7 @@ def test_invalid_password(client):
         'success': False,
         'message': 'Password is required'
     }
-    
+
 
 def test_invalid_first_name(client):
     """
@@ -151,8 +148,8 @@ def test_long_phone_number(client):
         "success": False,
         "message": "Phone number is required"
     }
-    
-    
+
+
 def test_short_phone_number(client):
     """
     GIVEN a Flask application configured for testing
