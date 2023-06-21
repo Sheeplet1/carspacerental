@@ -15,7 +15,7 @@ const Login = () => {
         <label className='mb-2'>Password:</label>
         <input className='w-96 border-2 border-gray-300 rounded-3xl p-2 mb-14' type='password' placeholder='Password' />
 
-        <Link href='/forgotpassword'>
+        <Link href='/login/forgotpassword'>
         <button className='mb-8 text-teal-400 text-xs align-content: flex-start'>Forgot password?</button>
         </Link>
 
