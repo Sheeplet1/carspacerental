@@ -2,7 +2,7 @@ import React from 'react'
 import Link from "next/link";
 import Image from "next/image";
 
-export const Sidebar = () => {
+export const Searchbar = () => {
     return (
       <div className="absolute bottom-48 left-96 ml-144 transform -translate-y-1/2 w-144 h-24 bg-white p-4 rounded-3xl shadow-md">
         <div className='flex justify-between'>
@@ -11,8 +11,8 @@ export const Sidebar = () => {
                     <p className='text-xs text-gray-300'>Location</p>
                     <div className='flex gap-1 items-center'>
                         <Image
-                        src='/assets/icons/Logo.svg'
-                        alt='logo'
+                        src='/assets/icons/Vector.svg'
+                        alt='vector'
                         width={20}
                         height={20}
                         className='object-contain outline border-orange-400'
@@ -26,11 +26,11 @@ export const Sidebar = () => {
                     <p className='text-xs text-gray-300'>Car Type</p>
                     <div className='flex gap-1 items-center'>
                         <Image
-                        src='/assets/icons/Logo.svg'
-                        alt='logo'
-                        width={20}
-                        height={20}
-                        className='object-contain outline border-orange-400'
+                            src='/assets/icons/Car.svg'
+                            alt='car'
+                            width={20}
+                            height={20}
+                            className='object-contain outline border-orange-400'
                         />
                         <Link href='/city car'>
                             <p className='text-xs cursor-pointer hover:underline hover:text-orange-500'>city car</p>
@@ -41,11 +41,11 @@ export const Sidebar = () => {
                     <p className='text-xs text-gray-300'>Pick up</p>
                     <div className='flex gap-1 items-center'>
                         <Image
-                        src='/assets/icons/Logo.svg'
-                        alt='logo'
-                        width={20}
-                        height={20}
-                        className='object-contain outline border-orange-400'
+                            src='/assets/icons/Calendar.svg'
+                            alt='calander'
+                            width={20}
+                            height={20}
+                            className='object-contain outline border-orange-400'
                         />
                         <Link href='/17 July 2021'>
                             <p className='text-xs cursor-pointer hover:underline hover:text-orange-500'>17 July 2021</p>
@@ -56,11 +56,11 @@ export const Sidebar = () => {
                     <p className='text-xs text-gray-300'>Return</p>
                     <div className='flex gap-1 items-center'>
                         <Image
-                        src='/assets/icons/Logo.svg'
-                        alt='logo'
-                        width={20}
-                        height={20}
-                        className='object-contain outline border-orange-400'
+                            src='/assets/icons/Calendar.svg'
+                            alt='calendar'
+                            width={20}
+                            height={20}
+                            className='object-contain outline border-orange-400'
                         />
                         <Link href='/17 July 2021'>
                             <p className='text-xs cursor-pointer hover:underline hover:text-orange-500'>17 July 2021</p>
@@ -79,4 +79,4 @@ export const Sidebar = () => {
     )
   }
 
-export default Sidebar
+export default Searchbar

@@ -1,5 +1,6 @@
 import React from 'react'
 import Selectbar from '@components/Selectbar'
+import Image from "next/image";
 
 const Home = () => {
 return (
@@ -15,6 +16,24 @@ return (
           Learn More
         </button>
       </div>
+    </div>
+
+    <div className="flex flex-col  image-container mr-24 gap-16">
+      <Image
+          src='/assets/icons/sport-car.png'
+          alt='sport-car'
+          width={600}
+          height={600}
+      />
+    </div>
+
+    <div className="flex flex-col mr-24 gap-16">
+      <Image
+            src='/assets/icons/ornament.png'
+            alt='ornament'
+            width={450}
+            height={450}
+        />
     </div>
   </div>
    )
