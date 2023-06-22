@@ -17,7 +17,7 @@ export const Navbar = () => {
                   alt='call'
                   width={20}
                   height={20}
-                  className='object-contain outline border-orange-400'
+                  className='object-contain'
                 />
                 <p className='text-xs'>+61 234 567 890</p>
               </div>
@@ -27,7 +27,7 @@ export const Navbar = () => {
                   alt='email'
                   width={20}
                   height={20}
-                  className='object-contain outline border-orange-400'
+                  className='object-contain'
                 />
                 <p className='text-xs'>support@homie.com</p>
               </div>

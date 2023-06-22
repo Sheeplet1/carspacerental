@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const Sidebar = () => {
     return (
-      <div className="absolute top-96 left-0 ml-12 transform -translate-y-1/2 w-64 h-80 bg-white p-4 rounded-3xl shadow-md">
+      <div className="absolute top-80 left-0 ml-12 transform -translate-y-1/2 w-64 h-80 bg-white p-4 rounded-3xl shadow-md">
         <ul className="flex flex-col gap-4">
           <li>
             <Link href='/login'>
