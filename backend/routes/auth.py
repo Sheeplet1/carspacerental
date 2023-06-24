@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_jwt_extended import create_access_token
 from ..db import user, db
 from .. import helpers
 
@@ -6,33 +7,35 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()    
-    email = data["email"]
-    password = data["password"]
-    first_name = data["first_name"]
-    last_name = data["last_name"]
-
+    data = request.get_json()
     database = db.get_database()
     user_account = database["UserAccount"]
 
-    if not helpers.is_valid_email(email) or user_account.find_one({"email": email}):
-        return {"error": "Invalid email or email already registered"}, 400
+    if "email" not in data or not helpers.is_valid_email(data["email"]):
+        return {"error": "Email is required"}, 400
 
-    if not password:
+    if user_account.find_one({"email": data["email"]}):
+        return {"error": "Email already registered"}, 400
+
+    if "password" not in data or len(data["password"]) < 8:
         return {"error": "Password is required"}, 400
 
-    if not first_name or not last_name:
+    if "first_name" not in data or "last_name" not in data:
         return {"error": "Name is required"}, 400
 
+    if "phone_number" not in data or \
+        not helpers.is_valid_phone_number(data["phone_number"]):
+        return {"error": "Phone number is required"}, 400
+
     id = user.user_register(data)
-    return {'user_id': str(id)}, 200
+    return { "token": create_access_token(identity=str(id)) }, 200
 
 @bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-        
+
     user_id = user.user_login(data)
     if user_id:
-        return {'user_id': str(user_id)}, 200
+        return { "token": create_access_token(identity=str(user_id)) }, 200
     else:
         return {"error": "Invalid email or password"}, 400

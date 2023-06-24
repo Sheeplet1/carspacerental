@@ -1,17 +1,19 @@
 from flask import Blueprint, request
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from werkzeug.exceptions import Unauthorized
+
+from ..helpers import validate_jwt
 from ..db import listings as listings_db
-from .. import helpers
-from werkzeug.exceptions import Forbidden
 
 bp = Blueprint('listings', __name__, url_prefix='/listings')
 
 @bp.route('/new', methods=['POST'])
+@jwt_required()
 def new():
-    # Get user id from token
+    # Valid token and get user id
     try:
-        user_id = helpers.validate_token(request.headers)
-    except Forbidden as e:
-        # return 403 error if invalid token
+        user_id = validate_jwt(get_jwt_identity())
+    except Unauthorized as e:
         return e
 
     data = request.get_json()

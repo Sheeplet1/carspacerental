@@ -4,11 +4,15 @@ import os
 from flask import Flask
 from unittest.mock import patch
 from bson import ObjectId
+from flask_jwt_extended import JWTManager
 from datetime import datetime, timedelta
 
 from ..routes.auth import bp as auth_bp
 from ..routes.listings import bp as listings_bp
+from ..helpers import generate_hash
 
+TEST_JWT_KEY = "testingsecretkey"
+TEST_PW_HASH = generate_hash("password123")
 TEST_UID = ObjectId()
 TEST_LID = ObjectId()
 TEST_BID = ObjectId()
@@ -52,7 +56,7 @@ BOOKING_STUB = {
 
 OK = 200
 BAD_REQUEST = 400
-FORBIDDEN = 403
+UNAUTHORIZED = 401
 
 @pytest.fixture
 def mock_db():
@@ -64,6 +68,10 @@ def mock_db():
 def client(mock_db):
     # create test flask client
     app = Flask(__name__)
+
+    app.config["JWT_SECRET_KEY"] = TEST_JWT_KEY
+    JWTManager(app)
+
     app.register_blueprint(auth_bp)
     app.register_blueprint(listings_bp)
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
@@ -87,9 +95,7 @@ def user_token(client):
     }
 
     resp = client.post('/auth/register', json=register_data)
-    print(resp)
-    # TODO: CHANGE THIS TO TOKEN
     token_head = {
-       "Authorization": "Bearer " + resp.get_json()["user_id"]
+       "Authorization": "Bearer " + resp.get_json()["token"]
     }
     yield token_head

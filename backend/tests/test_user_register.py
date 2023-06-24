@@ -1,3 +1,6 @@
+import jwt
+from bson import ObjectId
+
 from ..tests import conftest
 
 USER_STUB = conftest.USER_STUB
@@ -14,14 +17,15 @@ def test_successful_registration(client, mock_db):
     assert response.status_code == conftest.OK
     user = mock_db['UserAccount'].find_one()
     id = user["_id"]
-    assert response.json == {
-        'user_id': str(id)
-    }
+    token = response.json["token"]
+    data = jwt.decode(token, conftest.TEST_JWT_KEY, algorithms=["HS256"])
+    # check that the returned user id is valid
+    assert ObjectId(data["sub"]) == id
 
     # check if user was inserted into the mock database
     assert user is not None
     assert user["email"] == conftest.TEST_EMAIL
-    assert user["password"] == conftest.TEST_PW
+    assert user["password"] == conftest.TEST_PW_HASH
     assert user["phone_number"] == [conftest.TEST_PN]
     assert user["payment_information"] == {}
     assert user["current_bookings"] == []
@@ -39,7 +43,19 @@ def test_missing_email(client):
     user["email"] = "123"
     response = client.post('/auth/register', json=user)
     assert response.status_code == conftest.BAD_REQUEST
-    assert response.json == {"error": "Invalid email or email already registered"}
+    assert response.json == {"error": "Email is required"}
+
+def test_missing_name(client):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the '/auth/register' is posted with an invalid name (POST)
+    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
+    """
+    user = USER_STUB.copy()
+    user.pop("first_name")
+    response = client.post('/auth/register', json=user)
+    assert response.status_code == conftest.BAD_REQUEST
+    assert response.json == {"error": "Name is required"}
 
 def test_missing_password(client):
     """
@@ -65,4 +81,31 @@ def test_existing_email(client):
 
     response = client.post('/auth/register', json=USER_STUB)
     assert response.status_code == conftest.BAD_REQUEST
-    assert response.json == {"error": "Invalid email or email already registered"}
+    assert response.json == {"error": "Email already registered"}
+
+def test_invalid_phone_number(client):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the '/auth/register' is posted with an invalid phone number (POST)
+    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
+    """
+    user = USER_STUB.copy()
+    user["phone_number"] = "4invalid362"
+    response = client.post('/auth/register', json=user)
+
+    assert response.status_code == conftest.BAD_REQUEST
+    assert response.json == {"error": "Phone number is required"}
+
+def test_missing_phone_number(client):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the '/auth/register' is posted with an invalid phone number (POST)
+    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
+    """
+    user = USER_STUB.copy()
+    user.pop("phone_number")
+    response = client.post('/auth/register', json=user)
+
+    assert response.status_code == conftest.BAD_REQUEST
+    assert response.json == {"error": "Phone number is required"}
+
