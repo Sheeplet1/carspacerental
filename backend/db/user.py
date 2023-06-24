@@ -2,33 +2,15 @@ from bson import ObjectId
 from ..db import db
 
 
-def user_register(email: str, password: str) -> ObjectId:
-    data = db.get_database()
-    collection = data["UserAccount"]
-
-    id = ObjectId()
-    userDoc = {
-        "_id": id,
-        "email": email,
-        "password": password
-    }
-
-    collection.insert_one(userDoc)
-    return id
-
-
-def user_create_profile(id: ObjectId, email: str, password: str, first_name: str, 
-                        last_name: str, phone_number: str) -> None:
-    data = db.get_database()
-    collection = data["UserProfile"]
-
-    userProfile = {
-        "_id": id,
-        "email": email,
-        "password": password,
-        "first_name":  first_name,
-        "last_name": last_name,
-        "phone_number": [phone_number],
+def user_register(data: dict) -> ObjectId:
+    user_id = ObjectId()
+    user_doc = {
+        "_id": user_id,
+        "email": data["email"],
+        "password": data["password"],
+        "first_name":  data["first_name"],
+        "last_name": data["last_name"],
+        "phone_number": [data["phone_number"]],
         "payment_information": {},
         "current_bookings": [],
         "completed_bookings": [],
@@ -36,15 +18,15 @@ def user_create_profile(id: ObjectId, email: str, password: str, first_name: str
         "listings": []
     }
 
-    collection.insert_one(userProfile)
-    
+    collection = db.get_database()["UserAccount"]
+    collection.insert_one(user_doc)
+    return user_id
 
-def user_login(email: str, password: str) -> ObjectId:
-    data = db.get_database()
-    collection = data["UserAccount"]
-    user = collection.find_one({"email": email, "password": password})
+def user_login(data: dict) -> ObjectId:
+    collection = db.get_database()["UserAccount"]
+    user = collection.find_one({"email": data["email"], "password": data["password"]})
     id = None
     if user:
-        id = str(user["_id"])
+        id = user["_id"]
     
     return id 

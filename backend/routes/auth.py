@@ -1,52 +1,38 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from ..db import user, db
 from .. import helpers
-
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['POST'])
 def register():
-    email = request.form.get("email")
-    password = request.form.get("password")
-    first_name = request.form.get("first_name")
-    last_name = request.form.get("last_name")
-    phone_number = request.form.get("phone_number")
+    data = request.get_json()    
+    email = data["email"]
+    password = data["password"]
+    first_name = data["first_name"]
+    last_name = data["last_name"]
 
-    data = db.get_database()
-    collection = data["UserAccount"]
+    database = db.get_database()
+    user_account = database["UserAccount"]
 
-    if not helpers.is_valid_email(email) or collection.find_one({"email": email}):
-        response = {"success": False, "message": "Invalid email or email already registered"}
-        return jsonify(response), 400
+    if not helpers.is_valid_email(email) or user_account.find_one({"email": email}):
+        return {"error": "Invalid email or email already registered"}, 400
 
     if not password:
-        response = {"success": False, "message": "Password is required"}
-        return jsonify(response), 400
+        return {"error": "Password is required"}, 400
 
     if not first_name or not last_name:
-        response = {"success": False, "message": "Name is required"}
-        return jsonify(response), 400
+        return {"error": "Name is required"}, 400
 
-    if not helpers.is_valid_phone_number(phone_number):
-        response = {"success": False, "message": "Phone number is required"}
-        return jsonify(response), 400
-
-    id = user.user_register(email, password)
-    user.user_create_profile(id, email, password, first_name, last_name, phone_number)
-    response = {"success": True, "message": "User registered successfully"}
-    return jsonify(response), 200
-
+    id = user.user_register(data)
+    return {'user_id': str(id)}, 200
 
 @bp.route('/login', methods=['POST'])
 def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    
-    user_id = user.user_login(email, password)
+    data = request.get_json()
+        
+    user_id = user.user_login(data)
     if user_id:
-        response = {"success": True, "message": "Login successful", 'user_id': str(user_id)}
-        return jsonify(response), 200
+        return {'user_id': str(user_id)}, 200
     else:
-        response = {"success": False, "message": "Invalid email or password"}
-        return jsonify(response), 400
+        return {"error": "Invalid email or password"}, 400
