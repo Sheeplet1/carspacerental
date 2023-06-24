@@ -7,6 +7,7 @@ from bson import ObjectId
 from datetime import datetime, timedelta
 
 from ..routes.auth import bp as auth_bp
+from ..routes.listings import bp as listings_bp
 
 TEST_UID = ObjectId()
 TEST_LID = ObjectId()
@@ -25,6 +26,7 @@ USER_STUB = {
     "password": TEST_PW,
     "first_name": TEST_FIRST_NAME,
     "last_name": TEST_LAST_NAME,
+    "phone_number": TEST_PN,
 }
 
 LISTING_STUB = {
@@ -63,6 +65,7 @@ def client(mock_db):
     # create test flask client
     app = Flask(__name__)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(listings_bp)
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
 
@@ -73,9 +76,18 @@ def client(mock_db):
 @pytest.fixture
 def user_token(client):
     """
-    Logs in a user and yields their token
+    Registers a user and yields their token
     """
-    resp = client.post('/auth/login', data={"email": TEST_EMAIL, "password": TEST_PW})
+    register_data = {
+        "email": TEST_EMAIL,
+        "password": TEST_PW,
+        "first_name": TEST_FIRST_NAME,
+        "last_name": TEST_LAST_NAME,
+        "phone_number": TEST_PN,
+    }
+
+    resp = client.post('/auth/register', json=register_data)
+    print(resp)
     # TODO: CHANGE THIS TO TOKEN
     token_head = {
        "Authorization": "Bearer " + resp.get_json()["user_id"]
