@@ -1,9 +1,8 @@
-const checkPasswordValidation = (password) => {
+export const checkPasswordValidation = (password) => {
   const isWhitespace = /^(?=.*\s)/;
   if (isWhitespace.test(password)) {
     return "Password must not contain Whitespaces.";
   }
-
 
   const isContainsUppercase = /^(?=.*[A-Z])/;
   if (!isContainsUppercase.test(password)) {
@@ -36,5 +35,3 @@ const checkPasswordValidation = (password) => {
 
   return "";
 }
-
-export default checkPasswordValidation;

@@ -2,7 +2,8 @@
 
 import React from 'react'
 import Sidebar from '@components/Sidebar'
-import checkPasswordValidation from '@utils/validatePassword';
+import { useRouter } from 'next/router';
+import { checkPasswordValidation, makeRequest } from '@utils/validatePassword';
 
 import { useState } from 'react';
 
@@ -42,7 +43,7 @@ const Register = () => {
     }
   }
 
-  const validateFurtherRegistration = () => {
+  const validateFurtherRegistration = async () => {
     let isFirstNameValid = !!firstName;
     setFirstNameError(isFirstNameValid ? '' : 'This field is required');
 
@@ -54,7 +55,15 @@ const Register = () => {
     setPhoneNumberError(isPhoneNumberExist ? (isPhoneNumberValid ? '' : 'Enter a valid phone number') : 'This field is required');
 
     if (isFirstNameValid && isLastNameValid && isPhoneNumberValid) {
-      alert('Registration Successful!');
+      const response = await makeRequest('/register', 'POST', { email, password, firstName, lastName, phoneNumber });
+      if (response.error) {
+        setEmailError(response.error);
+        setShowFurtherRegistration(false);
+      } else {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('u_id', response.u_id);
+        router.push('/');
+      }
     }
   }
 
