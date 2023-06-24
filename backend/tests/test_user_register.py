@@ -1,6 +1,7 @@
 from ..tests import conftest
 
 USER_STUB = conftest.USER_STUB
+USER_STUB.pop("_id")
 
 def test_successful_registration(client, mock_db):
     """
@@ -9,7 +10,7 @@ def test_successful_registration(client, mock_db):
     THEN check that a '200' (OK) status code is returned and user is registered
     """
     response = client.post('/auth/register', json=USER_STUB)
-    
+
     assert response.status_code == conftest.OK
     user = mock_db['UserAccount'].find_one()
     id = user["_id"]
@@ -27,7 +28,7 @@ def test_successful_registration(client, mock_db):
     assert user["completed_bookings"] == []
     assert user["reviews"] == []
     assert user["listings"] == []
-    
+
 def test_missing_email(client):
     """
     GIVEN a Flask application configured for testing
@@ -39,7 +40,7 @@ def test_missing_email(client):
     response = client.post('/auth/register', json=user)
     assert response.status_code == conftest.BAD_REQUEST
     assert response.json == {"error": "Invalid email or email already registered"}
-    
+
 def test_missing_password(client):
     """
     GIVEN a Flask application configured for testing
@@ -52,7 +53,7 @@ def test_missing_password(client):
 
     assert response.status_code == conftest.BAD_REQUEST
     assert response.json == {"error": "Password is required"}
-    
+
 def test_existing_email(client):
     """
     GIVEN a Flask application configured for testing

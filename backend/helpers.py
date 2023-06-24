@@ -1,5 +1,6 @@
 import re
 from bson import ObjectId
+from bson.errors import InvalidId
 from werkzeug.datastructures import Headers
 from werkzeug.exceptions import Forbidden
 
@@ -21,4 +22,7 @@ def validate_token(headers: Headers) -> ObjectId:
     # Return stored user objectid
 
     # NOTE: Temporary placeholder
-    return ObjectId(headers.get('Authorization'))
+    try:
+        return ObjectId(str(headers.get('Authorization')).removeprefix("Bearer "))
+    except InvalidId:
+        raise Forbidden
