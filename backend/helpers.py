@@ -1,28 +1,34 @@
 import re
+import hashlib
+from .db import db
 from bson import ObjectId
 from bson.errors import InvalidId
-from werkzeug.datastructures import Headers
-from werkzeug.exceptions import Forbidden
+from werkzeug.exceptions import Unauthorized
 
 def is_valid_email(email: str):
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     return re.match(pattern, email) is not None
 
 def is_valid_phone_number(phone_number):
-    pattern = r"^04(\s?[0-9]{2}\s?)([0-9]{3}\s?[0-9]{3}|[0-9]{2}\s?[0-9]{2}\s?[0-9]{2})$"
+    phone_number = "".join(phone_number.split())
+    pattern = r"^04([0-9]{8})$"
     return re.match(pattern, phone_number)
 
-# TODO: Implement Token Authorization
-def validate_token(headers: Headers) -> ObjectId:
-    if not headers.get('Authorization'):
-        raise Forbidden(description="Token does not exist")
-
-    # Validate and Decode JWT Token
-
-    # Return stored user objectid
-
-    # NOTE: Temporary placeholder
+def validate_jwt(jwt_identity) -> ObjectId:
+    """
+    Returns ObjectId from jwt_identity if valid, otherwise raises Unauthorized
+    """
     try:
-        return ObjectId(str(headers.get('Authorization')).removeprefix("Bearer "))
+        # attempt to convert jwt_identity to objectid
+        id = ObjectId(jwt_identity)
+        data = db.get_database()
+        # check if user exists in db
+        if not data["UserAccount"].find_one({ "_id": id }):
+            raise Unauthorized
+        return id
+
     except InvalidId:
-        raise Forbidden
+        raise Unauthorized
+
+def generate_hash(input: str) -> str:
+    return hashlib.sha256(input.encode()).hexdigest()

@@ -5,9 +5,9 @@ class Config(object):
 
 class ProductionConfig(Config):
     FLASK_ENV = 'production'
-    
+
 class DevelopmentConfig(Config):
     DEBUG = True
-    
+
 class TestingConfig(Config):
     TESTING = True

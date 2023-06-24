@@ -25,10 +25,15 @@ def test_successful_listing(client, mock_db, user_token):
                            json=LISTING_BODY)
     assert response.status_code == conftest.OK
     assert ObjectId().is_valid(response.json["listing_id"])
-    print(user_token)
-    print(mock_db["UserAccount"].find_one())
-    assert user_token is not None
+    listing = mock_db["Listings"].find_one({
+        "_id": ObjectId(response.json["listing_id"])
+    })
+    assert listing
 
+    assert ObjectId().is_valid(listing.pop("_id"))
+    assert ObjectId().is_valid(listing.pop("provider"))
+
+    assert listing == LISTING_BODY
 
 def test_invalid_token(client):
     """
@@ -38,7 +43,7 @@ def test_invalid_token(client):
     """
     response = client.post('/listings/new', headers={"Authorization": "invalid"},
                            json=LISTING_BODY)
-    assert response.status_code == conftest.FORBIDDEN
+    assert response.status_code == conftest.UNAUTHORIZED
 
 
 def test_missing_address(client, user_token):
