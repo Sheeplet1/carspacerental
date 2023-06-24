@@ -8,6 +8,8 @@ import { checkPasswordValidation, makeRequest } from '@utils/validatePassword';
 import { useState } from 'react';
 
 const Register = () => {
+  const router = useRouter();
+
   const [showFurtherRegistration, setShowFurtherRegistration] = useState(false);
   const [email, setEmail] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
@@ -55,13 +57,19 @@ const Register = () => {
     setPhoneNumberError(isPhoneNumberExist ? (isPhoneNumberValid ? '' : 'Enter a valid phone number') : 'This field is required');
 
     if (isFirstNameValid && isLastNameValid && isPhoneNumberValid) {
-      const response = await makeRequest('/register', 'POST', { email, password, firstName, lastName, phoneNumber });
+      const body = {
+        "email": email,
+        "password": password,
+        "first_name": firstName,
+        "last_name": lastName,
+        "phone_number": phoneNumber
+      }
+      const response = await makeRequest('/register', 'POST', body);
       if (response.error) {
         setEmailError(response.error);
         setShowFurtherRegistration(false);
       } else {
         localStorage.setItem('token', response.token);
-        localStorage.setItem('u_id', response.u_id);
         router.push('/');
       }
     }
