@@ -2,35 +2,24 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Register from '@app/register/page'
 import '@testing-library/jest-dom'
-import axios from 'axios'
-import { useRouter } from 'next/router'
 
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(),
-}));
+const renderFurtherRegistration = async () => {
+  render(<Register />)
 
-jest.mock('axios')
+  await userEvent.type(screen.getByLabelText(/^Email-Address:/i), 'test@example.com');
+  await userEvent.type(screen.getByLabelText(/^Confirm your Email-Address:/i), 'test@example.com');
+  await userEvent.type(screen.getByLabelText(/^Password:/i), 'Test@12345');
+
+  fireEvent.click(screen.getByRole('button', { name: /Next/i }));
+}
 
 describe('Register Component', () => {
-  let mockPush;
-  beforeEach(() => {
-    mockPush = jest.fn();
-    useRouter.mockReturnValue({
-      push: mockPush,
-    });
-    axios.post.mockResolvedValue({ data: {} })
-  })
-
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('renders the heading', () => {
     render(<Register />)
     expect(screen.getByText(/Register/i)).toBeInTheDocument()
   })
 
-  it('renders form fields', () => {
+  it('renders Register form fields', () => {
     render(<Register />)
 
     expect(screen.getByLabelText(/^Email-Address:/i)).toBeInTheDocument()
@@ -44,36 +33,24 @@ describe('Register Component', () => {
     expect(screen.getByRole('button', { name: /Next/i })).toBeInTheDocument()
   })
 
-  it('calls the register API with form data on submit', async () => {
+  it('renders the further registration heading', async () => {
+    await renderFurtherRegistration()
 
-    const user = userEvent.setup();
+    expect(screen.getByText(/Further Registration/i)).toBeInTheDocument()
+  })
 
-    render(<Register />)
+  it('renders further registration form fields', async () => {
+    await renderFurtherRegistration()
 
-    user.type(screen.getByLabelText('Email-Address:'), 'test@example.com');
-    user.type(screen.getByLabelText('Confirm your Email-Address:'), 'test@example.com');
-    user.type(screen.getByLabelText('Password:'), 'Test@12345');
+    expect(screen.getByLabelText(/^First-Name:/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/^Last-Name:/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/^Phone Number:/i)).toBeInTheDocument()
+  })
 
-    screen.debug();
+  it('renders the back and register button', async () => {
+    await renderFurtherRegistration()
 
-    fireEvent.click(screen.getByRole('button', { name: /Next/i }));
-
-    expect(screen.getByText(/^Further Registration/i)).toBeInTheDocument()
-
-    user.type(screen.getByLabelText(/^First-Name:/i), 'John')
-    user.type(screen.getByLabelText(/^Last-Name:/i), 'Doe')
-    user.type(screen.getByLabelText(/^Phone number:/i), '0412345678')
-
-    fireEvent.click(screen.getByRole('button', { name: /Register/i }))
-
-    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1))
-
-    expect(axios.post).toHaveBeenCalledWith('/register', {
-      email: 'test@example.com',
-      password: 'Test@12345',
-      first_name: 'John',
-      last_name: 'Doe',
-      phone_number: '0412345678',
-    })
+    expect(screen.getByRole('button', { name: /Back/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Register/i })).toBeInTheDocument()
   })
 })

@@ -62,6 +62,7 @@ const Register = () => {
         "last_name": lastName,
         "phone_number": phoneNumber
       }
+
       const response = await makeRequest('/register', 'POST', body);
       if (response.error) {
         setEmailError(response.error);
@@ -98,7 +99,7 @@ const Register = () => {
             </label>
 
             <label htmlFor='phoneNumber' className='mb-2'>
-              Phone number:
+              Phone Number:
               <div className='mb-10'>
                 <input id='phoneNumber' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder='0412345678' />
                 <p className='error_text'>{phoneNumberError}</p>

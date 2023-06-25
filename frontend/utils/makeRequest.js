@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const makeRequest = async (route, method, body) => {
   const options = {
     method,
@@ -8,12 +10,10 @@ export const makeRequest = async (route, method, body) => {
   };
 
   if (body !== undefined) {
-    options.body = JSON.stringify(body);
+    options.data = body;
   }
 
-  const response = await fetch(`http://localhost:${BACKEND_PORT}${route}`, options);
+  const response = await axios(`http://localhost:${BACKEND_PORT}${route}`, options);
 
-  const data = await response.json();
-
-  return data;
+  return response.data;
 };
