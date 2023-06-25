@@ -4,7 +4,7 @@ import React from 'react'
 import Sidebar from '@components/Sidebar'
 import { checkPasswordValidation } from '@utils/validatePassword';
 import { makeRequest } from '@utils/makeRequest';
-
+import { useRouter } from 'next/navigation'
 import { useState } from 'react';
 
 const Register = () => {
@@ -21,6 +21,8 @@ const Register = () => {
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
+
+  const router = useRouter();
 
   const validateRegister = () => {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -63,7 +65,7 @@ const Register = () => {
         "phone_number": phoneNumber
       }
 
-      const response = await makeRequest('/register', 'POST', body);
+      const response = await makeRequest('/auth/register', 'POST', body);
       if (response.error) {
         setEmailError(response.error);
         setShowFurtherRegistration(false);

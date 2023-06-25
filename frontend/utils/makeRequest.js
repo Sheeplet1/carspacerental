@@ -13,7 +13,9 @@ export const makeRequest = async (route, method, body) => {
     options.body = JSON.stringify(body);
   }
 
-  const response = await fetch(`http://127.0.0.1:${BACKEND_PORT}${route}`, options);
+  const response = await fetch(`http://localhost:${BACKEND_PORT}${route}`, options);
 
-  return response.data;
+  const data = await response.json();
+
+  return data;
 };
