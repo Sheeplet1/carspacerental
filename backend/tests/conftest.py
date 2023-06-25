@@ -5,10 +5,10 @@ from flask import Flask
 from unittest.mock import patch
 from bson import ObjectId
 from flask_jwt_extended import JWTManager
-from datetime import datetime, timedelta
 
 from ..routes.auth import bp as auth_bp
 from ..routes.listings import bp as listings_bp
+from ..routes.booking_route import bp as booking_bp
 from ..routes.user import bp as user_bp
 from ..helpers import generate_hash
 
@@ -22,8 +22,8 @@ TEST_PW = "password123"
 TEST_FIRST_NAME = "John"
 TEST_LAST_NAME = "Doe"
 TEST_PN = "0416 123 980"
-TEST_START = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-TEST_END = (datetime.now() + timedelta(days=4)).strftime("%Y-%m-%d %H:%M:%S")
+TEST_START = '01 Jan 2022 00:00:00'
+TEST_END = '01 Jan 2023 00:00:00'
 
 USER_STUB = {
     "_id": TEST_UID,
@@ -37,19 +37,21 @@ USER_STUB = {
 LISTING_STUB = {
     "_id": TEST_LID,
     "provider": TEST_UID,
-    "address": {"street": "unsw"},
+    "address": {
+        "street": "unsw"
+    },
+    "price": 100,
     "space_type": "parking lot",
     "max_size": "suv",
     "description": "none",
     "access_type": "key card",
     "images": ["image1", "image2"],
-    "features": "ev"
+    "features": ["ev"]
 }
 
 BOOKING_STUB = {
-    "_id": TEST_BID,
-    "consumer": TEST_UID,
-    "listing_id": TEST_LID,
+    "_id": str(TEST_BID),
+    "listing_id": str(TEST_LID),
     "start_time": TEST_START,
     "end_time": TEST_END,
     "price": 100
@@ -76,6 +78,7 @@ def client(mock_db):
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(listings_bp)
+    app.register_blueprint(booking_bp)
     app.register_blueprint(user_bp)
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()

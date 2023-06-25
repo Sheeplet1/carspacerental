@@ -330,6 +330,114 @@
 
 </details>
 
+### Bookings
+
+<details>
+  <summary><code>POST</code> <code><b>/listings/book</b></code> <code>(creates new booking)</code></summary>
+
+##### Parameters
+
+> | name             | type | data type | description      |
+> |------------------|------|-----------|------------------|
+> | Booking Details  | body | Object    | New booking data |
+>
+> Booking Details:
+> ```
+> {
+>     "consumer": ObjectId(6496e8e2876de3535cf3aa02)
+>     "listing_id": ObjectId(6496e8e2876de3535cf3aa02)
+>     "start_time": '01 Jan 2022 00:00:00'
+>     "end_time": '01 Jan 2023 00:00:00'
+>     "price": 100.0
+> }
+> ```
+
+##### Responses
+
+> | http code | response                          |
+> |-----------|-----------------------------------|
+> | `200`     | `{ "token": str(ObjectId) }`      |
+> | `400`     | `{ "error": "_ is required"}`     |
+> | `400`     | `{ "error": "Invalid time slot"}` |
+
+</details>
+
+<details>
+  <summary><code>GET</code> <code><b>/bookings/{booking_id}</b></code> <code>(gets a specific booking)</code></summary>
+
+##### Parameters
+
+> | name         | type  | data type     | description      |
+> |--------------|-------|---------------|------------------|
+> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+
+##### Responses
+
+> | http code | response                            |
+> |-----------|-------------------------------------|
+> | `200`     | Booking Information Object          |
+> | `401`     | `Unauthorized`                      |
+> | `400`     | `{ "error": "Invalid booking id" }` |
+>
+> Booking Info Example:
+> ```
+> {
+>     "_id": str(ObjectId())
+>     "consumer": str(ObjectId())
+>     "listing_id": str(ObjectId())
+>     "start_time": '01 Jan 2022 00:00:00'
+>     "end_time": '05 Jan 2022 00:00:00'
+>     "price": 100.0
+> }
+> ```
+</details>
+
+<details>
+  <summary><code>PUT</code> <code><b>/bookings/{booking_id}</b></code> <code>(updates a specific booking</code></summary>
+  
+##### PARAMETERS
+
+> | name         | type  | data type     | description      |
+> |--------------|-------|---------------|------------------|
+> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+> | Update Info  | path  | str(ObjectId) | Booking ObjectId |
+>
+> Update Info Example:
+> ```
+> {
+>     "price": 200.0
+>     "start_time": '01 Jan 2022 00:00:00'
+> }
+
+##### Responses
+
+> | http code | response                            |
+> |-----------|-------------------------------------|
+> | `200`     | `{}`                                |
+> | `401`     | `Unauthorized`                      |
+> | `400`     | `{ "error": "Invalid _" }`          |
+
+</details>
+
+<details>
+  <summary><code>DELETE</code> <code><b>/bookings/{booking_id}</b></code> <code>(deletes/cancels a specific booking)</code></summary>
+
+##### Parameters
+
+> | name         | type  | data type     | description      |
+> |--------------|-------|---------------|------------------|
+> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+
+##### Responses
+
+> | http code | response       |
+> |-----------|----------------|
+> | `200`     | `{}`           |
+> | `401`     | `Unauthorized` |
+
+</details>
+
+
 ## Database
 
 ### UserAccount
@@ -355,7 +463,7 @@
 | `_id`         | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
 | `provider`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
 | `address`     | Object   | {TODO}                             |
-| `price`       | float    | 100                                |
+| `price`       | float    | 100.0                              |
 | `space_type`  | string   | "Driveway"                         |
 | `max_size`    | string   | "SUV"                              |
 | `description` | string   | "Listing Description"              |
@@ -363,16 +471,16 @@
 | `images`      | Array    | ["Base64 encoded image"]           |
 | `features`    | Array    | ["Electric Charging"]              |
 
-### Bookings (TODO)
+### Bookings
 
-    - bookingId (primary key)
-    - carSpaceId (foreign key referencing CarSpaces)
-    - userId (foreign key referencing Users)
-    - startTime
-    - endTime
-    - cost
-    - payment status
-    - booking status
+| Field         | Type     | Example                            |
+| ------------- | -------- | -----------------------------------|
+| `_id`         | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `consumer`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `booking`     | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `start_time`  | str      | 01 Jan 2022 00:00:00               |
+| `end_time`    | str      | 05 Jan 2022 00:00:00               |
+| `price`       | float    | 100.0                              |
 
 ### Reviews (TODO)
 

@@ -3,6 +3,7 @@ import hashlib
 from .db import db
 from bson import ObjectId
 from bson.errors import InvalidId
+from bson.json_util import loads, dumps
 from werkzeug.exceptions import Unauthorized
 
 def is_valid_email(email: str):
@@ -32,3 +33,6 @@ def validate_jwt(jwt_identity) -> ObjectId:
 
 def generate_hash(input: str) -> str:
     return hashlib.sha256(input.encode()).hexdigest()
+
+def parse_json(data):
+    return loads(dumps(data))

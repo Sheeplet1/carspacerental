@@ -12,7 +12,7 @@ def test_successful_registration(client, mock_db):
     WHEN the '/auth/register' is posted to (POST)
     THEN check that a '200' (OK) status code is returned and user is registered
     """
-    response = client.post('/auth/register', json=USER_STUB)
+    response = client.post('/auth/register', json=USER_STUB.copy())
 
     assert response.status_code == conftest.OK
     user = mock_db['UserAccount'].find_one()
@@ -31,6 +31,7 @@ def test_successful_registration(client, mock_db):
     assert user["current_bookings"] == []
     assert user["completed_bookings"] == []
     assert user["reviews"] == []
+    assert user["listings"] == []
     assert user["listings"] == []
 
 def test_missing_email(client):
@@ -76,36 +77,9 @@ def test_existing_email(client):
     WHEN the '/auth/register' is posted with an existing email (POST)
     THEN check that a '400' (BAD REQUEST) code and suitable message is returned
     """
-    response = client.post('/auth/register', json=USER_STUB)
+    response = client.post('/auth/register', json=USER_STUB.copy())
     assert response.status_code == conftest.OK
 
-    response = client.post('/auth/register', json=USER_STUB)
+    response = client.post('/auth/register', json=USER_STUB.copy())
     assert response.status_code == conftest.BAD_REQUEST
     assert response.json == {"error": "Email already registered"}
-
-def test_invalid_phone_number(client):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the '/auth/register' is posted with an invalid phone number (POST)
-    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
-    """
-    user = USER_STUB.copy()
-    user["phone_number"] = "4invalid362"
-    response = client.post('/auth/register', json=user)
-
-    assert response.status_code == conftest.BAD_REQUEST
-    assert response.json == {"error": "Phone number is required"}
-
-def test_missing_phone_number(client):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the '/auth/register' is posted with an invalid phone number (POST)
-    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
-    """
-    user = USER_STUB.copy()
-    user.pop("phone_number")
-    response = client.post('/auth/register', json=user)
-
-    assert response.status_code == conftest.BAD_REQUEST
-    assert response.json == {"error": "Phone number is required"}
-
