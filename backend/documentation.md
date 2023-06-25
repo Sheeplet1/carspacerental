@@ -382,4 +382,3 @@
     - review
     - rating
     - timestamp
-

@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
-
 from . import config
 from .routes import auth, listings, user
 
@@ -16,4 +15,4 @@ def create_app():
     app.register_blueprint(user.bp)
 
     return app
-
+  
