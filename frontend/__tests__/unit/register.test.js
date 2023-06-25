@@ -16,7 +16,7 @@ const renderFurtherRegistration = async () => {
 describe('Register Component', () => {
   it('renders the heading', () => {
     render(<Register />)
-    expect(screen.getByText(/Register/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^Register/i })).toBeInTheDocument()
   })
 
   it('renders Register form fields', () => {
@@ -36,7 +36,7 @@ describe('Register Component', () => {
   it('renders the further registration heading', async () => {
     await renderFurtherRegistration()
 
-    expect(screen.getByText(/Further Registration/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^Further Registration/i })).toBeInTheDocument()
   })
 
   it('renders further registration form fields', async () => {

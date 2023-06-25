@@ -80,7 +80,7 @@ const Register = () => {
       {
         showFurtherRegistration ? (
           <div className='relative bottom-14 flex flex-col mr-44'>
-            <p className='heading_text'>Further Registration</p>
+            <h1 className='heading_text'>Further Registration</h1>
 
             <label htmlFor='firstName' className='mb-2'>
               First-Name:
@@ -117,7 +117,7 @@ const Register = () => {
           </div>
         ) : (
           <div className='relative bottom-14 flex flex-col mr-44 '>
-            <p className='heading_text'>Register</p>
+            <h1 className='heading_text'>Register</h1>
 
             <label htmlFor='email' className='mb-2'>
               Email-Address:

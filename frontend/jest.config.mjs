@@ -20,7 +20,11 @@ const config = {
     '^@public/(.*)$': '<rootDir>/public/$1',
     '^@styles/(.*)$': '<rootDir>/styles/$1',
     '^@utils/(.*)$': '<rootDir>/utils/$1',
-  }
+  },
+
+  roots: [
+    '__tests__/unit',
+  ],
 }
 
  

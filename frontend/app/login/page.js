@@ -1,34 +1,75 @@
+'use client'
+
 import React from 'react'
 import Sidebar from '@components/Sidebar'
 import Link from 'next/link'
+import { useState } from 'react';
+import { makeRequest } from '@utils/makeRequest';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validateLogin = async () => {
+    let isEmailExist = !!email;
+    setEmailError(isEmailExist ? '' : 'This field is required');
+
+    let isPasswordExist = !!password;
+    setPasswordError(isPasswordExist ? '' : 'This field is required');
+
+    if (isEmailExist && isPasswordExist) {
+      const body = {
+        "email": email,
+        "password": password,
+      }
+      const response = await makeRequest('/login', 'POST', body);
+      if (response.error) {
+        setEmailError(response.error);
+      } else {
+        localStorage.setItem('token', response.token);
+        router.push('/');
+      }
+    }
+  }
+
   return (
     <div className='flex flex-row h-screen'>
       <Sidebar />
-      <div className='flex flex-col mr-44'>
-        <p className='heading_text'>Login</p>
+      <div className='relative bottom-14 flex flex-col mr-44'>
+        <h1 className='heading_text'>Login</h1>
 
-        <label className='mb-2 mt-4'>Email-Address:</label>
-        <input className='w-96 border-2 border-gray-300 rounded-3xl p-2 mb-14' type='email' placeholder='Email' />
+        <label htmlFor='email' className='mb-2'>
+          Email-Address:
+          <div className='mb-10'>
+            <input id='email' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='email' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='jane.doe@email.com' />
+            <p className='error_text'>{emailError}</p>
+          </div>
+        </label>
 
-        <label className='mb-2'>Password:</label>
-        <input className='w-96 border-2 border-gray-300 rounded-3xl p-2 mb-14' type='password' placeholder='Password' />
+        <label htmlFor='password' className='mb-2'>
+          Password:
+          <div className='mb-2'>
+            <input id='password' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='password' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Janedoe@123' />
+            <p className='error_text'>{passwordError}</p>
+          </div>
+        </label>
 
-        <Link href='/login/forgotpassword'>
-        <button className='mb-8 text-teal-400 text-xs align-content: flex-start'>Forgot password?</button>
+        <Link id='forgotPassword' className='mb-20 text-teal-400 text-xs align-content: flex-start' href='/login/forgotpassword'>
+          Forgot password?
         </Link>
 
         <div className='flex justify-between'>
           {/* <Link href='/'> */}
-            <button className='blue_btn'>
-              Back
-            </button>
+          <button className='blue_btn'>
+            Back
+          </button>
           {/* </Link>
           <Link> */}
-            <button className='blue_btn'>
-              Next
-            </button>
+          <button className='blue_btn' onClick={() => validateLogin()}>
+            Login
+          </button>
           {/* </Link> */}
         </div>
       </div>
