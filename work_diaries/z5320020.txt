@@ -44,3 +44,9 @@ WEEK 3
 - Help with proposal
 - Starting developing user_registration functionality and tests
     - Playing around with mongomock 
+
+------------------------------------------------------------------------------
+WEEK 4
+
+- Finished user_registration, user_login and booking routes
+- Updated documentation

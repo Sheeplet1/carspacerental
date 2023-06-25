@@ -20,3 +20,11 @@ We finished off writing the proposal and Anthony and I started scaffolding the
 backend. I did some research into how MongoDB worked with Python and set up an
 Atlas cluster for our project development. I also did some research into how
 Flask Blueprints work so that our file structure can be more modular
+
+Week 4
+
+We worked on completing sprint 1. I completed the routes, database access and
+testing for registering, updating and deleting car spaces as well as user
+management routes and general GET routes. I also added tokening and wrote up
+the documentation for our api and database in a markdown file as we decided
+swagger was unnecessary for our project.
