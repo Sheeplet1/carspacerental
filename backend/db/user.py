@@ -35,3 +35,16 @@ def user_login(data: dict) -> Optional[ObjectId]:
         id = ObjectId(user["_id"])
 
     return id
+
+def get_user(user_id: ObjectId) -> dict:
+    users = db.get_database()["UserAccount"]
+    user = users.find_one({ "_id": user_id })
+    return user if user else {}
+
+def update_user(user_id: ObjectId, body: dict) -> None:
+    users = db.get_database()["UserAccount"]
+    users.update_one({ "_id": user_id }, {"$set":body})
+
+def remove_user(user_id: ObjectId) -> None:
+    users = db.get_database()["UserAccount"]
+    users.delete_one({ "_id": user_id })

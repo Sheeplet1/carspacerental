@@ -1,5 +1,10 @@
+from typing import Optional
 from bson import ObjectId
 from ..db import db
+
+def all() -> list:
+    listings = db.get_database()["Listings"]
+    return list(listings.find())
 
 def new(user_id: ObjectId, data: dict) -> ObjectId:
     id = ObjectId()
@@ -19,3 +24,15 @@ def new(user_id: ObjectId, data: dict) -> ObjectId:
     collection = db.get_database()["Listings"]
     collection.insert_one(listing_doc)
     return id
+
+def get(listing_id: ObjectId) -> Optional[dict]:
+    listings = db.get_database()["Listings"]
+    return listings.find_one({ "_id": listing_id })
+
+def update_listing(listing_id: ObjectId, body: dict) -> None:
+    listings = db.get_database()["Listings"]
+    listings.update_one({ "_id": listing_id }, {"$set":body})
+
+def remove_listing(listing_id: ObjectId) -> None:
+    listings = db.get_database()["Listings"]
+    listings.delete_one({ "_id": listing_id })

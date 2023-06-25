@@ -10,7 +10,7 @@ def is_valid_email(email: str):
     return re.match(pattern, email) is not None
 
 def is_valid_phone_number(phone_number):
-    phone_number = "".join(phone_number.split())
+    phone_number = "".join(str(phone_number).split())
     pattern = r"^04([0-9]{8})$"
     return re.match(pattern, phone_number)
 

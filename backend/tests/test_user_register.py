@@ -3,7 +3,7 @@ from bson import ObjectId
 
 from ..tests import conftest
 
-USER_STUB = conftest.USER_STUB
+USER_STUB = conftest.USER_STUB.copy()
 USER_STUB.pop("_id")
 
 def test_successful_registration(client, mock_db):

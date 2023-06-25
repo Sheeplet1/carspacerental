@@ -1,20 +1,25 @@
+from bson import ObjectId
 from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Forbidden
 
 from ..helpers import validate_jwt
 from ..db import listings as listings_db
 
 bp = Blueprint('listings', __name__, url_prefix='/listings')
 
+@bp.route('', methods=['GET'])
+def get_all():
+    listings = listings_db.all()
+    for listing in listings:
+        listing["_id"] = str(listing["_id"])
+        listing["provider"] = str(listing["provider"])
+    return { "listings": listings }, 200
+
 @bp.route('/new', methods=['POST'])
 @jwt_required()
 def new():
-    # Valid token and get user id
-    try:
-        user_id = validate_jwt(get_jwt_identity())
-    except Unauthorized as e:
-        return e
+    user_id = validate_jwt(get_jwt_identity())
 
     data = request.get_json()
 
@@ -44,3 +49,47 @@ def new():
 
     response = { "listing_id": str(listing_id) }
     return response, 200
+
+@bp.route('/<listing_id>', methods=['GET', 'PUT', 'DELETE'])
+@jwt_required(optional=True)
+def info(listing_id):
+
+    if not ObjectId.is_valid(listing_id):
+        return { "error": "Invalid listing id" }, 400
+
+    listing_id = ObjectId(listing_id)
+    listing = listings_db.get(listing_id)
+
+    if not listing:
+        return { "error": "Invalid listing id" }, 400
+
+    if request.method == "GET":
+        listing["_id"] = str(listing["_id"])
+        listing["provider"] = str(listing["provider"])
+        return listing, 200
+
+    user_id = validate_jwt(get_jwt_identity())
+
+    # TODO: Allow Admin to bypass this
+    if listing["provider"] != user_id:
+        raise Forbidden
+
+    if request.method == "PUT":
+        update_data = request.get_json()
+
+        if "_id" in update_data:
+            return { "error": "Cannot update id" }, 400
+
+        for key, val in update_data.items():
+            if key not in listing.keys():
+                return { "error": "Invalid update key" }, 400
+            if not isinstance(val, type(listing[key])):
+                return { "error": "Update value has invalid type" }, 400
+
+        listings_db.update_listing(listing_id, update_data)
+
+    elif request.method == "DELETE":
+        listings_db.remove_listing(listing_id)
+
+    return {}, 200
+

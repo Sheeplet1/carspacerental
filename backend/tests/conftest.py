@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 
 from ..routes.auth import bp as auth_bp
 from ..routes.listings import bp as listings_bp
+from ..routes.user import bp as user_bp
 from ..helpers import generate_hash
 
 TEST_JWT_KEY = "testingsecretkey"
@@ -57,6 +58,7 @@ BOOKING_STUB = {
 OK = 200
 BAD_REQUEST = 400
 UNAUTHORIZED = 401
+FORBIDDEN = 403
 
 @pytest.fixture
 def mock_db():
@@ -74,6 +76,7 @@ def client(mock_db):
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(listings_bp)
+    app.register_blueprint(user_bp)
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
 
@@ -87,7 +90,7 @@ def user_token(client):
     Registers a user and yields their token
     """
     register_data = {
-        "email": TEST_EMAIL,
+        "email": "alternatetest@email.com",
         "password": TEST_PW,
         "first_name": TEST_FIRST_NAME,
         "last_name": TEST_LAST_NAME,
