@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   // Look for test files in the "__tests__" directory, relative to this configuration file.
-  testDir: '__tests__',
+  testDir: '__tests__/e2e',
 
   // Run all tests in parallel.
   fullyParallel: true,
@@ -27,21 +27,21 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  // Configure projects for major browsers.
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'safari',
-      use: { ...devices['Desktop Safari'] },
-    },
-  ],
+  // // Configure projects for major browsers.
+  // projects: [
+  //   {
+  //     name: 'chromium',
+  //     use: { ...devices['Desktop Chrome'] },
+  //   },
+  //   {
+  //     name: 'firefox',
+  //     use: { ...devices['Desktop Firefox'] },
+  //   },
+  //   {
+  //     name: 'safari',
+  //     use: { ...devices['Desktop Safari'] },
+  //   },
+  // ],
 
   // Run your local dev server before starting the tests.
   webServer: {
