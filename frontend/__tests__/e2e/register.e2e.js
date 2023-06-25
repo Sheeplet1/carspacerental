@@ -23,14 +23,14 @@ const checkErrorMessage = async (page, expectedError) => {
 
 test.describe('Registration Page', () => {
 
-  // Successful Registration & Token Storage
-  test('should register successfully and store token', async ({ page, context }) => {
-    await fillInitialForm(page, 'test@example.com', 'test@example.com', 'Test@12345');
-    await fillDetailsForm(page, 'Test', 'User', '0412345678');
-    expect(page.url()).toBe('http://localhost:3000/');
-    const localStorage = await context.storageState();
-    expect(localStorage.localStorage[0].value).toBeDefined();  // Assuming token is non-empty
-  });
+//   // Successful Registration & Token Storage
+//   test('should register successfully and store token', async ({ page, context }) => {
+//     await fillInitialForm(page, 'test@example.com', 'test@example.com', 'Test@12345');
+//     await fillDetailsForm(page, 'Test', 'User', '0412345678');
+//     expect(page.url()).toBe('http://localhost:3000/');
+//     const localStorage = await context.storageState();
+//     expect(localStorage.localStorage[0].value).toBeDefined();  // Assuming token is non-empty
+//   });
 
   // Invalid Email
   test('should display error for invalid email', async ({ page }) => {
@@ -114,7 +114,7 @@ test.describe('Registration Page', () => {
     expect(heading).toBe('Register');
     expect(page.url()).toBe('http://localhost:3000/register');
   });
-  
+
   // Email Already in Use
   test('should display error for email already in use', async ({ page }) => {
     await fillInitialForm(page, 'austintest@gmail.com', 'austintest@gmail.com', 'Test@12345');

@@ -2,14 +2,12 @@
 
 import React from 'react'
 import Sidebar from '@components/Sidebar'
-import { useRouter } from 'next/router';
-import { checkPasswordValidation, makeRequest } from '@utils/validatePassword';
+import { checkPasswordValidation } from '@utils/validatePassword';
+import { makeRequest } from '@utils/makeRequest';
 
 import { useState } from 'react';
 
 const Register = () => {
-  const router = useRouter();
-
   const [showFurtherRegistration, setShowFurtherRegistration] = useState(false);
   const [email, setEmail] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
@@ -83,23 +81,29 @@ const Register = () => {
           <div className='relative bottom-14 flex flex-col mr-44'>
             <p className='heading_text'>Further Registration</p>
 
-            <label className='mb-2'>First-Name:</label>
-            <div className='mb-10'>
-              <input className='w-96 border-2 border-gray-300 rounded-3xl p-2' type='text' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='Jane' />
-              <p className='error_text'>{firstNameError}</p>
-            </div>
+            <label htmlFor='firstName' className='mb-2'>
+              First-Name:
+              <div className='mb-10'>
+                <input id='firstName' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='Jane' />
+                <p className='error_text'>{firstNameError}</p>
+              </div>
+            </label>
 
-            <label className='mb-2'>Last-Name:</label>
-            <div className='mb-10'>
-              <input className='w-96 border-2 border-gray-300 rounded-3xl p-2' type='text' value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder='Doe' />
-              <p className='error_text'>{lastNameError}</p>
-            </div>
+            <label htmlFor='lastName' className='mb-2'>
+              Last-Name:
+              <div className='mb-10'>
+                <input id='lastName' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder='Doe' />
+                <p className='error_text'>{lastNameError}</p>
+              </div>
+            </label>
 
-            <label className='mb-2'>Phone number:</label>
-            <div className='mb-10'>
-              <input className='w-96 border-2 border-gray-300 rounded-3xl p-2' type='number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder='0412345678' />
-              <p className='error_text'>{phoneNumberError}</p>
-            </div>
+            <label htmlFor='phoneNumber' className='mb-2'>
+              Phone number:
+              <div className='mb-10'>
+                <input id='phoneNumber' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder='0412345678' />
+                <p className='error_text'>{phoneNumberError}</p>
+              </div>
+            </label>
 
             <div className='flex justify-between'>
               <button className='blue_btn' onClick={() => setShowFurtherRegistration(false)}>
@@ -114,23 +118,29 @@ const Register = () => {
           <div className='relative bottom-14 flex flex-col mr-44 '>
             <p className='heading_text'>Register</p>
 
-            <label className='mb-2'>Email-Address:</label>
-            <div className='mb-10'>
-              <input className='w-96 border-2 border-gray-300 rounded-3xl p-2' type='email' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='jane.doe@email.com' />
-              <p className='error_text'>{emailError}</p>
-            </div>
+            <label htmlFor='email' className='mb-2'>
+              Email-Address:
+              <div className='mb-10'>
+                <input id='email' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='email' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='jane.doe@email.com' />
+                <p className='error_text'>{emailError}</p>
+              </div>
+            </label>
 
-            <label className='mb-2'>Confirm your Email-Address:</label>
-            <div className='mb-10'>
-              <input className='w-96 border-2 border-gray-300 rounded-3xl p-2' type='email' value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} placeholder='jane.doe@email.com' />
-              <p className='error_text'>{confirmEmailError}</p>
-            </div>
+            <label htmlFor='confirmEmail' className='mb-2'>
+              Confirm your Email-Address:
+              <div className='mb-10'>
+                <input id='confirmEmail' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='email' value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} placeholder='jane.doe@email.com' />
+                <p className='error_text'>{confirmEmailError}</p>
+              </div>
+            </label>
 
-            <label className='mb-2'>Password:</label>
-            <div className='mb-10'>
-              <input className='w-96 border-2 border-gray-300 rounded-3xl p-2' type='password' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='janedoe123' />
-              <p className='error_text'>{passwordError}</p>
-            </div>
+            <label htmlFor='password' className='mb-2'>
+              Password:
+              <div className='mb-10'>
+                <input id='password' className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2' type='password' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Janedoe@123' />
+                <p className='error_text'>{passwordError}</p>
+              </div>
+            </label>
 
             <div className='flex justify-between'>
               <button className='blue_btn' onClick={() => setShowFurtherRegistration(false)}>
