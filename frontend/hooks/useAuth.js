@@ -1,36 +1,64 @@
 import { useState, useEffect } from 'react';
+import { makeRequest } from '@utils/makeRequest';
+import { useRouter } from 'next/navigation';
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
 
+  const router = useRouter();
+
   const fetchUser = async (token) => {
-    // TODO: Fetch user data from backend
-    return { name: "John Doe", image: "profile.jpg" };
+    const response = await makeRequest('/user/profile', 'GET');
+    if (response.error) {
+      console.log(response.error);
+      setUser(null);
+    } else {
+      setUser(response);
+    }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setToken(token);
-      fetchUser(token).then((user) => {
-        setUser(user);
-      });
+    const localToken = localStorage.getItem('token');
+    if (localToken) {
+      setToken(localToken);
+      fetchUser(localToken);
     }
   }, []);
 
-  const login = async (username, password) => {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    });
-    const data = await response.json();
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
-      const user = await fetchUser(data.token);
-      setUser(user);
+  const register = async (email, password, firstName, lastName, phoneNumber) => {
+    const body = {
+      "email": email,
+      "password": password,
+      "first_name": firstName,
+      "last_name": lastName,
+      "phone_number": phoneNumber
+    }
+
+    const response = await makeRequest('/auth/register', 'POST', body);
+    if (response.error) {
+      console.log(response.error);
+      setUser(null);
+      setToken(null);
+    } else {
+      localStorage.setItem('token', response.token);
+      setToken(response.token);
+      fetchUser(response.token);
+      router.push('/');
+    }
+  }
+
+  const login = async (email, password) => {
+    const response = await makeRequest('/auth/login', 'POST', { email, password });
+    if (response.error) {
+      console.log(response.error);
+      setUser(null);
+      setToken(null);
+    } else {
+      localStorage.setItem('token', response.token);
+      setToken(response.token);
+      fetchUser(response.token);
+      router.push('/');
     }
   };
 
@@ -38,7 +66,8 @@ export const useAuth = () => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
+    router.push('/');
   };
 
-  return { user, token, login, logout };
+  return { user, token, register, login, logout };
 };

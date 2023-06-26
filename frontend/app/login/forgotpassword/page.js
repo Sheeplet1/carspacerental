@@ -4,7 +4,6 @@ import React from 'react'
 import Sidebar from '@components/Sidebar'
 import Link from 'next/link'
 import { useState } from 'react';
-import { makeRequest } from '@utils/makeRequest';
 import { useRouter } from 'next/navigation'
 
 const ForgotPassword = () => {
