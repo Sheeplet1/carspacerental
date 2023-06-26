@@ -2,6 +2,15 @@ import { render, screen } from '@testing-library/react'
 import ForgotPassword from '@app/login/forgotpassword/page'
 import '@testing-library/jest-dom'
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    route: '/',
+    pathname: '/',
+    query: '',
+    asPath: ''
+  }),
+}));
+
 describe('Forgot Password Component', () => {
   it('renders the heading', () => {
     render(<ForgotPassword />)
