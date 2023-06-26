@@ -4,10 +4,13 @@ import React from 'react'
 import Sidebar from '@components/Sidebar'
 import Link from 'next/link'
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+
+  const router = useRouter();
 
   const sendEmail = async () => {
     let isEmailExist = !!email;
@@ -17,7 +20,7 @@ const ForgotPassword = () => {
       const body = {
         "email": email,
       }
-      // const response = await makeRequest('/forgotpassword', 'POST', body);
+      // const response = await makeRequest('/auth/forgotpassword', 'POST', body);
       if (response.error) {
         setEmailError(response.error);
       } else {

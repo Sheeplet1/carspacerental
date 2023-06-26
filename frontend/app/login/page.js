@@ -3,14 +3,19 @@
 import React from 'react'
 import Sidebar from '@components/Sidebar'
 import Link from 'next/link'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { makeRequest } from '@utils/makeRequest';
+import { useRouter } from 'next/navigation'
+import UserContext from '@contexts/UserContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+
+  const router = useRouter();
+  const { setToken } = useContext(UserContext);
 
   const validateLogin = async () => {
     let isEmailExist = !!email;
@@ -24,11 +29,12 @@ const Login = () => {
         "email": email,
         "password": password,
       }
-      const response = await makeRequest('/login', 'POST', body);
+      const response = await makeRequest('/auth/login', 'POST', body);
       if (response.error) {
         setEmailError(response.error);
       } else {
         localStorage.setItem('token', response.token);
+        setToken(response.token);
         router.push('/');
       }
     }

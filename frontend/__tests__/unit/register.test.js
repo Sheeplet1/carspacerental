@@ -3,6 +3,15 @@ import userEvent from '@testing-library/user-event'
 import Register from '@app/register/page'
 import '@testing-library/jest-dom'
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    route: '/',
+    pathname: '/',
+    query: '',
+    asPath: ''
+  }),
+}));
+
 const renderFurtherRegistration = async () => {
   render(<Register />)
 
@@ -14,7 +23,7 @@ const renderFurtherRegistration = async () => {
 }
 
 describe('Register Component', () => {
-  it('renders the heading', () => {
+    it('renders the heading', () => {
     render(<Register />)
     expect(screen.getByRole('heading', { name: /^Register/i })).toBeInTheDocument()
   })

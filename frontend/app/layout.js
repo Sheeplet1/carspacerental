@@ -1,7 +1,7 @@
 import "@styles/globals.css";
 
 import { Navbar } from "@components/Navbar";
-import { Sidebar } from "@components/Sidebar";
+import UserProvider from "@contexts/UserProvider";
 
 export const metadata = {
   title: 'SFCars',
@@ -12,11 +12,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-background">
-        <main className='app'>
-          <Navbar />
+        <UserProvider>
+          <main className='app'>
+            <Navbar />
 
-          {children}
-        </main>
+            {children}
+          </main>
+        </UserProvider>
       </body>
     </html>
   )

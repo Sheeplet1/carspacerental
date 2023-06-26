@@ -2,6 +2,15 @@ import { render, screen } from '@testing-library/react'
 import Login from '@app/login/page'
 import '@testing-library/jest-dom'
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    route: '/',
+    pathname: '/',
+    query: '',
+    asPath: ''
+  }),
+}));
+
 describe('Login Component', () => {
   it('renders the heading', () => {
     render(<Login />)
