@@ -5,7 +5,8 @@ import Sidebar from '@components/Sidebar'
 import { checkPasswordValidation } from '@utils/validatePassword';
 import { makeRequest } from '@utils/makeRequest';
 import { useRouter } from 'next/navigation'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import UserContext from '@contexts/UserContext';
 
 const Register = () => {
   const [showFurtherRegistration, setShowFurtherRegistration] = useState(false);
@@ -23,6 +24,7 @@ const Register = () => {
   const [phoneNumberError, setPhoneNumberError] = useState('');
 
   const router = useRouter();
+  const { setToken } = useContext(UserContext);
 
   const validateRegister = () => {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -71,6 +73,7 @@ const Register = () => {
         setShowFurtherRegistration(false);
       } else {
         localStorage.setItem('token', response.token);
+        setToken(response.token);
         router.push('/');
       }
     }

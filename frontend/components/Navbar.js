@@ -2,32 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { makeRequest } from "@utils/makeRequest";
 import { useRouter } from "next/navigation";
+import { useState, useContext } from "react";
+import UserContext from "@contexts/UserContext";
 
 export const Navbar = () => {
 
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const response = await makeRequest('/user/profile', 'GET');
-
-        if (response.error) {
-          console.log(response.error);
-        } else {
-          setUser(response);
-        }
-      }
-    }
-    fetchUser();
-  }, []);
 
   const logOut = () => {
     localStorage.removeItem('token');

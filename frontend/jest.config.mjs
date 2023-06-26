@@ -20,6 +20,7 @@ const config = {
     '^@public/(.*)$': '<rootDir>/public/$1',
     '^@styles/(.*)$': '<rootDir>/styles/$1',
     '^@utils/(.*)$': '<rootDir>/utils/$1',
+    '^@contexts/(.*)$': '<rootDir>/contexts/$1',
   },
 
   roots: [
