@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -21,6 +22,10 @@
   }
 }
 
+html, body {
+  font-family: 'Poppins', cursive;
+}
+
 /* Tailwind Styles */
 
 .app {
@@ -37,15 +42,20 @@
 
 
 .logo_text {
-  @apply max-sm:hidden font-satoshi font-semibold text-3xl text-black tracking-wide;
+  @apply max-sm:hidden font-semibold text-3xl text-black tracking-wide;
+}
+
+.landing_page_text {
+  @apply max-sm:hidden font-semibold text-6xl text-black;
+  font-family: 'Bebas Neue', cursive;
 }
 
 .heading_text {
-  @apply font-satoshi font-semibold text-2xl text-black tracking-wide;
+  @apply font-semibold text-2xl text-black tracking-wide;
 }
 
 .error_text {
-  @apply font-satoshi font-semibold text-xs text-red-500 tracking-wide;
+  @apply font-semibold text-xs text-red-500 tracking-wide;
 }
 
 .dropdown {
@@ -79,3 +89,4 @@
   transform: translate(-20%, -60%);
   z-index: 1;
 }
+

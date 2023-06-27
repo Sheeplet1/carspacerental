@@ -1,42 +1,41 @@
-import React from 'react'
-import Selectbar from '@components/Selectbar'
-import Image from "next/image";
+import React from 'react';
+import Image from 'next/image';
+import SearchBar from '@components/SearchBar';
 
 const Home = () => {
-return (
-  <div className="flex flex-row h-screen">
-    <Selectbar />
-    <div className="flex flex-col mr-44 gap-16">
-      <p className="logo_text">ACCONPANY YOUR</p>
-      <p className="logo_text">JOURNEY WITH COMFORT</p>
-      <label className="text-xs text-gray-400">Car rent services for various terrain with guaranteed qualitys</label>
+  return (
+    <div className="flex flex-col items-center h-screen">
+      <div className="flex justify-around items-center w-full" style={{height: '40vh'}}>
+        <div className="flex flex-col items-start gap-4 mr-44 w-3/4">
+          <p className="landing_page_text">ACCOMPANY YOUR</p>
+          <p className="landing_page_text">JOURNEY WITH COMFORT</p>
+          <label className="text-xs text-gray-400">Car rent services for various terrain with guaranteed qualitys</label>
+          <div className="w-full mt-4 relative">
+            <SearchBar />
+          </div>
+        </div>
 
-      <div className="flex justify-start">
-        <button className="blue_btn">
-          Learn More
-        </button>
+        <div className="flex flex-col image-container">
+          <Image
+            src='/assets/images/sport-car.png'
+            alt='sport-car'
+            width={500}
+            height={500}
+            className="object-contain ml-24 mb-16"
+          />
+        </div>
+
+        <div className="flex flex-col mr-24">
+          <Image
+            src='/assets/images/ornament.png'
+            alt='ornament'
+            width={1000}
+            height={1000}
+          />
+        </div>
       </div>
     </div>
+  )
+}
 
-    <div className="flex flex-col  image-container mr-24 gap-16">
-      <Image
-          src='/assets/icons/sport-car.png'
-          alt='sport-car'
-          width={600}
-          height={600}
-      />
-    </div>
-
-    <div className="flex flex-col mr-24 gap-16">
-      <Image
-            src='/assets/icons/ornament.png'
-            alt='ornament'
-            width={450}
-            height={450}
-        />
-    </div>
-  </div>
-   )
- }
-
-export default Home
+export default Home;

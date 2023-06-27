@@ -16,7 +16,13 @@ module.exports = {
         'custom-orange': '#f89c3c',
         'custom-blue': '#6ED4D4',
         'background': '#F2F1F0',
-      }
+      },
+    },
+  },
+  variants: {
+    extend: {
+      opacity: ['disabled'],
+      textColor: ['placeholder'],  // <-- add this line
     },
   },
   plugins: [],
