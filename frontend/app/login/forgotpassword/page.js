@@ -30,7 +30,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className='flex flex-row h-screen'>
+    <div className='flex flex-row h-screen mt-24'>
       <Sidebar />
       <div className='relative bottom-14 flex flex-col mr-44'>
         <h1 className='heading_text'>

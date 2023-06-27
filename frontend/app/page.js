@@ -4,12 +4,12 @@ import SearchBar from '@components/SearchBar';
 
 const Home = () => {
   return (
-    <div className="flex flex-col items-center h-screen">
+    <div className="flex flex-col items-center h-screen mt-10">
       <div className="flex justify-around items-center w-full" style={{height: '40vh'}}>
-        <div className="flex flex-col items-start gap-4 mr-44 w-3/4">
+        <div className="flex flex-col items-start gap-4 mr-44 w-full">
           <p className="landing_page_text">ACCOMPANY YOUR</p>
           <p className="landing_page_text">JOURNEY WITH COMFORT</p>
-          <label className="text-xs text-gray-400">Car rent services for various terrain with guaranteed qualitys</label>
+          <label className="text-xs text-gray-400">Car rent services for various terrain with guaranteed quality</label>
           <div className="w-full mt-4 relative">
             <SearchBar />
           </div>

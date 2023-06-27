@@ -42,8 +42,7 @@ function SearchBar() {
 
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyDLObtS4lYXqrA_Y_kF6VGxy-ogZFP5-lU
-      "
+      googleMapsApiKey="AIzaSyDLObtS4lYXqrA_Y_kF6VGxy-ogZFP5-lU"
       libraries={libraries}
     >
       <Autocomplete
