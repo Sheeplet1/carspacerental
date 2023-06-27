@@ -20,7 +20,7 @@ export const Navbar = () => {
   }
 
   return (
-    <header className='w-full mb-16 pt-3'>
+    <header className='w-full mb-16 pt-3 h-14'>
       <nav>
         <div className='border-b border-gray-300 pb-2'>
           <div className='flex justify-between'>

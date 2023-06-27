@@ -11,11 +11,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-background">
+      <body className="bg-background" style={{ overflowY: "hidden" }}>
         <UserProvider>
           <main className='app'>
             <Navbar />
-
             {children}
           </main>
         </UserProvider>

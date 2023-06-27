@@ -80,7 +80,7 @@ const Register = () => {
   }
 
   return (
-    <div className='flex flex-row h-screen'>
+    <div className='flex flex-row h-screen mt-14'>
       <Sidebar />
       {
         showFurtherRegistration ? (
