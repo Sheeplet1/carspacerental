@@ -7,6 +7,7 @@ import { useState } from 'react';
 import SearchBar from '@components/SearchBar';
 
 const ListYourSpot = () => {
+
     const [showParkingSpotDetails, setShowParkingSpotDetails] = useState(false);
     const [address, setAddress] = useState('');
     const [addressError, setAddressError] = useState('');
