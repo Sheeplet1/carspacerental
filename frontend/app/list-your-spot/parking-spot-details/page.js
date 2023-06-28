@@ -44,7 +44,7 @@ const ParkingSpotDetails = () => {
                 Tell us about your parking spot.
                 </h1>
 
-                <h6 className='text-lg font-bold dark:text-white'>
+                <h6 className='text-lg font-bold'>
                 Space Details
                 </h6>
                 <label className='mb-2 mt-2'>
@@ -57,19 +57,19 @@ const ParkingSpotDetails = () => {
                 <input className='w-96 border-b border-black p-2 mb-14' type='address' placeholder='Choose your type of spot'/>
 
 
-                <h6 className='text-lg font-bold dark:text-white'>
+                <h6 className='text-lg font-bold'>
                 How can drivers access this space? (optional)
                 </h6>
                 <label className='mb-2 mt-2'>
-                Type of Spot:
+                Access Details:
                 </label>
                 <input className='w-96 border-b border-black p-2 mb-14' type='address' placeholder='Choose your type of spot'/>
 
-                <h6 className='text-lg font-bold dark:text-white'>
+                <h6 className='text-lg font-bold'>
                 Any other details? (optional)
                 </h6>
                 <label className='mb-2 mt-2'>
-                Type of Spot:
+                Other Features:
                 </label>
                 <input className='w-96 border-b border-black p-2 mb-14' type='address' placeholder='Choose your type of spot'/>
 

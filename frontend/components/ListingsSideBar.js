@@ -1,21 +1,50 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { Autocomplete, GoogleMap, LoadScript } from '@react-google-maps/api';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { CSSTransition } from 'react-transition-group';
 import { makeRequest } from '@utils/makeRequest';
-
-const libraries = ["places"];
+import SearchBar from '@components/SearchBar';
 
 const ListingsSideBar = () => {
   const [selectedListing, setSelectedListing] = useState(null);
-  const [autocomplete, setAutocomplete] = useState(null);
   const [addressData, setAddressData] = useState(null);
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [sort, setSort] = useState('distance');
   const [listings, setListings] = useState([]);
-  const now = new Date().toISOString().substring(0, 16); // Get current time in proper format
-  const autocompleteRef = useRef(null);
+  const now = new Date().toISOString().substring(0, 16);
+
+  useEffect(() => {
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    const now = (new Date(Date.now() - tzoffset));
+    const now1 = (new Date(Date.now() - tzoffset));
+
+    const startDate = new Date(now.setHours(now.getHours() + 1));
+    const endDate = new Date(now1.setHours(now1.getHours() + 2));
+
+    const formatDateTime = (date) => date.toISOString().substring(0, 16);
+
+    setDateRange({
+      start: formatDateTime(startDate),
+      end: formatDateTime(endDate),
+    });
+
+  }, []);
+
+  const calculateDistanceInKm = (lat1, lon1) => {
+    const lat2 = addressData.coordinates.lat;
+    const lon2 = addressData.coordinates.lng;
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+      ;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,70 +57,27 @@ const ListingsSideBar = () => {
       }
     }
 
-    // Call the fetch function
     fetchData();
-  }, [addressData, dateRange]); // Run this useEffect when addressData or dateRange changes
+  }, [addressData, dateRange, sort]);
 
-  const onLoad = useCallback((autocomplete) => {
-    setAutocomplete(autocomplete);
-  }, []);
-
-  const onPlaceChanged = () => {
-    if (autocomplete !== null) {
-      const place = autocomplete.getPlace();
-      setAddressData({
-        address: place.formatted_address,
-        place_id: place.place_id,
-        coordinates: {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        },
-      });
-    } else {
-      console.log('Autocomplete is not loaded yet!');
-    }
-  };
-
-  const searchClick = () => {
-    if (addressData) {
-      router.push('/search');
+  const searchClick = (data) => {
+    if (data) {
+      setAddressData(data);
     }
   };
 
   return (
-    <div className="flex flex-row w-2/3 h-full">
+    <div className="flex flex-row w-4/5 h-full">
 
       <div className="flex flex-col w-1/2 pr-2 overflow-y-auto h-screen">
         <div className="mb-4">
           <h2 className='font-bold text-sm text-gray-500 mb-1'>Find Parking Near</h2>
-          <LoadScript
-            googleMapsApiKey="AIzaSyDLObtS4lYXqrA_Y_kF6VGxy-ogZFP5-lU"
-            libraries={libraries}
-          >
-            <Autocomplete
-              onLoad={onLoad}
-              onPlaceChanged={onPlaceChanged}
-            >
-              <input
-                ref={autocompleteRef}
-                type="text"
-                placeholder="Search Address"
-                className="border w-full h-10 px-2 text-base outline-none overflow-ellipsis overflow-hidden whitespace-nowrap placeholder-black-400"
-              />
-            </Autocomplete>
-            <button
-              type="submit"
-              className="absolute -right-4 top-6 transform -translate-y-1/2 -translate-x-1/2 rounded-full bg-custom-orange w-10 h-10 flex items-center justify-center"
-              onClick={searchClick}
-            >
-              <Image
-                src="/assets/images/search.png"
-                alt="search"
-                width={20}
-                height={20}
-              />
-            </button>
-          </LoadScript>
+          <SearchBar
+            placeholder="Search Address"
+            onSearch={searchClick}
+            className="border w-full h-10 px-2 text-base outline-none overflow-ellipsis overflow-hidden whitespace-nowrap placeholder-black-400"
+            showSearchButton={false}
+          />
         </div>
         <div className="flex justify-between space-x-4 mb-4 pr-4">
           <div className="w-1/2">
@@ -116,12 +102,11 @@ const ListingsSideBar = () => {
           </div>
         </div>
 
-        {/* Dropdown input */}
         <div className="mb-4">
           <h3 className='font-bold text-sm text-gray-500 mb-2'>Sort By</h3>
           <select
             className="border rounded p-2 w-full"
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setSort(e.target.value)}
           >
             <option value="distance">Sort By Distance</option>
             <option value="price">Sort By Price</option>
@@ -129,7 +114,7 @@ const ListingsSideBar = () => {
         </div>
 
         <hr className="border-t-2 border-gray-300" />
-        {/* Listings */}
+
         <div className="mt-4 w-full">
           {listings.length === 0 ? (
             <div className="border border-red-500 text-red-700 bg-red-100 rounded p-2 mb-2">
@@ -141,29 +126,63 @@ const ListingsSideBar = () => {
               <div
                 key={listing.id}
                 onClick={() => setSelectedListing(listing)}
-                className="border rounded p-2 mb-2 cursor-pointer"
+                className="flex flex-col border border-gray-300 p-4 mb-4 cursor-pointer rounded shadow-md"
               >
-                {listing.title}
+                <div className="flex flex-row justify-between">
+                  <div className="w-1/4">
+                    <Image
+                      src={listing.images[0]}
+                      alt="Listing Image"
+                      width={80}
+                      height={80}
+                      className="rounded"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between w-3/4 ml-4">
+                    <div className="flex flex-col h-1/2">
+                      <h3 className="font-bold text-sm text-gray-700">{listing.address.address}</h3>
+                      <p className="text-xs text-gray-500">${listing.price}/day</p>
+                    </div>
+                    <div className="flex flex-col h-1/2 pt-3">
+                      <p className="text-xs text-gray-500">{calculateDistanceInKm(listing.address.coordinates.lat, listing.address.coordinates.lng).toFixed(2)} kms</p>
+                      <div className="flex flex-row justify-between">
+                        <p className="text-xs text-gray-700">Fits a Van</p>
+                        <p className="text-xl font-bold text-gray-800 ml-2">${listing.price}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))
           )}
         </div>
-
       </div>
 
-      <CSSTransition
-        in={selectedListing !== null}
-        timeout={300}
-        classNames="slide"
-        unmountOnExit
-      >
-        {selectedListing && (
+      {selectedListing && (
+        <CSSTransition
+          in={selectedListing !== null}
+          timeout={300}
+          classNames="slide"
+          unmountOnExit
+        >
           <div className="mt-4 w-1/2 pl-2 bg-gray-200 p-4 rounded">
+            <button
+              className="right-4 top-4 rounded-full p-2"
+              onClick={() => setSelectedListing(null)}
+            >
+              <Image
+                src="/assets/icons/close.svg" // your close icon image path
+                alt="close"
+                width={20}
+                height={20}
+              />
+            </button>
+
             <h2>{selectedListing.title}</h2>
             <p>{selectedListing.description}</p>
           </div>
-        )}
-      </CSSTransition>
+        </CSSTransition>
+      )}
     </div >
   );
 };

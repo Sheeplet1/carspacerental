@@ -71,15 +71,17 @@ export const Navbar = () => {
           </Link>
           {
             user ? (
-              <div className="relative inline-block text-left">
+              <div className="relative inline-block text-left"
+                onMouseEnter={() => setToggleDropdown(true)}
+                onMouseLeave={() => setToggleDropdown(false)}
+              >
                 <div>
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 gap-x-2"
+                    className="inline-flex justify-center rounded-md bg-background px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 gap-x-2 hover:bg-gray-300 transition-colors duration-200"
                     id="menu-button"
                     aria-expanded="true"
                     aria-haspopup="true"
-                    onClick={() => setToggleDropdown(!toggleDropdown)}
                   >
                     {user.first_name} {user.last_name}
                     <Image
@@ -93,7 +95,7 @@ export const Navbar = () => {
                 </div>
 
                 {toggleDropdown && (
-                  <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
+                  <div className="absolute right-0 z-10 mt-0 w-56 origin-top-right rounded-md bg-background shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
                     <div className="py-1" role="none">
                       <Link href='/profile'>
                         <p
@@ -139,7 +141,7 @@ export const Navbar = () => {
                           Manage Bookings
                         </p>
                       </Link>
-                      <Link href='/manage-listings'>
+                      <Link href='/list-your-spot'>
                         <p
                           className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
                           role="menuitem"

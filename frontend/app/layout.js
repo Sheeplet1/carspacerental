@@ -1,22 +1,27 @@
+'use client'
+
 import "@styles/globals.css";
 
+import { LoadScript } from '@react-google-maps/api';
 import { Navbar } from "@components/Navbar";
 import UserProvider from "@contexts/UserProvider";
 
-export const metadata = {
-  title: 'SFCars',
-  description: 'Your perfect spot awaits - Discover and secure parking with ease.',
-}
+const libraries = ["places"];
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-background" style={{ overflowY: "hidden" }}>
+      <body className="bg-background">
         <UserProvider>
-          <main className='app'>
-            <Navbar />
-            {children}
-          </main>
+          <LoadScript
+            googleMapsApiKey="AIzaSyDLObtS4lYXqrA_Y_kF6VGxy-ogZFP5-lU"
+            libraries={libraries}
+          >
+            <main className='app'>
+              <Navbar />
+              {children}
+            </main>
+          </LoadScript>
         </UserProvider>
       </body>
     </html>

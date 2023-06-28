@@ -6,7 +6,11 @@ import { makeRequest } from '@utils/makeRequest';
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(
+    typeof window !== 'undefined' && window.localStorage 
+      ? localStorage.getItem('token') 
+      : ''
+  );
 
   const updateUser = async (token) => {
     const response = await makeRequest('/user/profile', 'GET');
