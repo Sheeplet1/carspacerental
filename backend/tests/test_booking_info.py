@@ -125,7 +125,7 @@ def test_cancel_booking(client, mock_db, user_token):
     resp = client.post('/listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
     
-    assert mock_db['UserAccount'].find_one()['current_bookings'] == [ObjectId(booking_id)]
+    assert mock_db['UserAccount'].find_one()['bookings'] == [ObjectId(booking_id)]
     assert mock_db['Bookings'].find_one()
     # post response to cancel booking
     response = client.delete(f'/bookings/{booking_id}', headers=user_token, json={
@@ -135,4 +135,4 @@ def test_cancel_booking(client, mock_db, user_token):
     
     # check its not in user profile, check its not in database
     assert mock_db['Bookings'].find_one() == None
-    assert mock_db['UserAccount'].find_one()['current_bookings'] == []
+    assert mock_db['UserAccount'].find_one()['bookings'] == []

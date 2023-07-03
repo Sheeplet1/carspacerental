@@ -81,8 +81,7 @@
 > ```
 > {
 >     "_id": "6496e8e2876de3535cf3aa02",
->     "completed_bookings": [],
->     "current_bookings": [],
+>     "bookings": [],
 >     "email": "example@gmail.com",
 >     "first_name": "example_first",
 >     "last_name": "example_last",
@@ -116,8 +115,7 @@
 > ```
 > {
 >     "_id": "6496e8e2876de3535cf3aa02",
->     "completed_bookings": [],
->     "current_bookings": [],
+>     "bookings": [],
 >     "email": "example@gmail.com",
 >     "first_name": "example_first",
 >     "last_name": "example_last",
@@ -346,8 +344,8 @@
 > {
 >     "consumer": ObjectId(6496e8e2876de3535cf3aa02)
 >     "listing_id": ObjectId(6496e8e2876de3535cf3aa02)
->     "start_time": '01 Jan 2022 00:00:00'
->     "end_time": '01 Jan 2023 00:00:00'
+>     "start_time": '2022-01-01T00:00:00'
+>     "end_time": '2022-01-23T00:00:00'
 >     "price": 100.0
 > }
 > ```
@@ -385,8 +383,8 @@
 >     "_id": str(ObjectId())
 >     "consumer": str(ObjectId())
 >     "listing_id": str(ObjectId())
->     "start_time": '01 Jan 2022 00:00:00'
->     "end_time": '05 Jan 2022 00:00:00'
+>     "start_time": '2022-01-01T00:00:00'
+>     "end_time": '2022-01-23T00:00:00'
 >     "price": 100.0
 > }
 > ```
@@ -406,7 +404,7 @@
 > ```
 > {
 >     "price": 200.0
->     "start_time": '01 Jan 2022 00:00:00'
+>     "start_time": '2022-01-01T00:00:00'
 > }
 
 ##### Responses
@@ -437,6 +435,22 @@
 
 </details>
 
+<details>
+  <summary><code>GET</code> <code><b>/profile/completed-bookings</b></code> <code>(gets user's completed bookings)</code></summary>
+
+##### Parameters
+
+> | name            | type   | data type | description               |
+> |-----------------|--------|-----------|---------------------------|
+> | `Authorization` | header | string    | "Bearer {token}"          |
+
+##### Responses
+
+> | http code | response                    |
+> |-----------|-----------------------------|
+> | `200`     | `{}` or `[{booking_infos}]` |
+
+</details>
 
 ## Database
 
@@ -451,8 +465,7 @@
 | `last_name`           | string   | "last"                               |
 | `phone_number`        | Array    | ["0412345678"]                       |
 | `payment_information` | Object   | {TODO}                               |
-| `current_bookings`    | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `completed_bookings`  | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `reviews`             | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 
@@ -478,8 +491,8 @@
 | `_id`         | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
 | `consumer`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
 | `booking`     | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `start_time`  | str      | 01 Jan 2022 00:00:00               |
-| `end_time`    | str      | 05 Jan 2022 00:00:00               |
+| `start_time`  | str      | 2022-01-01T00:00:00                |
+| `end_time`    | str      | 2022-01-05T00:00:00                |
 | `price`       | float    | 100.0                              |
 
 ### Reviews (TODO)

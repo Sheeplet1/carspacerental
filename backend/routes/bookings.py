@@ -1,12 +1,10 @@
 from bson import ObjectId
 from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from datetime import datetime as dt
 from werkzeug.exceptions import Forbidden
 
-from ..helpers import validate_jwt
-from ..db import bookings
-from ..db import db
+from .. import helpers
+from ..db import bookings, db
 
 OK = 200
 BAD_REQUEST = 400
@@ -17,7 +15,7 @@ bp = Blueprint('bookings', __name__, url_prefix='')
 @jwt_required()
 def new():
     # get user_id from token
-    consumer = validate_jwt(get_jwt_identity())
+    consumer = helpers.validate_jwt(get_jwt_identity())
     data = request.get_json()
 
     if "listing_id" not in data:
@@ -36,13 +34,10 @@ def new():
     collection = db.get_database()['Bookings']
     all_bookings = collection.find()
     
-    new_start = dt.strptime(data['start_time'], '%d %b %Y %H:%M:%S')
-    new_end = dt.strptime(data['end_time'], '%d %b %Y %H:%M:%S')
     for bkn in all_bookings:
-        exist_s = dt.strptime(bkn['start_time'], '%d %b %Y %H:%M:%S')
-        exist_e = dt.strptime(bkn['end_time'], '%d %b %Y %H:%M:%S')
         # if start and end are further ahead
-        if (new_start > exist_e and new_end > exist_e) or (new_start < exist_s and new_end < exist_s):
+        if (data['start_time'] > bkn['end_time'] and data['end_time'] > bkn['end_time']) or \
+           (data['start_time'] < bkn['start_time'] and data['end_time'] < bkn['start_time']):
             continue
         else:
             return {"error": "Invalid time slot"}, BAD_REQUEST
@@ -51,7 +46,7 @@ def new():
     data['consumer'] = consumer
     booking_id = bookings.new(data)
     response = {
-        "booking_id": str(booking_id)
+        "booking_id": booking_id
     }
     return response, OK
 
@@ -68,12 +63,12 @@ def info(booking_id):
         return { 'error': "Booking doesn't exist" }, BAD_REQUEST
     
     if request.method == "GET":
-        booking['_id'] = str(booking['_id'])
-        booking['consumer'] = str(booking['consumer'])
-        booking['listing_id'] = str(booking['listing_id'])
+        booking['_id'] = booking['_id']
+        booking['consumer'] = booking['consumer']
+        booking['listing_id'] = booking['listing_id']
         return booking, OK
     
-    user_id = validate_jwt(get_jwt_identity())
+    user_id = helpers.validate_jwt(get_jwt_identity())
     
     # TODO: Allow admins to bypass this
     if booking['consumer'] != user_id:
@@ -97,3 +92,15 @@ def info(booking_id):
         bookings.cancel(booking_id)
         
     return {}, OK
+
+@bp.route('profile/completed-bookings', methods=['GET'])
+@jwt_required()
+def completed():
+    user_id = helpers.validate_jwt(get_jwt_identity())
+    
+    c_bookings = []
+    completed_ids = bookings.get_completed(user_id)
+    for b_id in completed_ids:
+        c_bookings.append(bookings.get(b_id['_id']))
+    
+    return c_bookings, OK

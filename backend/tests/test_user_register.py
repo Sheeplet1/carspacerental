@@ -28,8 +28,7 @@ def test_successful_registration(client, mock_db):
     assert user["password"] == conftest.TEST_PW_HASH
     assert user["phone_number"] == [conftest.TEST_PN]
     assert user["payment_information"] == {}
-    assert user["current_bookings"] == []
-    assert user["completed_bookings"] == []
+    assert user["bookings"] == []
     assert user["reviews"] == []
     assert user["listings"] == []
     assert user["listings"] == []

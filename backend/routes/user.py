@@ -15,7 +15,6 @@ def profile():
     user = user_db.get_user(user_id)
 
     if request.method == "GET":
-        user["_id"] = str(user["_id"])
         user.pop("password")
         return user, 200
 
@@ -26,8 +25,7 @@ def profile():
         invalid_keys = [
             "_id",
             "password",
-            "current_bookings",
-            "completed_bookings",
+            "bookings",
             "reviews",
             "listings"
         ]
@@ -66,8 +64,6 @@ def get_user(user_id):
     if not user:
         return { "error": "Invalid user id" }, 400
 
-    user["_id"] = str(user["_id"])
-
     invalid_keys = [
         "password",
         "payment_information",
@@ -77,4 +73,3 @@ def get_user(user_id):
         user.pop(key)
 
     return user, 200
-

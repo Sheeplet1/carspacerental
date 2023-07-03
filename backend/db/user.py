@@ -14,8 +14,7 @@ def user_register(data: dict) -> ObjectId:
         "last_name": data["last_name"],
         "phone_number": [data["phone_number"]],
         "payment_information": {},
-        "current_bookings": [],
-        "completed_bookings": [],
+        "bookings": [],
         "reviews": [],
         "listings": []
     }

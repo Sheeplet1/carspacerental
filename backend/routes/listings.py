@@ -12,8 +12,8 @@ bp = Blueprint('listings', __name__, url_prefix='/listings')
 def get_all():
     listings = listings_db.all()
     for listing in listings:
-        listing["_id"] = str(listing["_id"])
-        listing["provider"] = str(listing["provider"])
+        listing["_id"] = listing["_id"]
+        listing["provider"] = listing["provider"]
     return { "listings": listings }, 200
 
 @bp.route('/new', methods=['POST'])
@@ -47,7 +47,7 @@ def new():
 
     listing_id = listings_db.new(user_id, data)
 
-    response = { "listing_id": str(listing_id) }
+    response = { "listing_id": listing_id }
     return response, 200
 
 @bp.route('/<listing_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -64,8 +64,8 @@ def info(listing_id):
         return { "error": "Invalid listing id" }, 400
 
     if request.method == "GET":
-        listing["_id"] = str(listing["_id"])
-        listing["provider"] = str(listing["provider"])
+        listing["_id"] = listing["_id"]
+        listing["provider"] = listing["provider"]
         return listing, 200
 
     user_id = validate_jwt(get_jwt_identity())

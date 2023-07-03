@@ -8,9 +8,10 @@ from flask_jwt_extended import JWTManager
 
 from ..routes.auth import bp as auth_bp
 from ..routes.listings import bp as listings_bp
-from ..routes.booking_route import bp as booking_bp
+from ..routes.bookings import bp as booking_bp
 from ..routes.user import bp as user_bp
 from ..helpers import generate_hash
+from ..json_encoder import CustomJSONProvider
 
 TEST_JWT_KEY = "testingsecretkey"
 TEST_PW_HASH = generate_hash("password123")
@@ -22,8 +23,8 @@ TEST_PW = "password123"
 TEST_FIRST_NAME = "John"
 TEST_LAST_NAME = "Doe"
 TEST_PN = "0416 123 980"
-TEST_START = '01 Jan 2022 00:00:00'
-TEST_END = '01 Jan 2023 00:00:00'
+TEST_START = '2022-01-01T00:00:00'
+TEST_END = '2023-01-01T00:00:00'
 
 USER_STUB = {
     "_id": TEST_UID,
@@ -50,8 +51,8 @@ LISTING_STUB = {
 }
 
 BOOKING_STUB = {
-    "_id": str(TEST_BID),
-    "listing_id": str(TEST_LID),
+    "_id": TEST_BID,
+    "listing_id": TEST_LID,
     "start_time": TEST_START,
     "end_time": TEST_END,
     "price": 100
@@ -72,6 +73,7 @@ def mock_db():
 def client(mock_db):
     # create test flask client
     app = Flask(__name__)
+    app.json = CustomJSONProvider(app)
 
     app.config["JWT_SECRET_KEY"] = TEST_JWT_KEY
     JWTManager(app)
