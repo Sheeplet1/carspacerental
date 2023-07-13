@@ -120,184 +120,148 @@ const ProfilePage = () => {
     }
   };
 
+  const handlePaymentDetailsClick = () => {
+    // Redirect to payment page
+    router.push('/payment');
+  };
+
+  const handleVehicleDetailsClick = () => {
+    // Redirect to vehicle details page
+    router.push('/vehicle-details');
+  };
+
   return (
-    <div className='flex flex-row h-screen mt-2 bottom-44'>
-      <div className='relative w-1/3'>
-        <div
-          className='w-40 h-40 rounded-full bg-gray-300 cursor-pointer relative'
-          onMouseEnter={handlePhotoMouseEnter}
-          onMouseLeave={handlePhotoMouseLeave}
-          onClick={handlePhotoChangeClick}
-        >
-          <img src={user.profilePhoto || '/assets/icons/profile.svg'} alt='Profile' className='w-40 h-40 rounded-full' />
-          {showChangePhotoButton && (
-            <button className='absolute bg-blue-500 text-white py-1 px-2 rounded-md transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2'>
-              Change Photo
-            </button>
-          )}
-          <input
-            type='file'
-            accept='image/*'
-            className='hidden'
-            ref={fileInputRef}
-            onChange={handleFileInputChange}
-          />
+    <div className='flex flex-col h-screen mt-2'>
+     <div className='w-8/5 mx-auto left-0 ml-2 pl-4'>
+        <h1 className='heading_text mb-4'>Profile</h1>
+        <div className='flex'>
+          <div className='w-8/5'>
+            <div
+              className='w-40 h-40 rounded-full bg-gray-300 cursor-pointer relative'
+              onMouseEnter={handlePhotoMouseEnter}
+              onMouseLeave={handlePhotoMouseLeave}
+              onClick={handlePhotoChangeClick}
+            >
+              <img src={user.profilePhoto || '/assets/icons/profile.svg'} alt='Profile' className='w-40 h-40 rounded-full' />
+              {showChangePhotoButton && (
+                <button className='absolute bg-blue-500 text-white py-1 px-2 rounded-md transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2'>
+                  Change Photo
+                </button>
+              )}
+              <input type='file' accept='image/*' className='hidden' ref={fileInputRef} onChange={handleFileInputChange} />
+            </div>
+          </div>
+          <div className='w-1/3 pl-6'>
+            <div className='mt-2'>
+              <label className='block mb-2'>
+                Email:
+                {editingEmail ? (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder='Enter new email' />
+                ) : (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={oldEmail} readOnly />
+                )}
+              </label>
+              {editingEmail ? (
+                <div className='flex'>
+                  <button className='blue_btn' onClick={handleSaveEmailClick}>
+                    Save
+                  </button>
+                  <button className='blue_btn ml-2' onClick={handleCancelEmailClick}>
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button className='blue_btn' onClick={handleEditEmailClick}>
+                  Edit
+                </button>
+              )}
+            </div>
+            <div className='mt-4'>
+              <label className='block mb-2'>
+                Phone Number:
+                {editingPhoneNumber ? (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={newPhoneNumber} onChange={(e) => setNewPhoneNumber(e.target.value)} placeholder='Enter new phone number' />
+                ) : (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={oldPhoneNumber} readOnly />
+                )}
+              </label>
+              {editingPhoneNumber ? (
+                <div className='flex'>
+                  <button className='blue_btn' onClick={handleSavePhoneNumberClick}>
+                    Save
+                  </button>
+                  <button className='blue_btn ml-2' onClick={handleCancelPhoneNumberClick}>
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button className='blue_btn' onClick={handleEditPhoneNumberClick}>
+                  Edit
+                </button>
+              )}
+            </div>
+            <div className='mt-4'>
+              <label className='block mb-2'>
+                First Name:
+                {editingFirstName ? (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={newFirstName} onChange={(e) => setNewFirstName(e.target.value)} placeholder='Enter new first name' />
+                ) : (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={oldFirstName} readOnly />
+                )}
+              </label>
+              {editingFirstName ? (
+                <div className='flex'>
+                  <button className='blue_btn' onClick={handleSaveFirstNameClick}>
+                    Save
+                  </button>
+                  <button className='blue_btn ml-2' onClick={handleCancelFirstNameClick}>
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button className='blue_btn' onClick={handleEditFirstNameClick}>
+                  Edit
+                </button>
+              )}
+            </div>
+            <div className='mt-4'>
+              <label className='block mb-2'>
+                Last Name:
+                {editingLastName ? (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={newLastName} onChange={(e) => setNewLastName(e.target.value)} placeholder='Enter new last name' />
+                ) : (
+                  <input className='border-2 border-gray-300 rounded-3xl p-2 mt-2' type='text' value={oldLastName} readOnly />
+                )}
+              </label>
+              {editingLastName ? (
+                <div className='flex'>
+                  <button className='blue_btn' onClick={handleSaveLastNameClick}>
+                    Save
+                  </button>
+                  <button className='blue_btn ml-2' onClick={handleCancelLastNameClick}>
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button className='blue_btn' onClick={handleEditLastNameClick}>
+                  Edit
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-      <div className='relative bottom-14 flex flex-col mr-44'>
-        <h1 className='heading_text'>Profile</h1>
-        <div className='flex items-center mb-10'>
-          <label className='mb-2'>
-            Email:
-            <div className='mb-10'>
-              {editingEmail ? (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  placeholder='Enter new email'
-                />
-              ) : (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={oldEmail}
-                  readOnly
-                />
-              )}
-            </div>
-          </label>
-          {editingEmail ? (
-            <div className='flex ml-4'>
-              <button className='blue_btn' onClick={handleSaveEmailClick}>
-                Save
-              </button>
-              <button className='blue_btn' onClick={handleCancelEmailClick}>
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <button className='blue_btn' onClick={handleEditEmailClick}>
-              Edit
-            </button>
-          )}
-        </div>
-        <div className='flex items-center mb-10'>
-          <label className='mb-2'>
-            Phone Number:
-            <div className='mb-10'>
-              {editingPhoneNumber ? (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={newPhoneNumber}
-                  onChange={(e) => setNewPhoneNumber(e.target.value)}
-                  placeholder='Enter new phone number'
-                />
-              ) : (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={oldPhoneNumber}
-                  readOnly
-                />
-              )}
-            </div>
-          </label>
-          {editingPhoneNumber ? (
-            <div className='flex ml-4'>
-              <button className='blue_btn' onClick={handleSavePhoneNumberClick}>
-                Save
-              </button>
-              <button className='blue_btn' onClick={handleCancelPhoneNumberClick}>
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <button className='blue_btn' onClick={handleEditPhoneNumberClick}>
-              Edit
-            </button>
-          )}
-        </div>
-        <div className='flex items-center mb-10'>
-          <label className='mb-2'>
-            First Name:
-            <div className='mb-10'>
-              {editingFirstName ? (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={newFirstName}
-                  onChange={(e) => setNewFirstName(e.target.value)}
-                  placeholder='Enter new first name'
-                />
-              ) : (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={oldFirstName}
-                  readOnly
-                />
-              )}
-            </div>
-          </label>
-          {editingFirstName ? (
-            <div className='flex ml-4'>
-              <button className='blue_btn' onClick={handleSaveFirstNameClick}>
-                Save
-              </button>
-              <button className='blue_btn' onClick={handleCancelFirstNameClick}>
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <button className='blue_btn' onClick={handleEditFirstNameClick}>
-              Edit
-            </button>
-          )}
-        </div>
-        <div className='flex items-center mb-10'>
-          <label className='mb-2'>
-            Last Name:
-            <div className='mb-10'>
-              {editingLastName ? (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={newLastName}
-                  onChange={(e) => setNewLastName(e.target.value)}
-                  placeholder='Enter new last name'
-                />
-              ) : (
-                <input
-                  className='w-96 border-2 border-gray-300 rounded-3xl p-2 mt-2'
-                  type='text'
-                  value={oldLastName}
-                  readOnly
-                />
-              )}
-            </div>
-          </label>
-          {editingLastName ? (
-            <div className='flex ml-4'>
-              <button className='blue_btn' onClick={handleSaveLastNameClick}>
-                Save
-              </button>
-              <button className='blue_btn' onClick={handleCancelLastNameClick}>
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <button className='blue_btn' onClick={handleEditLastNameClick}>
-              Edit
-            </button>
-          )}
-        </div>
+
+      <div className='flex justify-center mt-6'>
+        <button className='blue_btn' onClick={handlePaymentDetailsClick}>
+          Payment Details
+        </button>
+        <button className='blue_btn ml-4' onClick={handleVehicleDetailsClick}>
+          Vehicle Details
+        </button>
       </div>
     </div>
   );
 };
 
 export default ProfilePage;
-
