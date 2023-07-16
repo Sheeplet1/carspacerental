@@ -228,6 +228,46 @@
 > | http code | response                         |
 > |-----------|----------------------------------|
 > | `200`     | `{ "listings": Listings Array }` |
+>
+> Listing Details:
+> ```
+> {
+>   listing_id: ....
+>   address: {
+>     "formatted_address": "Sydney NSW, Australia",
+>     "streetNumber": "",
+>     "street": "",
+>     "city": "",
+>     "state": "NSW",
+>     "postcode": "",
+>     "country": "Australia",
+>     "lat": -33.8688197,
+>     "lng": 151.2092955,
+>     "place_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
+>   },
+>   type: 'Carport / Driveway / Garage / Parking Lot',
+>   max_vehicle_size: 'Bike / Hatchback / Sedan / 4WD/SUV / Van / Truck',
+>   access_type: 'None / Boom Gate / Key / Passcode / Permit / Remote / Ticket / Swipe Card',
+>   ev_charging: true / false,
+>   description: 'This is a description',
+>   instructions: 'This is the instructions',
+>   casual_booking: true / false,
+>   monthly_booking: true / false,
+>   pricing: {
+>     "hourly_rate": 100,
+>     "monthly_rate": 1000,
+>   }
+>   photos: [image1, image2, image3]
+>   "availability": {
+>     "is_24_7": true / false,
+>     "start_time": "08:00",
+>     "end_time": "17:00",
+>     "available_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+>   }
+>   "safety_features": ["CCTV", "On-site security", "Well lit"],
+>   "amenities": ["Restrooms", "Nearby shopping", "Charging station"],
+> }
+> ```
 
 </details>
 
