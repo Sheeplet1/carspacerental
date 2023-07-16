@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
-import { makeRequest } from '@utils/makeRequest';
 import SearchBar from '@components/SearchBar';
 import TimePicker from '@components/TimePicker';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -44,7 +43,7 @@ const calculateTotalPrice = (hourlyPrice, startDate, endDate, startTime, endTime
   return totalPrice;
 }
 
-const ListingsSideBar = ({listings, setListings, selectedListing, setSelectedListing}) => {
+const ListingsSideBar = ({ listings, setListings, selectedListing, setSelectedListing }) => {
   const router = useRouter();
   const { user } = useContext(UserContext);
   const searchParams = useSearchParams();
@@ -59,9 +58,6 @@ const ListingsSideBar = ({listings, setListings, selectedListing, setSelectedLis
   const [sort, setSort] = useState('distance');
   const [imageIndex, setImageIndex] = useState(0);
   const [isCasual, setIsCasual] = useState(true);
-
-  const sixMonthsFromNow = new Date();
-  sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
 
   const calculateDistanceInKm = (lat1, lon1) => {
     const lat2 = addressData.coordinates.lat;
@@ -144,8 +140,20 @@ const ListingsSideBar = ({listings, setListings, selectedListing, setSelectedLis
   }
 
   return (
-    <div className="flex flex-row h-fit">
+    <div className="flex flex-row">
       <div className="flex flex-col pr-2">
+        <div className="flex justify-start space-x-4 mb-4 pr-4">
+          <button
+            className={`font-black text-xl mb-1 hover:text-custom-orange ${isCasual ? "text-custom-orange underline" : ""}`}
+            onClick={() => setIsCasual(true)}>
+            Casual
+          </button>
+          <button
+            className={`font-black text-xl mb-1 hover:text-custom-orange ${!isCasual ? "text-custom-orange underline" : ""}`}
+            onClick={() => setIsCasual(false)}>
+            Monthly
+          </button>
+        </div>
         <div className="mb-4">
           <h2 className='font-bold text-sm text-gray-500 mb-1'>Find Parking Near</h2>
           <SearchBar
