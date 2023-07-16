@@ -59,6 +59,35 @@
 
 </details>
 
+<details>
+  <summary><code>POST</code> <code><b>/auth/register/admin</b></code> <code>(registers a new admin)</code></summary>
+
+##### Parameters
+
+> | name             | type | data type | description   |
+> |------------------|------|-----------|---------------|
+> | Register Details | body | Object    | New User data |
+>
+> Register Details:
+> ```
+> {
+>     "email": "example@email.com",
+>     "password": "example_password"
+>     "first_name": "example_first"
+>     "last_name": "example_last"
+>     "phone_number": "0412345678"
+> }
+> ```
+
+##### Responses
+
+> | http code | response                      |
+> |-----------|-------------------------------|
+> | `200`     | `{ "token": str(ObjectId) }`  |
+> | `400`     | `{ "error": "_ is required"}` |
+
+</details>
+
 ### User
 
 <details>
@@ -395,7 +424,7 @@
 
 <details>
   <summary><code>PUT</code> <code><b>/bookings/{booking_id}</b></code> <code>(updates a specific booking</code></summary>
-  
+
 ##### PARAMETERS
 
 > | name         | type  | data type     | description      |

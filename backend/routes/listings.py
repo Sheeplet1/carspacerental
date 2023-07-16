@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from werkzeug.exceptions import Forbidden
 
-from ..helpers import validate_jwt
+from ..helpers import validate_jwt, is_admin
 from ..db import listings as listings_db
 
 bp = Blueprint('listings', __name__, url_prefix='/listings')
@@ -23,7 +23,6 @@ def new():
 
     data = request.get_json()
 
-    # TODO: VALIDATE ADDRESS PROPERLY
     if "address" not in data:
         return { "error": "Valid address is required" }, 400
 
@@ -73,8 +72,7 @@ def info(listing_id):
 
     user_id = validate_jwt(get_jwt_identity())
 
-    # TODO: Allow Admin to bypass this
-    if listing["provider"] != user_id:
+    if listing["provider"] != user_id and not is_admin(user_id):
         raise Forbidden
 
     if request.method == "PUT":

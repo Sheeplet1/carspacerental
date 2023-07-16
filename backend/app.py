@@ -3,11 +3,11 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from . import config
 from .routes import auth, listings, user
-from json_encoder import CustomJSONProvider
+from . import json_encoder
 
 def create_app():
     app = Flask(__name__)
-    app.json = CustomJSONProvider(app)
+    app.json = json_encoder.CustomJSONProvider(app)
 
     CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
@@ -20,4 +20,4 @@ def create_app():
     app.register_blueprint(user.bp)
 
     return app
-  
+

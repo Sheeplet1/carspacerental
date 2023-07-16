@@ -110,3 +110,22 @@ def user_token(client):
        "Authorization": "Bearer " + resp.get_json()["token"]
     }
     yield token_head
+
+@pytest.fixture
+def admin_token(client):
+    """
+    Registers a user and yields their token
+    """
+    register_data = {
+        "email": "admin@email.com",
+        "password": TEST_PW + "admin",
+        "first_name": TEST_FIRST_NAME + "admin",
+        "last_name": TEST_LAST_NAME + "admin",
+        "phone_number": "0400023646",
+    }
+
+    resp = client.post('/auth/register/admin', json=register_data)
+    token_head = {
+       "Authorization": "Bearer " + resp.get_json()["token"]
+    }
+    yield token_head
