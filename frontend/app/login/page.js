@@ -35,15 +35,17 @@ const Login = () => {
       } else {
         localStorage.setItem('token', response.token);
         setToken(response.token);
-        router.push('/');
+        router.push('/search');
       }
     }
   }
 
   return (
-    <div className='flex flex-row h-screen mt-14'>
-      <Sidebar />
-      <div className='relative bottom-14 flex flex-col mr-44'>
+    <div className='flex flex-row mt-12'>
+      <div className='absolute left-20'>
+        <Sidebar />
+      </div>
+      <div className='flex flex-col mr-44'>
         <h1 className='heading_text'>Login</h1>
 
         <label htmlFor='email' className='mb-2'>
@@ -68,9 +70,11 @@ const Login = () => {
 
         <div className='flex justify-between'>
           {/* <Link href='/'> */}
-          <button className='blue_btn'>
-            Back
-          </button>
+          <Link href='/'>
+            <button className='blue_btn'>
+              Back
+            </button>
+          </Link>
           {/* </Link>
           <Link> */}
           <button className='blue_btn' onClick={() => validateLogin()}>

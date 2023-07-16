@@ -5,6 +5,7 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./node_modules/tailwind-datepicker-react/dist/**/*.js",
   ],
   theme: {
     extend: {
@@ -18,6 +19,12 @@ module.exports = {
         'custom-blue': '#6ED4D4',
         'background': '#F2F1F0',
       },
+      maxWidth: {
+        '8xl': '100rem',
+      },
+      spacing: {
+        '95': '382px'
+      }
     },
   },
   variants: {
