@@ -8,7 +8,7 @@ def test_successful_booking(client, mock_db, user_token):
     THEN check that a '200' (OK) status code is returned and booking is added
          to the user's acc and the listing
     """
-    # register user one and insert listing into mock_db
+    # register Provider and insert listing into mock_db
     user_stub = conftest.USER_STUB.copy()
     user_stub['listings'] = [conftest.TEST_LID]
     
@@ -194,3 +194,16 @@ def test_missing_end_time(client, user_token):
     assert response.json == {
         "error": "Valid end time is required"
     }
+    
+def test_user_books_own_listing(client, user_token, mock_db):
+    exist_user = mock_db['UserAccount'].find_one()
+    
+    exist_user['listings'] = [conftest.TEST_LID]
+    
+    listing_stub = conftest.LISTING_STUB.copy()
+    listing_stub['provider'] = exist_user['_id']
+    mock_db['Listings'].insert_one(listing_stub)
+        
+    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    resp = client.post('/listings/book', headers=user_token, json=stub)
+    assert resp.status_code == conftest.BAD_REQUEST

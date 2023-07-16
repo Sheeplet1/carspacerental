@@ -32,6 +32,8 @@ def test_get_exists(client, mock_db, user_token):
     WHEN the '/bookings/:booking_id' is called with GET
     THEN check that a '200' (OK) status code is returned and the booking is returned
     """
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
+    
     stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
 
     resp = client.post('/listings/book', headers=user_token, json=stub)
@@ -42,12 +44,14 @@ def test_get_exists(client, mock_db, user_token):
     })
     assert booking
     
-def test_put_invalid_user(client, user_token):
+def test_put_invalid_user(client, user_token, mock_db):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/bookings/:booking_id' is called with PUT from the wrong user
     THEN check that a '400' (BAD_REQUEST) status code is returned
     """
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
+    
     resp = client.post('/auth/register', json={
         "email": "randomuser@gmail.com",
         "password": conftest.TEST_PW,
@@ -71,6 +75,8 @@ def test_put_valid(client, mock_db, user_token):
     WHEN the '/bookings/:booking_id' is called with PUT
     THEN check that a '200' (OK) status code is returned
     """
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
+    
     stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
@@ -82,7 +88,8 @@ def test_put_valid(client, mock_db, user_token):
     assert resp.status_code == conftest.OK
     assert mock_db['Bookings'].find_one()['price'] == 200
     
-def test_put_invalid_key(client, user_token):
+def test_put_invalid_key(client, user_token, mock_db):
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
     stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
@@ -96,6 +103,8 @@ def test_put_invalid_key(client, user_token):
     }
 
 def test_put_invalid_value(client, mock_db, user_token):
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
+    
     stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']

@@ -30,6 +30,11 @@ def new():
     if "price" not in data or not str(data["price"]).replace('.', '', 1).isdigit():
         return { "error": "Valid pricing is required" }, BAD_REQUEST
     
+    # check if user is trying to book their own listing
+    listing = db.get_database()['Listings'].find_one({'_id': ObjectId(data['listing_id'])})
+    if listing['provider'] == consumer:
+        return { 'error': 'User cannot book their own listing' }, BAD_REQUEST
+    
     # check if booking overlaps with existing bookings
     collection = db.get_database()['Bookings']
     all_bookings = collection.find()

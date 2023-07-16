@@ -31,7 +31,6 @@ def test_successful_registration(client, mock_db):
     assert user["bookings"] == []
     assert user["reviews"] == []
     assert user["listings"] == []
-    assert user["listings"] == []
 
 def test_missing_email(client):
     """

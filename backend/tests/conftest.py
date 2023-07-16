@@ -10,6 +10,7 @@ from ..routes.auth import bp as auth_bp
 from ..routes.listings import bp as listings_bp
 from ..routes.bookings import bp as booking_bp
 from ..routes.user import bp as user_bp
+from ..routes.payments import bp as payments_bp
 from ..helpers import generate_hash
 from ..json_encoder import CustomJSONProvider
 
@@ -41,9 +42,10 @@ LISTING_STUB = {
     "address": {
         "street": "unsw"
     },
-    "price": 100,
-    "space_type": "parking lot",
-    "max_size": "suv",
+    "hourly_price": 4.2,
+    "daily_price": 100,
+    "space_type": "Driveway",
+    "max_size": "SUV",
     "description": "none",
     "access_type": "key card",
     "images": ["image1", "image2"],
@@ -82,6 +84,7 @@ def client(mock_db):
     app.register_blueprint(listings_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(payments_bp)
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
 

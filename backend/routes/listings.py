@@ -27,8 +27,11 @@ def new():
     if "address" not in data:
         return { "error": "Valid address is required" }, 400
 
-    if "price" not in data or not str(data["price"]).replace('.', '', 1).isdigit():
-        return { "error": "Valid price is required" }, 400
+    if "hourly_price" not in data or not str(data["hourly_price"]).replace('.', '', 1).isdigit():
+        return { "error": "Valid hourly price is required" }, 400
+
+    if "daily_price" not in data or not str(data["daily_price"]).replace('.', '', 1).isdigit():
+        return { "error": "Valid daily price is required" }, 400
 
     if "space_type" not in data:
         return { "error": "Valid car space type is required" }, 400

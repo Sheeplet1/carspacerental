@@ -16,7 +16,8 @@ def user_register(data: dict) -> ObjectId:
         "payment_information": {},
         "bookings": [],
         "reviews": [],
-        "listings": []
+        "listings": [],
+        "revenue": 0
     }
 
     collection = db.get_database()["UserAccount"]

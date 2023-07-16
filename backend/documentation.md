@@ -89,7 +89,8 @@
 >     "phone_number": [
 >         "0412345678"
 >     ],
->     "reviews": []
+>     "reviews": [],
+>     "revenue": 0
 > }
 > ```
 
@@ -126,7 +127,8 @@
 >     "phone_number": [
 >         "0412345678"
 >     ],
->     "reviews": []
+>     "reviews": [],
+>     "revenue": 0
 > }
 > ```
 
@@ -265,7 +267,8 @@
 >     "address": {
 >         TODO
 >     },
->     "price": 100,
+>     "hourly_price": 5,
+>     "daily_price": 120,
 >     "space_type": "Driveway",
 >     "max_size": "SUV",
 >     "description": "Listing Description",
@@ -294,7 +297,7 @@
 > Update Info Example:
 > ```
 > {
->     "price": 200,
+>     "daily_price": 6,
 >     "space_type": "Garage",
 > }
 > ```
@@ -468,21 +471,23 @@
 | `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `reviews`             | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `revenue`             | float    | 200.0
 
 ### Listings
 
-| Field         | Type     | Example                            |
-| ------------- | -------- | -----------------------------------|
-| `_id`         | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `provider`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `address`     | Object   | {TODO}                             |
-| `price`       | float    | 100.0                              |
-| `space_type`  | string   | "Driveway"                         |
-| `max_size`    | string   | "SUV"                              |
-| `description` | string   | "Listing Description"              |
-| `access_type` | string   | "Key Card"                         |
-| `images`      | Array    | ["Base64 encoded image"]           |
-| `features`    | Array    | ["Electric Charging"]              |
+| Field           | Type     | Example                            |
+| -------------   | -------- | -----------------------------------|
+| `_id`           | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `provider`      | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `address`       | Object   | {TODO}                             |
+| `hourly_price`  | float    | 5.0                                |
+| `daily_price`   | float    | 100.0                              |
+| `space_type`    | string   | "Driveway"                         |
+| `max_size`      | string   | "SUV"                              |
+| `description`   | string   | "Listing Description"              |
+| `access_type`   | string   | "Key Card"                         |
+| `images`        | Array    | ["Base64 encoded image"]           |
+| `features`      | Array    | ["Electric Charging"]              |
 
 ### Bookings
 
