@@ -20,7 +20,7 @@ module.exports = {
         'background': '#F2F1F0',
       },
       maxWidth: {
-        '8xl': '100rem',
+        '8xl': '105rem',
       },
       spacing: {
         '95': '382px'

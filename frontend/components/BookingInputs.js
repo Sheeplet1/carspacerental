@@ -1,9 +1,23 @@
-const BookingInputs = ({ searchClick, startDate, setStartDate, endDate, setEndDate, minStartTime, startTime, setStartTime, minEndTime, endTime, setEndTime, setSort }) => {
+import SearchBar from '@components/SearchBar';
+import TimePicker from '@components/TimePicker';
+import { useSearchParams } from 'next/navigation';
+
+const BookingInputs = ({ searchClick, isCasual, startDate, setStartDate, endDate, setEndDate, minStartTime, startTime, setStartTime, minEndTime, endTime, setEndTime, setSort }) => {
+  const searchParams = useSearchParams();
+
   const sixMonthsFromNow = new Date();
   sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
 
   const twoWeeksFromStartDay = new Date(startDate);
   twoWeeksFromStartDay.setDate(twoWeeksFromStartDay.getDate() + 14);
+
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+  
+    return `${year}-${month}-${day}`;
+  };
 
   return (
     <div>
@@ -18,7 +32,7 @@ const BookingInputs = ({ searchClick, startDate, setStartDate, endDate, setEndDa
         />
       </div>
       {
-        isCasual ? (
+        !isCasual ? (
           <>
             <div className="flex justify-between space-x-4 mb-4 pr-4">
               <div className="w-1/2">

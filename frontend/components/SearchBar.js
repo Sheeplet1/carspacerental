@@ -22,6 +22,10 @@ function SearchBar({ placeholder, onSearch, className, showSearchButton, initial
     if (autocomplete !== null) {
       const place = autocomplete.getPlace();
 
+      if (!place) {
+        return;
+      }
+
       let streetNumber = '';
       let street = '';
       let city = '';
@@ -62,7 +66,7 @@ function SearchBar({ placeholder, onSearch, className, showSearchButton, initial
 
       return {
           formatted_address: place.formatted_address,
-          streetNumber,
+          street_number: streetNumber,
           street,
           city,
           state,
