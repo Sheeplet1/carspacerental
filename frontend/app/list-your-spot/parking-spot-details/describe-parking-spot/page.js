@@ -14,14 +14,19 @@ const DescribeParkingSpot = () => {
   const [driverInstructionsError, setDriverInstructionsError] = useState('');
 
   const handleNextClick = () => {
-    if (describeParkingSpace === '' || driverInstructions === '') {
-      if (describeParkingSpace === '') {
+    if (describeParkingSpace === '') {
         setDescribeParkingSpaceError('Please describe your parking space.');
-      }
-      if (driverInstructions === '') {
-        setDriverInstructionsError('Please provide instructions for the driver');
-      }
     } else {
+      setDescribeParkingSpaceError('');
+    }
+
+    if (driverInstructions === '') {
+      setDriverInstructionsError('Please provide instructions for the driver.');
+    } else {
+      setDriverInstructionsError('');
+    }
+
+    if (describeParkingSpace && driverInstructions) {
       router.push('/list-your-spot/parking-spot-details/describe-parking-spot/set-price');
     }
   }

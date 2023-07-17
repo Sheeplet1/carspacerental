@@ -24,13 +24,25 @@ const SetPrice = () => {
   }
 
   const handleNextClick = () => {
+    const ratePattern = /^\d+(\.\d+)?$/;
+    let hourlyExist = !!hourlyPrice;
+    let hourlyValid = hourlyExist && ratePattern.test(hourlyPrice);
+    let monthlyExist = !!monthlyPrice;
+    let monthlyValid = monthlyExist && ratePattern.test(monthlyPrice);
+
     if (!isHourlyActive && !isMonthlyActive) {
       setErrorMessage('Please select at least hourly or monthly booking.');
-    } else if (isHourlyActive && hourlyPrice === '') {
-      setErrorMessage('Please enter an hourly rate.');
-    } else if (isMonthlyActive && monthlyPrice === '') {
-      setErrorMessage('Please enter a monthly rate.');
-    } else {
+    }
+
+    if (isHourlyActive) {
+      setErrorMessage(hourlyExist ? (hourlyValid ? '' : 'Please enter digits only.') : 'Please enter an hourly rate.')
+    }
+
+    if (isMonthlyActive) {
+      setErrorMessage(monthlyExist ? (monthlyValid ? '' : 'Please enter digits only.') : 'Please enter a monthly rate.')
+    }
+
+    if ((isHourlyActive && hourlyValid) || (isMonthlyActive && monthlyValid)) {
       router.push('/list-your-spot/parking-spot-details/describe-parking-spot/set-price/confirm-listing');
     }
   }

@@ -112,9 +112,13 @@ const ParkingSpotDetails = () => {
     if (selectedTypeOfSpot === '' || selectedMaxVehicleSize === '') {
       if (selectedTypeOfSpot === '') {
         setTypeOfSpotError('Type of Spot is required');
+      } else {
+        setTypeOfSpotError('');
       }
       if (selectedMaxVehicleSize === '') {
       setMaxVehicleSizeError('Max. Vehicle Size is required');
+      } else {
+        setMaxVehicleSizeError('');
       }
     } else {
       router.push('/list-your-spot/parking-spot-details/describe-parking-spot');
@@ -129,12 +133,12 @@ const ParkingSpotDetails = () => {
 
           <h2 className='text-lg font-bold'>Space Details</h2>
 
-          <label className='mb-2 mt-2'>Type of Spot</label>
+          <label className='mt-2 mb-1'>Type of Spot</label>
           <div className='relative'>
             <button
                 id='dropdownDefaultButton-spotType'
                 data-dropdown-toggle='typeOfSpot'
-                className={`text-gray-500 text-left bg-white w-96 border-b border-black p-2 mb-4 ${typeOfSpotError ? 'border-red-500' : ''}`}
+                className={`text-gray-500 text-left bg-white w-96 border-b border-black p-2 ${typeOfSpotError ? 'border-red-500' : ''}`}
                 type='button'
                 onClick={() => toggleDropdown('typeOfSpot')}>
                 {selectedTypeOfSpot || 'Choose your type of spot'}
@@ -163,12 +167,12 @@ const ParkingSpotDetails = () => {
             <p className='text-red-500 text-xs mt-1'>{typeOfSpotError}</p>
           )}
 
-          <label className='mb-2'>Max. Vehicle Size</label>
+          <label className='mt-2 mb-1'>Max. Vehicle Size</label>
           <div className='relative'>
             <button
               id='dropdownDefaultButton-vehicleSize'
               data-dropdown-toggle='maxVehicleSize'
-              className={`text-gray-500 text-left bg-white w-96 border-b border-black p-2 mb-4 ${maxVehicleSizeError ? 'border-red-500' : ''}`}
+              className={`text-gray-500 text-left bg-white w-96 border-b border-black p-2 ${maxVehicleSizeError ? 'border-red-500' : ''}`}
               type='button'
               onClick={() => toggleDropdown('maxVehicleSize')}>
               {selectedMaxVehicleSize || 'Select max vehicle size'}
@@ -197,8 +201,8 @@ const ParkingSpotDetails = () => {
             <p className='text-red-500 text-xs mt-1'>{maxVehicleSizeError}</p>
           )}
 
-          <h6 className='text-lg font-bold'>How can drivers access this space? (optional)</h6>
-          <label className='mb-2 mt-2'>Access Details:</label>
+          <h6 className='text-lg font-bold mt-4'>How can drivers access this space? (optional)</h6>
+          <label className='mt-2 mb-1'>Access Details:</label>
           <div className='relative'>
             <button
               id='dropdownDefaultButton-accessType'
@@ -229,8 +233,8 @@ const ParkingSpotDetails = () => {
             )}
           </div>
 
-          <h6 className='text-lg font-bold'>Any other details? (optional)</h6>
-          <label className='mb-2 mt-2'>Other Features:</label>
+          <h6 className='text-lg font-bold mt-4'>Any other details? (optional)</h6>
+          <label className='mt-2 mb-1'>Other Features:</label>
           <div className='relative'>
             <button
               id='dropdownDefaultButton-elecCharging'
