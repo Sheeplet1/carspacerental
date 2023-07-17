@@ -7,7 +7,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 
 const SetPrice = () => {
-
   const [isHourlyActive, setIsHourlyActive] = useState(false);
   const [isMonthlyActive, setIsMonthlyActive] = useState(false);
   const [hourlyPrice, setHourlyPrice] = useState('');
