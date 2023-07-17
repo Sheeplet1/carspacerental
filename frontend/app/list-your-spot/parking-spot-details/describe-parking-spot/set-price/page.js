@@ -4,11 +4,16 @@ import React from 'react'
 import Sidebar from '@components/Sidebar'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation';
 
 const SetPrice = () => {
 
-  const[isHourlyActive, setIsHourlyActive] = useState(false);
-  const[isMonthlyActive, setIsMonthlyActive] = useState(false);
+  const [isHourlyActive, setIsHourlyActive] = useState(false);
+  const [isMonthlyActive, setIsMonthlyActive] = useState(false);
+  const [hourlyPrice, setHourlyPrice] = useState('');
+  const [monthlyPrice, setMonthlyPrice] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
 
   const hourlyToggle = () => {
     setIsHourlyActive(!isHourlyActive);
@@ -16,6 +21,18 @@ const SetPrice = () => {
 
   const monthlyToggle = () => {
     setIsMonthlyActive(!isMonthlyActive);
+  }
+
+  const handleNextClick = () => {
+    if (!isHourlyActive && !isMonthlyActive) {
+      setErrorMessage('Please select at least hourly or monthly booking.');
+    } else if (isHourlyActive && hourlyPrice === '') {
+      setErrorMessage('Please enter an hourly rate.');
+    } else if (isMonthlyActive && monthlyPrice === '') {
+      setErrorMessage('Please enter a monthly rate.');
+    } else {
+      router.push('/list-your-spot/parking-spot-details/describe-parking-spot/set-price/confirm-listing');
+    }
   }
 
   return (
@@ -32,11 +49,20 @@ const SetPrice = () => {
             onClick={hourlyToggle}>
           </div>
           <span className="text-sm">Allow hourly bookings</span>
-
-          <div>
-            
-          </div>
         </div>
+        {isHourlyActive && (
+          <>
+            <label className='mb-2 mt-2'>Hourly</label>
+            <div className='relative'>
+              <input
+                className='text-gray-500 text-left w-96 border-b border-black pl-8 p-2 mb-4'
+                placeholder='0.00'
+                value={hourlyPrice}
+                onChange={(e) => setHourlyPrice(e.target.value)}/>
+                <span className='absolute left-3 top-2'>$</span>
+            </div>
+          </>
+        )}
 
         <h2 className='text-lg font-bold'>Monthly</h2>
         <div className='flex items-center mb-4'>
@@ -46,14 +72,27 @@ const SetPrice = () => {
           </div>
           <span className="text-sm">Allow monthly bookings</span>
         </div>
+        {isMonthlyActive && (
+          <>
+            <label className='mb-2 mt-2'>Monthly</label>
+            <div className='relative'>
+              <input
+                className='text-gray-500 text-left w-96 border-b border-black pl-8 p-2 mb-4'
+                placeholder='0.00'
+                value={monthlyPrice}
+                onChange={(e) => setMonthlyPrice(e.target.value)}/>
+                  <span className='absolute left-3 top-2'>$</span>
+            </div>
+          </>
+        )}
+
+        {errorMessage && <p className='text-red-500 mb-4 bg-red-100 py-2 px-4 text-center'>{errorMessage}</p>}
 
         <div className='flex justify-between'>
           <Link href='/list-your-spot/parking-spot-details/describe-parking-spot'>
             <button className='blue_btn'>Back</button>
           </Link>
-          <Link href='/list-your-spot/parking-spot-details/describe-parking-spot/set-price/confirm-listing'>
-            <button className='blue_btn'>Next</button>
-          </Link>
+          <button className='blue_btn' onClick={handleNextClick}>Next</button>
         </div>
       </div>
     </div>

@@ -13,7 +13,6 @@ const ListYourSpot = () => {
   const router = useRouter();
 
   const validateAddress = () => {
-    console.log(address);
     if (address) {
       router.push('/list-your-spot/parking-spot-details');
     } else {
@@ -35,28 +34,26 @@ const ListYourSpot = () => {
           List your spot!
         </h1>
 
-        <label htmlFor='address' className='mb-2 mt-4'>
-          Enter your address:
+        <div className='mb-2 mt-4'>
+          <label htmlFor='address' className='mb-2 mt-4'>Enter your address:</label>
           <div className='w-96 mb-14'>
             <SearchBar
               placeholder="Search Address"
               className="border border-transparent w-full h-12 px-3 rounded-full shadow-md text-base outline-none overflow-ellipsis overflow-hidden whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 placeholder-black-400"
               onSearch={searchClick}/>
-              {addressError && <p className='error_text'>{addressError}</p>}
           </div>
-        </label>
+          <p className='error_text'>{addressError}</p>
+        </div>
 
         <div className='flex justify-between'>
-          <Link href='/login'>
+          <Link href='/'>
             <button className='blue_btn'>
               Back
             </button>
           </Link>
-          <Link href='/list-your-spot/parking-spot-details'>
-            <button className='blue_btn' onClick={validateAddress}>
-              Next
-            </button>
-          </Link>
+          <button className='blue_btn' onClick={validateAddress}>
+            Next
+          </button>
         </div>
       </div>
     </div>

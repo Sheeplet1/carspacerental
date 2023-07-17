@@ -4,8 +4,11 @@ import React from 'react'
 import Sidebar from '@components/Sidebar'
 import Link from 'next/link'
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const ParkingSpotDetails = () => {
+  const router = useRouter();
+
   const typeOfSpot = [
     'Carport',
     'Driveway',
@@ -44,13 +47,13 @@ const ParkingSpotDetails = () => {
   const [isAccessTypeOpen, setIsAccessTypeOpen] = useState(false);
   const [isElectricChargingOpen, setIsElectricChargingOpen] = useState(false);
 
-  const[selectedTypeOfSpot, setSelectedTypeOfSpot] = useState('');
-  const[selectedMaxVehicleSize, setSelectedMaxVehicleSize] = useState('');
-  const[selectedAccessType, setSelectedAccessType] = useState('');
-  const[selectedElectricCharging, setSelectedElectricCharging] = useState('');
+  const [selectedTypeOfSpot, setSelectedTypeOfSpot] = useState('');
+  const [selectedMaxVehicleSize, setSelectedMaxVehicleSize] = useState('');
+  const [selectedAccessType, setSelectedAccessType] = useState('');
+  const [selectedElectricCharging, setSelectedElectricCharging] = useState('');
 
-  const[typeOfSpotError, setTypeOfSpotError] = useState('');
-  const[maxVehicleSizeError, setMaxVehicleSizeError] = useState('');
+  const [typeOfSpotError, setTypeOfSpotError] = useState('');
+  const [maxVehicleSizeError, setMaxVehicleSizeError] = useState('');
 
   const toggleDropdown = (dropdownName) => {
     switch (dropdownName) {
@@ -86,13 +89,13 @@ const ParkingSpotDetails = () => {
   const selectTypeOfSpot = (spot) => {
     setSelectedTypeOfSpot(spot);
     setIsTypeOfSpotOpen(false);
-    setTypeOfSpotError(false);
+    setTypeOfSpotError('');
   };
 
   const selectMaxVehicleSize = (size) => {
     setSelectedMaxVehicleSize(size);
     setIsMaxVehicleSizeOpen(false);
-    setMaxVehicleSizeError(false);
+    setMaxVehicleSizeError('');
   }
 
   const selectAccessType = (access) => {
@@ -106,15 +109,15 @@ const ParkingSpotDetails = () => {
   };
 
   const handleNextClick = () => {
-    if(selectedTypeOfSpot === '') {
-      setTypeOfSpotError('Type of Spot is required');
-    } else {
-      setTypeOfSpotError('');
-    }
-    if (!selectedMaxVehicleSize === '') {
+    if (selectedTypeOfSpot === '' || selectedMaxVehicleSize === '') {
+      if (selectedTypeOfSpot === '') {
+        setTypeOfSpotError('Type of Spot is required');
+      }
+      if (selectedMaxVehicleSize === '') {
       setMaxVehicleSizeError('Max. Vehicle Size is required');
+      }
     } else {
-      setMaxVehicleSizeError('');
+      router.push('/list-your-spot/parking-spot-details/describe-parking-spot');
     }
   }
 
@@ -262,9 +265,7 @@ const ParkingSpotDetails = () => {
             <Link href='/list-your-spot'>
               <button className='blue_btn'>Back</button>
             </Link>
-            <Link href='/list-your-spot/parking-spot-details/describe-parking-spot'>
-              <button className='blue_btn' onClick={handleNextClick}>Next</button>
-            </Link>
+            <button className='blue_btn' onClick={handleNextClick}>Next</button>
           </div>
         </div>
     </div>
