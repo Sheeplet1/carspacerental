@@ -35,7 +35,7 @@ const Login = () => {
       } else {
         localStorage.setItem('token', response.token);
         setToken(response.token);
-        router.push('/');
+        router.push('/search');
       }
     }
   }
@@ -68,9 +68,11 @@ const Login = () => {
 
         <div className='flex justify-between'>
           {/* <Link href='/'> */}
-          <button className='blue_btn'>
-            Back
-          </button>
+          <Link href='/'>
+            <button className='blue_btn'>
+              Back
+            </button>
+          </Link>
           {/* </Link>
           <Link> */}
           <button className='blue_btn' onClick={() => validateLogin()}>
