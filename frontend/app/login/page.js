@@ -41,9 +41,9 @@ const Login = () => {
   }
 
   return (
-    <div className='flex flex-row h-screen mt-14'>
+    <div className='flex flex-row h-screen w-full mx-auto gap-4'>
       <Sidebar />
-      <div className='relative bottom-14 flex flex-col mr-44'>
+      <div className='flex flex-col'>
         <h1 className='heading_text'>Login</h1>
 
         <label htmlFor='email' className='mb-2'>

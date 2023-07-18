@@ -6,14 +6,14 @@ import Sidebar from '@components/Sidebar'
 
 const Help = () => {
   return (
-    <div className='flex flex-row h-screen mt-14'>
+    <div className='flex flex-row h-screen w-full mx-auto gap-4'>
       <Sidebar />
-      <div className='relative bottom-14 flex flex-col'>
+      <div className='flex flex-col w-full'>
         <h1 className='heading_text'>Frequently Asked Questions</h1>
 
         <h2 className='text-lg font-bold mt-2'>I'm looking for parking.</h2>
         <div className='mt-2 space-y-4'>
-          <details className='border border-gray-300 rounded p-4 relative'>
+          <details className='border border-gray-300 rounded p-4'>
             <summary className='font-bold cursor-pointer'>Why do I need to provide my vehicle details?</summary>
             <div className='mt-4 mb-2 leading-[1.5em] pl-4'>
                 There are two main reasons we require your vehicle details.
@@ -29,7 +29,7 @@ const Help = () => {
             </div>
           </details>
 
-          <details className='border border-gray-300 rounded p-4 relative'>
+          <details className='border border-gray-300 rounded p-4'>
             <summary className='font-bold cursor-pointer'>What is the difference between the payment options?</summary>
             <div className='mt-4 mb-2 leading-[1.5em] pl-4'>
               Once you have added your credit or debit card details, you can choose either the ‘Pay As You Go’ or ‘Automatic Top Up’.
@@ -39,7 +39,7 @@ const Help = () => {
             </div>
           </details>
 
-          <details className='border border-gray-300 rounded p-4 relative'>
+          <details className='border border-gray-300 rounded p-4'>
             <summary className='font-bold cursor-pointer'>How long can I book parking for?</summary>
             <div className='mt-4 mb-2 leading-[1.5em] pl-4 z-10'>You can book parking for as little as 15 minutes, for several days or even on a monthly basis.</div>
           </details>
@@ -47,7 +47,7 @@ const Help = () => {
 
         <h2 className='text-lg font-bold mt-2'>I rent out my car space.</h2>
         <div className='mt-2 space-y-4'>
-          <details className='border border-gray-300 rounded p-4 relative'>
+          <details className='border border-gray-300 rounded p-4'>
             <summary className='font-bold cursor-pointer'>How can I list my availability in advance?</summary>
             <div className='mt-4 mb-2 leading-[1.5em] pl-4 z-10'>
             For our hosts that are listed their spot already – thank you for listing with SFCars!
@@ -57,7 +57,7 @@ const Help = () => {
             </div>
           </details>
 
-          <details className='border border-gray-300 rounded p-4 relative'>
+          <details className='border border-gray-300 rounded p-4'>
             <summary className='font-bold cursor-pointer'>What if a driver overstays their booking?</summary>
             <div className='mt-4 mb-2 leading-[1.5em] pl-4 z-10'>
             If someone has overstayed their booking, we ask you go into your ‘Calendar‘, ‘Bookings‘, select the last booking and ‘Lodge an Incident‘. The SFCars team will then assess the situation. You could receive $10 compensation for every hour the booking has been exceeded.
@@ -67,7 +67,7 @@ const Help = () => {
             </div>
           </details>
 
-          <details className='border border-gray-300 rounded p-4 relative'>
+          <details className='border border-gray-300 rounded p-4'>
             <summary className='font-bold cursor-pointer'>How much does it cost to get started?</summary>
             <div className='mt-4 mb-2 leading-[1.5em] pl-4 z-10'>It costs nothing to create your listing on SFCars. So really... what are you waiting for?</div>
           </details>
