@@ -12,7 +12,7 @@ def user_register(data: dict) -> ObjectId:
         "password": generate_hash(data["password"]),
         "first_name":  data["first_name"],
         "last_name": data["last_name"],
-        "phone_number": [data["phone_number"]],
+        "phone_number": data["phone_number"],
         "vehicle_details": [],
         "payment_details": [],
         "current_bookings": [],

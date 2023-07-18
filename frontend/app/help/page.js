@@ -6,8 +6,10 @@ import Sidebar from '@components/Sidebar'
 
 const Help = () => {
   return (
-    <div className='flex flex-row h-screen w-full mx-auto gap-4'>
-      <Sidebar />
+    <div className='flex flex-row w-full justify-between mt-12'>
+      <div className='w-1/3'>
+        <Sidebar />
+      </div>
       <div className='flex flex-col w-full'>
         <h1 className='heading_text'>Frequently Asked Questions</h1>
 

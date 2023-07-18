@@ -80,11 +80,13 @@ const Register = () => {
   }
 
   return (
-    <div className='flex flex-row h-screen w-full mx-auto gap-4'>
-      <Sidebar />
+    <div className='flex flex-row w-full justify-between mt-12'>
+      <div className='w-1/3'>
+        <Sidebar />
+      </div>
       {
         showFurtherRegistration ? (
-          <div className='flex flex-col'>
+          <div className='flex flex-col w-2/3'>
             <h1 className='heading_text'>Further Registration</h1>
 
             <label htmlFor='firstName' className='mb-2'>
@@ -111,7 +113,7 @@ const Register = () => {
               </div>
             </label>
 
-            <div className='flex justify-between'>
+            <div className='flex justify-between w-96'>
               <button className='blue_btn' onClick={() => setShowFurtherRegistration(false)}>
                 Back
               </button>
@@ -121,7 +123,7 @@ const Register = () => {
             </div>
           </div>
         ) : (
-          <div className='flex flex-col'>
+          <div className='flex flex-col w-2/3'>
             <h1 className='heading_text'>Register</h1>
 
             <label htmlFor='email' className='mb-2'>
@@ -148,7 +150,7 @@ const Register = () => {
               </div>
             </label>
 
-            <div className='flex justify-between'>
+            <div className='flex justify-between w-96'>
               <button className='blue_btn' onClick={() => setShowFurtherRegistration(false)}>
                 Back
               </button>

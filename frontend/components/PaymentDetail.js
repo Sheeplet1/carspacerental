@@ -1,5 +1,5 @@
 import { calculateTotalPrice, makeRequest } from '@utils/utils';
-import { useContext, useState } from 'react';
+import { use, useContext, useState } from 'react';
 import SearchContext from '@contexts/SearchContext';
 import UserContext from '@contexts/UserContext';
 import VehicleDetailsModal from '@components/VehicleDetailsModal';
@@ -15,8 +15,6 @@ const PaymentDetail = () => {
   const [promoCodeError, setPromoCodeError] = useState('');
   const [showVehicleDetailsModal, setShowVehicleDetailsModal] = useState(false);
   const [showPaymentDetailsModal, setShowPaymentDetailsModal] = useState(false);
-  const [vehicles, setVehicles] = useState(user.vehicle_details);
-  const [payments, setPayments] = useState(user.payment_details);
 
   const formatDateTime = (date, time) => {
     const formattedDate = date.toLocaleString('en-US', {
@@ -32,13 +30,15 @@ const PaymentDetail = () => {
     return `${formattedDate}, ${formattedTime}`;
   }
 
-  const vehicleOptions = vehicles.map((vehicle, index) => ({
+  const vehicleOptions = user.vehicle_details.map((vehicle, index) => ({
     value: vehicle.registration_number,
-    label: `${vehicle.make} ${vehicle.model} - (${vehicle.registration_number})`,
+    label: `${vehicle.vehicle_make} ${vehicle.vehicle_model} - (${vehicle.registration_number})`,
   }));
 
+  console.log(user.payment_details)
+  console.log(user.vehicle_details)
 
-  const paymentMethodOptions = payments.map((payment, index) => ({
+  const paymentMethodOptions = user.payment_details.map((payment, index) => ({
     value: payment.card_number,
     label: `**** **** **** ${payment.card_number.slice(-4)}`,
   }));
@@ -92,13 +92,13 @@ const PaymentDetail = () => {
           <div>Vehicle</div>
           <div>
             {
-              vehicles.length !== 0 ? (
+              user.vehicle_details.length !== 0 ? (
                 <Select
                   defaultValue={vehicleOptions[0]}
                   options={vehicleOptions}
                 />
               ) : (
-                <VehicleDetailsModal showVehicleDetailsModal={showVehicleDetailsModal} setShowVehicleDetailsModal={setShowVehicleDetailsModal} vehicles={vehicles} setVehicles={setVehicles} />
+                <VehicleDetailsModal showVehicleDetailsModal={showVehicleDetailsModal} setShowVehicleDetailsModal={setShowVehicleDetailsModal} />
               )
             }
           </div>
@@ -144,13 +144,13 @@ const PaymentDetail = () => {
           <div>Payment Method</div>
           <div>
             {
-              payments.length !== 0 ? (
+              user.payment_details.length !== 0 ? (
                 <Select
                   defaultValue={paymentMethodOptions[0]}
                   options={paymentMethodOptions}
                 />
               ) : (
-                <PaymentDetailsModal showPaymentDetailsModal={showPaymentDetailsModal} setShowPaymentDetailsModal={setShowPaymentDetailsModal} payments={payments} setPayments={setPayments} />
+                <PaymentDetailsModal showPaymentDetailsModal={showPaymentDetailsModal} setShowPaymentDetailsModal={setShowPaymentDetailsModal} />
               )
             }
           </div>
@@ -160,8 +160,8 @@ const PaymentDetail = () => {
         <div className="font-bold text-2xl text-gray-500">{isCasual ? `$${calculateTotalPrice(selectedListing.pricing.hourly_rate, startDate, endDate, startTime, endTime)}` : `$${selectedListing.pricing.monthly_rate}/mth`}</div>
         <div>
           <button
-            className={`w-60 text-white rounded-full p-2 ${(!vehicles.length && !payments.length) ? 'bg-gray-600' : 'bg-custom-orange'}`}
-            disabled={!vehicles.length && !payments.length}
+            className={`w-60 text-white rounded-full p-2 ${(!user.vehicle_details.length && !user.payment_details.length) ? 'bg-gray-600' : 'bg-custom-orange'}`}
+            disabled={!user.vehicle_details.length && !user.payment_details.length}
             onClick={clickPay}
           >
             Pay Now

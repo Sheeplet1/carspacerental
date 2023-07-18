@@ -1,11 +1,15 @@
+'use client'
+
 import React from 'react'
-import Sidebar from '@components/Sidebar'
+import LoginSidebar from '@components/LoginSideBar';
 import Link from 'next/link'
 
 const ConfirmListing = () => {
   return (
-    <div className='flex flex-row h-screen'>
-      <Sidebar />
+    <div className='flex flex-row w-full mt-12'>
+      <div className='w-1/3'>
+        <LoginSidebar />
+      </div>
       <div className='relative bottom-14 flex flex-col mr-44'>
         <h1 className='heading_text'>Listing Confirmed!</h1>
 
