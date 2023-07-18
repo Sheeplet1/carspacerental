@@ -62,6 +62,20 @@ export const useAuth = () => {
     }
   };
 
+  const profile = async (email) => {
+    const response = await makeRequest('/auth/updateEmail', 'POST', { email });
+    if (response.error) {
+      console.log(response.error);
+      setUser(null);
+      setToken(null);
+    } else {
+      localStorage.setItem('token', response.token);
+      setToken(response.token);
+      fetchUser(response.token);
+      router.push('/');
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
