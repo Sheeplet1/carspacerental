@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useContext } from 'react';
 import { makeRequest } from '@utils/utils';
 import UserContext from '@contexts/UserContext';
 
-const VehicleDetailsModal = ({ showVehicleDetailsModal, setShowVehicleDetailsModal, vehicles, setVehicles }) => {
+const VehicleDetailsModal = ({ showVehicleDetailsModal, setShowVehicleDetailsModal }) => {
   const [vehicleRegistration, setVehicleRegistration] = useState('');
   const [vehicleType, setVehicleType] = useState('');
   const [vehicleMake, setVehicleMake] = useState('');
@@ -14,7 +14,7 @@ const VehicleDetailsModal = ({ showVehicleDetailsModal, setShowVehicleDetailsMod
   const [vehicleTypeError, setVehicleTypeError] = useState('');
   const [vehicleMakeError, setVehicleMakeError] = useState('');
   const [vehicleModelError, setVehicleModelError] = useState('');
-  const { updateUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
 
   const ref = useRef(null);
 
@@ -36,20 +36,23 @@ const VehicleDetailsModal = ({ showVehicleDetailsModal, setShowVehicleDetailsMod
     setVehicleModelError(isVehicleModelExist ? '' : 'This field is required');
 
     if (isVehicleRegistrationExist && isVehicleMakeExist && isVehicleModelExist) {
+      const newVehicleDetail = {
+        registration_number: vehicleRegistration,
+        vehicle_type: vehicleType,
+        vehicle_make: vehicleMake,
+        vehicle_model: vehicleModel,
+      };
       const body = {
-        "vehicle_details": [{
-          registration_number: vehicleRegistration,
-          vehicle_type: vehicleType,
-          make: vehicleMake,
-          model: vehicleModel,
-        }]
-      }
+        "vehicle_details": [
+          ...user.vehicle_details,
+          newVehicleDetail,
+        ],
+      };
       const response = await makeRequest('/user/profile', 'PUT', body);
       if (response.error) {
         console.log(response.error);
       } else {
-        setVehicles([...vehicles, body.vehicle_details[0]]);
-        // updateUser();
+        updateUser();
         closeModal();
       }
     }

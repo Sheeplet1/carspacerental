@@ -14,9 +14,9 @@ export const Navbar = () => {
   const router = useRouter();
 
   const logOut = () => {
+    router.push('/');
     localStorage.removeItem('token');
     setUser(null);
-    router.push('/');
   }
 
   return (
@@ -42,14 +42,14 @@ export const Navbar = () => {
                 height={30}
                 className='object-contain'
               />
-              <p className='text-md'>support@homie.com</p>
+              <p className='text-md'>sfcars@support.com</p>
             </div>
           </div>
           <div className='flex gap-8'>
             <Link href='/about'>
               <p className='cursor-pointer hover:underline hover:text-orange-500 text-xl'>About</p>
             </Link>
-            <Link href='/list-your-spot'>
+            <Link href={user ? '/list-your-spot' : '/login'}>
               <p className='cursor-pointer hover:underline hover:text-orange-500 text-xl'>List Your Spot</p>
             </Link>
           </div>

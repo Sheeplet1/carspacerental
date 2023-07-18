@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Sidebar from '@components/Sidebar'
+import LoginSideBar from '@components/LoginSideBar'
 import Link from 'next/link'
 import { useState, useContext } from 'react';
 import { makeRequest } from '@utils/makeRequest';
@@ -35,15 +36,17 @@ const Login = () => {
       } else {
         localStorage.setItem('token', response.token);
         setToken(response.token);
-        router.push('/search');
+        router.push('/');
       }
     }
   }
 
   return (
-    <div className='flex flex-row h-screen w-full mx-auto gap-4'>
-      <Sidebar />
-      <div className='flex flex-col'>
+    <div className='flex flex-row w-full justify-between mt-12'>
+      <div className='w-1/3'>
+        <Sidebar />
+      </div>
+      <div className='flex flex-col w-2/3'>
         <h1 className='heading_text'>Login</h1>
 
         <label htmlFor='email' className='mb-2'>
@@ -66,19 +69,17 @@ const Login = () => {
           Forgot password?
         </Link>
 
-        <div className='flex justify-between'>
-          {/* <Link href='/'> */}
+        <div className='flex w-96 justify-between'>
           <Link href='/'>
             <button className='blue_btn'>
               Back
             </button>
           </Link>
-          {/* </Link>
-          <Link> */}
-          <button className='blue_btn' onClick={() => validateLogin()}>
-            Login
-          </button>
-          {/* </Link> */}
+          <div>
+            <button className='blue_btn' onClick={() => validateLogin()}>
+              Login
+            </button>
+          </div>
         </div>
       </div>
     </div>

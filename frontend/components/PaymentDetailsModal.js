@@ -1,18 +1,18 @@
 'use client';
 
-import { Button, Modal, Label, TextInput } from 'flowbite-react';
+import { Button, Modal, Label } from 'flowbite-react';
 import { useState, useRef, useEffect, useContext } from 'react';
 import { makeRequest } from '@utils/utils';
 import UserContext from '@contexts/UserContext';
 
-const PaymentDetailsModal = ({ showPaymentDetailsModal, setShowPaymentDetailsModal, payments, setPayments }) => {
+const PaymentDetailsModal = ({ showPaymentDetailsModal, setShowPaymentDetailsModal }) => {
   const [cardNo, setCardNo] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [cardNoError, setCardNoError] = useState('');
   const [expiryDateError, setExpiryDateError] = useState('');
   const [cvvError, setCvvError] = useState('');
-  const { updateUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
 
   const ref = useRef(null);
 
@@ -41,20 +41,24 @@ const PaymentDetailsModal = ({ showPaymentDetailsModal, setShowPaymentDetailsMod
     setCvvError(isCvvValid ? '' : 'This field is required');
 
     if (isCardNoValid && isExpiryDateValid && isCvvValid) {
+      const newPaymentDetail = {
+        card_number: cardNo,
+        expiry_date: expiryDate,
+        cvv: cvv,
+      };
+
       const body = {
-        payment_details: [{
-          "card_number": cardNo,
-          "expiry_date": expiryDate,
-          "cvv": cvv
-        }]
+        "payment_details": [
+          ...user.payment_details,
+          newPaymentDetail,
+        ],
       }
 
       const response = await makeRequest('/user/profile', 'PUT', body);
       if (response.error) {
         console.log(response.error);
       } else {
-        setPayments([...payments, body.payment_details[0]]);
-        // updateUser();
+        updateUser();
         closeModal();
       }
     }

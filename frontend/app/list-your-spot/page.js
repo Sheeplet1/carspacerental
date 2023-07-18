@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import Sidebar from '@components/Sidebar'
+import LoginSidebar from '@components/LoginSideBar';
 import Link from 'next/link'
 import { useState } from 'react';
 import SearchBar from '@components/SearchBar';
@@ -27,9 +27,11 @@ const ListYourSpot = () => {
   };
 
   return (
-    <div className='flex flex-row h-screen mt-14'>
-      <Sidebar />
-      <div className='relative bottom-14 flex flex-col mr-44'>
+    <div className='flex flex-row w-full justify-between mt-12'>
+      <div className='w-1/3'>
+        <LoginSidebar />
+      </div>
+      <div className='flex flex-col w-2/3'>
         <h1 className='heading_text'>
           List your spot!
         </h1>
@@ -45,7 +47,7 @@ const ListYourSpot = () => {
           <p className='error_text'>{addressError}</p>
         </div>
 
-        <div className='flex justify-between'>
+        <div className='flex justify-between w-96'>
           <Link href='/'>
             <button className='blue_btn'>
               Back
