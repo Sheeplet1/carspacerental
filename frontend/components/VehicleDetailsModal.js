@@ -49,7 +49,7 @@ const VehicleDetailsModal = ({ showVehicleDetailsModal, setShowVehicleDetailsMod
         console.log(response.error);
       } else {
         setVehicles([...vehicles, body.vehicle_details[0]]);
-        updateUser();
+        // updateUser();
         closeModal();
       }
     }

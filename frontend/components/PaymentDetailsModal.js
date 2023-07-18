@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Modal, Label, TextInput } from 'flowbite-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { makeRequest } from '@utils/utils';
 import UserContext from '@contexts/UserContext';
 
@@ -54,7 +54,7 @@ const PaymentDetailsModal = ({ showPaymentDetailsModal, setShowPaymentDetailsMod
         console.log(response.error);
       } else {
         setPayments([...payments, body.payment_details[0]]);
-        updateUser();
+        // updateUser();
         closeModal();
       }
     }

@@ -11,7 +11,7 @@ BAD_REQUEST = 400
 
 bp = Blueprint('bookings', __name__, url_prefix='')
 
-@bp.route('listings/book', methods=['POST'])
+@bp.route('/listings/book', methods=['POST'])
 @jwt_required()
 def new():
     # get user_id from token
@@ -97,7 +97,7 @@ def info(booking_id):
 
     return {}, OK
 
-@bp.route('profile/completed-bookings', methods=['GET'])
+@bp.route('/profile/completed-bookings', methods=['GET'])
 @jwt_required()
 def completed():
     user_id = helpers.validate_jwt(get_jwt_identity())
