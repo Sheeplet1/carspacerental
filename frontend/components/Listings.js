@@ -1,8 +1,11 @@
 import { calculateTotalPrice, calculateDistanceInKm } from "@utils/utils";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { useContext } from "react";
+import SearchContext from "@contexts/SearchContext";
 
-const Listings = ({ listings, setSelectedListing, startDate, endDate, startTime, endTime, isCasual, addressData }) => {
+const Listings = () => {
+  const { listings, setSelectedListing, startDate, endDate, startTime, endTime, isCasual, addressData } = useContext(SearchContext);
   const searchParams = useSearchParams();
 
   return (
@@ -32,7 +35,7 @@ const Listings = ({ listings, setSelectedListing, startDate, endDate, startTime,
               </div>
               <div className="flex flex-col justify-between w-3/4 ml-4">
                 <div className="flex flex-col h-1/2">
-                  <h3 className="font-bold text-sm text-gray-700">{listing.address.formatted_address}</h3>
+                  <h3 className="font-bold text-sm text-gray-700">{listing.address.street}, {listing.address.city}</h3>
                   <p className="text-xs text-gray-500">{isCasual && `$${listing.pricing.hourly_rate}/hr`}</p>
                 </div>
                 <div className="flex flex-col h-1/2 pt-3">

@@ -20,7 +20,6 @@ const Home = () => {
 
   const onSearch = (addressData) => {
     if (addressData) {
-      console.log(addressData)
       router.push('/search' + '?' + createQueryString('address', addressData.formatted_address) + '&' + createQueryString('lat', addressData.lat) + '&' + createQueryString('lng', addressData.lng))
     }
   };

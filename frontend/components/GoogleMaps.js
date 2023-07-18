@@ -1,7 +1,11 @@
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useSearchParams } from 'next/navigation';
+import { useContext } from 'react';
+import SearchContext from '@contexts/SearchContext';
 
-export const GoogleMaps = ({ listings, setSelectedListing, addressData, isCasual }) => {
+export const GoogleMaps = () => {
+  const { listings, setSelectedListing, addressData, isCasual } = useContext(SearchContext);
+
   const searchParams = useSearchParams();
   return (
     <div className="flex-grow">

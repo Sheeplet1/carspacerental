@@ -1,9 +1,12 @@
 import SearchBar from '@components/SearchBar';
 import TimePicker from '@components/TimePicker';
 import { useSearchParams } from 'next/navigation';
+import { useContext } from 'react';
+import SearchContext from '@contexts/SearchContext';
 
-const BookingInputs = ({ searchClick, isCasual, startDate, setStartDate, endDate, setEndDate, minStartTime, startTime, setStartTime, minEndTime, endTime, setEndTime, setSort }) => {
+const BookingInputs = () => {
   const searchParams = useSearchParams();
+  const { isCasual, startDate, setStartDate, endDate, setEndDate, minStartTime, startTime, setStartTime, minEndTime, endTime, setEndTime, setSort } = useContext(SearchContext);
 
   const sixMonthsFromNow = new Date();
   sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
@@ -25,7 +28,7 @@ const BookingInputs = ({ searchClick, isCasual, startDate, setStartDate, endDate
         <h2 className='font-bold text-sm text-gray-500 mb-1'>Find Parking Near</h2>
         <SearchBar
           placeholder="Search Address"
-          onSearch={searchClick}
+          onSearch={(data) => data && setAddressData(data)}
           className="border w-full text-base placeholder-black"
           showSearchButton={false}
           initialValue={searchParams.get('address')}

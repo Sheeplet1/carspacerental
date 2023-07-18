@@ -64,7 +64,7 @@ const Register = () => {
         "password": password,
         "first_name": firstName,
         "last_name": lastName,
-        "phone_number": phoneNumber
+        "phone_number": phoneNumber,
       }
 
       const response = await makeRequest('/auth/register', 'POST', body);
