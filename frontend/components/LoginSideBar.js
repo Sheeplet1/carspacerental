@@ -50,7 +50,7 @@ export const LoginSidebar = () => {
             </Link>
           </li>
           <li>
-            <Link href='/'>
+            <Link href='/list-your-spot'>
               <p className='flex py-1 text-lg text-gray-800 hover:underline'>Manage Listings</p>
             </Link>
           </li>

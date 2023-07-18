@@ -35,9 +35,6 @@ const PaymentDetail = () => {
     label: `${vehicle.vehicle_make} ${vehicle.vehicle_model} - (${vehicle.registration_number})`,
   }));
 
-  console.log(user.payment_details)
-  console.log(user.vehicle_details)
-
   const paymentMethodOptions = user.payment_details.map((payment, index) => ({
     value: payment.card_number,
     label: `**** **** **** ${payment.card_number.slice(-4)}`,
