@@ -80,13 +80,11 @@ const Register = () => {
   }
 
   return (
-    <div className='flex flex-row mt-12'>
-      <div className='absolute left-20'>
-        <Sidebar />
-      </div>
+    <div className='flex flex-row h-screen w-full mx-auto gap-4'>
+      <Sidebar />
       {
         showFurtherRegistration ? (
-          <div className='flex flex-col mr-44'>
+          <div className='flex flex-col'>
             <h1 className='heading_text'>Further Registration</h1>
 
             <label htmlFor='firstName' className='mb-2'>
@@ -123,7 +121,7 @@ const Register = () => {
             </div>
           </div>
         ) : (
-          <div className='flex flex-col mr-44 '>
+          <div className='flex flex-col'>
             <h1 className='heading_text'>Register</h1>
 
             <label htmlFor='email' className='mb-2'>

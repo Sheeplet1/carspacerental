@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from werkzeug.exceptions import Forbidden
 
-from ..helpers import validate_jwt
+from ..helpers import validate_jwt, is_admin
 from ..db import listings as listings_db
 
 bp = Blueprint('listings', __name__, url_prefix='/listings')
@@ -12,8 +12,8 @@ bp = Blueprint('listings', __name__, url_prefix='/listings')
 def get_all():
     listings = listings_db.all()
     for listing in listings:
-        listing["_id"] = str(listing["_id"])
-        listing["provider"] = str(listing["provider"])
+        listing["_id"] = listing["_id"]
+        listing["provider"] = listing["provider"]
     return { "listings": listings }, 200
 
 @bp.route('/new', methods=['POST'])
@@ -23,12 +23,14 @@ def new():
 
     data = request.get_json()
 
-    # TODO: VALIDATE ADDRESS PROPERLY
     if "address" not in data:
         return { "error": "Valid address is required" }, 400
 
-    if "price" not in data or not str(data["price"]).replace('.', '', 1).isdigit():
-        return { "error": "Valid price is required" }, 400
+    if "hourly_price" not in data or not str(data["hourly_price"]).replace('.', '', 1).isdigit():
+        return { "error": "Valid hourly price is required" }, 400
+
+    if "daily_price" not in data or not str(data["daily_price"]).replace('.', '', 1).isdigit():
+        return { "error": "Valid daily price is required" }, 400
 
     if "space_type" not in data:
         return { "error": "Valid car space type is required" }, 400
@@ -47,7 +49,7 @@ def new():
 
     listing_id = listings_db.new(user_id, data)
 
-    response = { "listing_id": str(listing_id) }
+    response = { "listing_id": listing_id }
     return response, 200
 
 @bp.route('/<listing_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -64,14 +66,13 @@ def info(listing_id):
         return { "error": "Invalid listing id" }, 400
 
     if request.method == "GET":
-        listing["_id"] = str(listing["_id"])
-        listing["provider"] = str(listing["provider"])
+        listing["_id"] = listing["_id"]
+        listing["provider"] = listing["provider"]
         return listing, 200
 
     user_id = validate_jwt(get_jwt_identity())
 
-    # TODO: Allow Admin to bypass this
-    if listing["provider"] != user_id:
+    if listing["provider"] != user_id and not is_admin(user_id):
         raise Forbidden
 
     if request.method == "PUT":

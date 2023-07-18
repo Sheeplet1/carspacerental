@@ -59,6 +59,35 @@
 
 </details>
 
+<details>
+  <summary><code>POST</code> <code><b>/auth/register/admin</b></code> <code>(registers a new admin)</code></summary>
+
+##### Parameters
+
+> | name             | type | data type | description   |
+> |------------------|------|-----------|---------------|
+> | Register Details | body | Object    | New User data |
+>
+> Register Details:
+> ```
+> {
+>     "email": "example@email.com",
+>     "password": "example_password"
+>     "first_name": "example_first"
+>     "last_name": "example_last"
+>     "phone_number": "0412345678"
+> }
+> ```
+
+##### Responses
+
+> | http code | response                      |
+> |-----------|-------------------------------|
+> | `200`     | `{ "token": str(ObjectId) }`  |
+> | `400`     | `{ "error": "_ is required"}` |
+
+</details>
+
 ### User
 
 <details>
@@ -81,8 +110,7 @@
 > ```
 > {
 >     "_id": "6496e8e2876de3535cf3aa02",
->     "completed_bookings": [],
->     "current_bookings": [],
+>     "bookings": [],
 >     "email": "example@gmail.com",
 >     "first_name": "example_first",
 >     "last_name": "example_last",
@@ -90,7 +118,8 @@
 >     "phone_number": [
 >         "0412345678"
 >     ],
->     "reviews": []
+>     "reviews": [],
+>     "revenue": 0
 > }
 > ```
 
@@ -116,8 +145,7 @@
 > ```
 > {
 >     "_id": "6496e8e2876de3535cf3aa02",
->     "completed_bookings": [],
->     "current_bookings": [],
+>     "bookings": [],
 >     "email": "example@gmail.com",
 >     "first_name": "example_first",
 >     "last_name": "example_last",
@@ -128,7 +156,8 @@
 >     "phone_number": [
 >         "0412345678"
 >     ],
->     "reviews": []
+>     "reviews": [],
+>     "revenue": 0
 > }
 > ```
 
@@ -199,6 +228,46 @@
 > | http code | response                         |
 > |-----------|----------------------------------|
 > | `200`     | `{ "listings": Listings Array }` |
+>
+> Listing Details:
+> ```
+> {
+>   listing_id: ....
+>   address: {
+>     "formatted_address": "Sydney NSW, Australia",
+>     "streetNumber": "",
+>     "street": "",
+>     "city": "",
+>     "state": "NSW",
+>     "postcode": "",
+>     "country": "Australia",
+>     "lat": -33.8688197,
+>     "lng": 151.2092955,
+>     "place_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
+>   },
+>   type: 'Carport / Driveway / Garage / Parking Lot',
+>   max_vehicle_size: 'Bike / Hatchback / Sedan / 4WD/SUV / Van / Truck',
+>   access_type: 'None / Boom Gate / Key / Passcode / Permit / Remote / Ticket / Swipe Card',
+>   ev_charging: true / false,
+>   description: 'This is a description',
+>   instructions: 'This is the instructions',
+>   casual_booking: true / false,
+>   monthly_booking: true / false,
+>   pricing: {
+>     "hourly_rate": 100,
+>     "monthly_rate": 1000,
+>   }
+>   photos: [image1, image2, image3]
+>   "availability": {
+>     "is_24_7": true / false,
+>     "start_time": "08:00",
+>     "end_time": "17:00",
+>     "available_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+>   }
+>   "safety_features": ["CCTV", "On-site security", "Well lit"],
+>   "amenities": ["Restrooms", "Nearby shopping", "Charging station"],
+> }
+> ```
 
 </details>
 
@@ -267,7 +336,8 @@
 >     "address": {
 >         TODO
 >     },
->     "price": 100,
+>     "hourly_price": 5,
+>     "daily_price": 120,
 >     "space_type": "Driveway",
 >     "max_size": "SUV",
 >     "description": "Listing Description",
@@ -296,7 +366,7 @@
 > Update Info Example:
 > ```
 > {
->     "price": 200,
+>     "daily_price": 6,
 >     "space_type": "Garage",
 > }
 > ```
@@ -346,8 +416,8 @@
 > {
 >     "consumer": ObjectId(6496e8e2876de3535cf3aa02)
 >     "listing_id": ObjectId(6496e8e2876de3535cf3aa02)
->     "start_time": '01 Jan 2022 00:00:00'
->     "end_time": '01 Jan 2023 00:00:00'
+>     "start_time": '2022-01-01T00:00:00'
+>     "end_time": '2022-01-23T00:00:00'
 >     "price": 100.0
 > }
 > ```
@@ -385,8 +455,8 @@
 >     "_id": str(ObjectId())
 >     "consumer": str(ObjectId())
 >     "listing_id": str(ObjectId())
->     "start_time": '01 Jan 2022 00:00:00'
->     "end_time": '05 Jan 2022 00:00:00'
+>     "start_time": '2022-01-01T00:00:00'
+>     "end_time": '2022-01-23T00:00:00'
 >     "price": 100.0
 > }
 > ```
@@ -394,7 +464,7 @@
 
 <details>
   <summary><code>PUT</code> <code><b>/bookings/{booking_id}</b></code> <code>(updates a specific booking</code></summary>
-  
+
 ##### PARAMETERS
 
 > | name         | type  | data type     | description      |
@@ -406,7 +476,7 @@
 > ```
 > {
 >     "price": 200.0
->     "start_time": '01 Jan 2022 00:00:00'
+>     "start_time": '2022-01-01T00:00:00'
 > }
 
 ##### Responses
@@ -437,6 +507,22 @@
 
 </details>
 
+<details>
+  <summary><code>GET</code> <code><b>/profile/completed-bookings</b></code> <code>(gets user's completed bookings)</code></summary>
+
+##### Parameters
+
+> | name            | type   | data type | description               |
+> |-----------------|--------|-----------|---------------------------|
+> | `Authorization` | header | string    | "Bearer {token}"          |
+
+##### Responses
+
+> | http code | response                    |
+> |-----------|-----------------------------|
+> | `200`     | `{}` or `[{booking_infos}]` |
+
+</details>
 
 ## Database
 
@@ -451,25 +537,26 @@
 | `last_name`           | string   | "last"                               |
 | `phone_number`        | Array    | ["0412345678"]                       |
 | `payment_information` | Object   | {TODO}                               |
-| `current_bookings`    | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `completed_bookings`  | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `reviews`             | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `revenue`             | float    | 200.0
 
 ### Listings
 
-| Field         | Type     | Example                            |
-| ------------- | -------- | -----------------------------------|
-| `_id`         | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `provider`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `address`     | Object   | {TODO}                             |
-| `price`       | float    | 100.0                              |
-| `space_type`  | string   | "Driveway"                         |
-| `max_size`    | string   | "SUV"                              |
-| `description` | string   | "Listing Description"              |
-| `access_type` | string   | "Key Card"                         |
-| `images`      | Array    | ["Base64 encoded image"]           |
-| `features`    | Array    | ["Electric Charging"]              |
+| Field           | Type     | Example                            |
+| -------------   | -------- | -----------------------------------|
+| `_id`           | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `provider`      | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `address`       | Object   | {TODO}                             |
+| `hourly_price`  | float    | 5.0                                |
+| `daily_price`   | float    | 100.0                              |
+| `space_type`    | string   | "Driveway"                         |
+| `max_size`      | string   | "SUV"                              |
+| `description`   | string   | "Listing Description"              |
+| `access_type`   | string   | "Key Card"                         |
+| `images`        | Array    | ["Base64 encoded image"]           |
+| `features`      | Array    | ["Electric Charging"]              |
 
 ### Bookings
 
@@ -478,8 +565,8 @@
 | `_id`         | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
 | `consumer`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
 | `booking`     | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `start_time`  | str      | 01 Jan 2022 00:00:00               |
-| `end_time`    | str      | 05 Jan 2022 00:00:00               |
+| `start_time`  | str      | 2022-01-01T00:00:00                |
+| `end_time`    | str      | 2022-01-05T00:00:00                |
 | `price`       | float    | 100.0                              |
 
 ### Reviews (TODO)

@@ -50,3 +50,16 @@ WEEK 4
 
 - Finished user_registration, user_login and booking routes
 - Updated documentation
+
+------------------------------------------------------------------------------
+WEEK 5
+
+- Sprint demonstration
+- Started on completed-bookings route 
+- Planning payment integration
+
+------------------------------------------------------------------------------
+WEEK 6
+
+- Completed completed-bookings route
+- Almost finished payment integration on backend

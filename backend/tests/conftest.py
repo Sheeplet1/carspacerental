@@ -8,9 +8,11 @@ from flask_jwt_extended import JWTManager
 
 from ..routes.auth import bp as auth_bp
 from ..routes.listings import bp as listings_bp
-from ..routes.booking_route import bp as booking_bp
+from ..routes.bookings import bp as booking_bp
 from ..routes.user import bp as user_bp
+from ..routes.payments import bp as payments_bp
 from ..helpers import generate_hash
+from ..json_encoder import CustomJSONProvider
 
 TEST_JWT_KEY = "testingsecretkey"
 TEST_PW_HASH = generate_hash("password123")
@@ -22,8 +24,8 @@ TEST_PW = "password123"
 TEST_FIRST_NAME = "John"
 TEST_LAST_NAME = "Doe"
 TEST_PN = "0416 123 980"
-TEST_START = '01 Jan 2022 00:00:00'
-TEST_END = '01 Jan 2023 00:00:00'
+TEST_START = '2022-01-01T00:00:00'
+TEST_END = '2023-01-01T00:00:00'
 
 USER_STUB = {
     "_id": TEST_UID,
@@ -40,9 +42,10 @@ LISTING_STUB = {
     "address": {
         "street": "unsw"
     },
-    "price": 100,
-    "space_type": "parking lot",
-    "max_size": "suv",
+    "hourly_price": 4.2,
+    "daily_price": 100,
+    "space_type": "Driveway",
+    "max_size": "SUV",
     "description": "none",
     "access_type": "key card",
     "images": ["image1", "image2"],
@@ -50,8 +53,8 @@ LISTING_STUB = {
 }
 
 BOOKING_STUB = {
-    "_id": str(TEST_BID),
-    "listing_id": str(TEST_LID),
+    "_id": TEST_BID,
+    "listing_id": TEST_LID,
     "start_time": TEST_START,
     "end_time": TEST_END,
     "price": 100
@@ -72,6 +75,7 @@ def mock_db():
 def client(mock_db):
     # create test flask client
     app = Flask(__name__)
+    app.json = CustomJSONProvider(app)
 
     app.config["JWT_SECRET_KEY"] = TEST_JWT_KEY
     JWTManager(app)
@@ -80,6 +84,7 @@ def client(mock_db):
     app.register_blueprint(listings_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(payments_bp)
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
 
@@ -101,6 +106,25 @@ def user_token(client):
     }
 
     resp = client.post('/auth/register', json=register_data)
+    token_head = {
+       "Authorization": "Bearer " + resp.get_json()["token"]
+    }
+    yield token_head
+
+@pytest.fixture
+def admin_token(client):
+    """
+    Registers a user and yields their token
+    """
+    register_data = {
+        "email": "admin@email.com",
+        "password": TEST_PW + "admin",
+        "first_name": TEST_FIRST_NAME + "admin",
+        "last_name": TEST_LAST_NAME + "admin",
+        "phone_number": "0400023646",
+    }
+
+    resp = client.post('/auth/register/admin', json=register_data)
     token_head = {
        "Authorization": "Bearer " + resp.get_json()["token"]
     }

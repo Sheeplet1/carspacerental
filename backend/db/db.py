@@ -24,6 +24,6 @@ def clear_database():
 
     # For any other collections, just drop them.
     for collection_name in db.list_collection_names():
-        if collection_name != 'UserAccount':
+        if collection_name != 'UserAccount' or collection_name != 'BankAccount':
             db.drop_collection(collection_name)
     

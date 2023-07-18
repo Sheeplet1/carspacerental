@@ -36,3 +36,10 @@ def generate_hash(input: str) -> str:
 
 def parse_json(data):
     return loads(dumps(data))
+
+def is_admin(user_id):
+    data = db.get_database()
+    user = data["UserAccount"].find_one({ "_id": user_id })
+    if not user:
+        return False
+    return user['is_admin']
