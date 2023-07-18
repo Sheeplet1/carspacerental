@@ -59,10 +59,10 @@ const PaymentDetail = () => {
 
     const body = {
       consumer: user._id,
-      listing: selectedListing._id,
-      startTime: `${formattedStartDate}T${formattedStartTime}`,
-      endTime: `${formattedEndDate}T${formattedEndTime}`,
-      price: `${isCasual ? calculateTotalPrice(selectedListing.pricing.hourly_rate, startDate, endDate) : selectedListing.pricing.monthly_rate}`
+      listing_id: selectedListing.listing_id,
+      start_time: `${formattedStartDate}T${formattedStartTime}`,
+      end_time: `${formattedEndDate}T${formattedEndTime}`,
+      price: `${isCasual ? calculateTotalPrice(selectedListing.pricing.hourly_rate, startDate, endDate, startTime, endTime) : selectedListing.pricing.monthly_rate}`
     };
 
     const response = await makeRequest('/listings/book', 'POST', body);

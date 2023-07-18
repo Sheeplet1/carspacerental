@@ -8,6 +8,10 @@ export const calculateTotalPrice = (hourlyPrice, startDate, endDate, startTime, 
     totalHours = ((24 - startTime) + endTime) + (diffInDays - 2) * 24;
   }
 
+  console.log(diffInDays);
+  console.log(totalHours);
+  console.log(hourlyPrice);
+
   const totalPrice = totalHours * hourlyPrice;
 
   return totalPrice;
