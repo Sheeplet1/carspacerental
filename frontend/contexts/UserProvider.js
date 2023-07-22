@@ -1,20 +1,21 @@
-'use strict';
+"use strict";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import UserContext from '@contexts/UserContext';
-import { makeRequest } from '@utils/makeRequest';
+import React, { useState, useEffect, useCallback } from "react";
+import UserContext from "@contexts/UserContext";
+import { makeRequest } from "@utils/makeRequest";
+import PropTypes from "prop-types";
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(
-    typeof window !== 'undefined' && window.localStorage
-      ? localStorage.getItem('token')
-      : ''
+    typeof window !== "undefined" && window.localStorage
+      ? localStorage.getItem("token")
+      : ""
   );
 
   const updateUser = useCallback(async () => {
-    const response = await makeRequest('/user/profile', 'GET');
+    const response = await makeRequest("/user/profile", "GET");
 
     if (response.error) {
       console.log(response.error);
@@ -37,6 +38,10 @@ const UserProvider = ({ children }) => {
       {!loading && children}
     </UserContext.Provider>
   );
-}
+};
 
 export default UserProvider;
+
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

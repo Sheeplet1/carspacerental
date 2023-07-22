@@ -1,14 +1,32 @@
-'use client'
-import ListingsSideBar from "@components/ListingsSideBar"
-import GoogleMaps from '@components/GoogleMaps';
+"use client";
+import ListingsSideBar from "@components/ListingsSideBar";
+import GoogleMaps from "@components/GoogleMaps";
 import { useContext, useEffect, useState } from "react";
 import SearchContext from "@contexts/SearchContext";
-import { getNextHour, calculateDistanceInKm, makeRequest, testListings } from "@utils/utils";
+import {
+  getNextHour,
+  calculateDistanceInKm,
+  makeRequest,
+  testListings,
+} from "@utils/utils";
 import { useSearchParams } from "next/navigation";
 
 const SearchListings = () => {
   const searchParams = useSearchParams();
-  const { isCasual, addressData, setListings, startTime, endTime, setEndTime, startDate, endDate, setEndDate, setMinStartTime, setMinEndTime, sort } = useContext(SearchContext);
+  const {
+    isCasual,
+    addressData,
+    setListings,
+    startTime,
+    endTime,
+    setEndTime,
+    startDate,
+    endDate,
+    setEndDate,
+    setMinStartTime,
+    setMinEndTime,
+    sort,
+  } = useContext(SearchContext);
   const [originalListings, setOriginalListings] = useState(testListings);
   useEffect(() => {
     if (startDate > endDate) {
@@ -43,21 +61,22 @@ const SearchListings = () => {
         setMinEndTime(startTime + 1);
       }
     }
-
   }, [startTime, endTime]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await makeRequest('/listings', 'GET');
-  //     if (response.error) {
-  //       console.log(response.error);
-  //     } else {
-  //       setOriginalListings(response.data);
-  //     }
-  //   }
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await makeRequest("/listings", "GET");
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        if (response.data.length !== 0) {
+          setOriginalListings(response.data);
+        }
+      }
+    };
 
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
   useEffect(() => {
     let processedListings = [...originalListings];
@@ -65,10 +84,36 @@ const SearchListings = () => {
     // Sorting
     processedListings.sort((a, b) => {
       switch (sort) {
-        case 'distance':
-          return addressData ? calculateDistanceInKm(addressData.lat, addressData.lng, a.address.lat, a.address.lng) - calculateDistanceInKm(addressData.lat, addressData.lng, b.address.lat, b.address.lng) : calculateDistanceInKm(searchParams.get('lat'), searchParams.get('lng'), a.address.lat, a.address.lng) - calculateDistanceInKm(searchParams.get('lat'), searchParams.get('lng'), b.address.lat, b.address.lng);
-        case 'price':
-          return isCasual ? a.pricing.hourly_rate - b.pricing.hourly_rate : a.pricing.monthly_rate - b.pricing.monthly_rate;
+        case "distance":
+          return addressData
+            ? calculateDistanceInKm(
+                addressData.lat,
+                addressData.lng,
+                a.address.lat,
+                a.address.lng
+              ) -
+                calculateDistanceInKm(
+                  addressData.lat,
+                  addressData.lng,
+                  b.address.lat,
+                  b.address.lng
+                )
+            : calculateDistanceInKm(
+                searchParams.get("lat"),
+                searchParams.get("lng"),
+                a.address.lat,
+                a.address.lng
+              ) -
+                calculateDistanceInKm(
+                  searchParams.get("lat"),
+                  searchParams.get("lng"),
+                  b.address.lat,
+                  b.address.lng
+                );
+        case "price":
+          return isCasual
+            ? a.pricing.hourly_rate - b.pricing.hourly_rate
+            : a.pricing.monthly_rate - b.pricing.monthly_rate;
         default:
           return 0;
       }
@@ -76,47 +121,62 @@ const SearchListings = () => {
 
     // Filtering
     if (isCasual) {
-      processedListings = processedListings.filter(listing => {
+      processedListings = processedListings.filter((listing) => {
         if (!listing.casual_booking) return false;
 
         if (listing.availability.is_24_7) return true;
 
-        const selectedDays = getDaysArray(new Date(startDate), new Date(endDate)).map(date => date.toLocaleString('en-us', { weekday: 'long' }));
+        const selectedDays = getDaysArray(
+          new Date(startDate),
+          new Date(endDate)
+        ).map((date) => date.toLocaleString("en-us", { weekday: "long" }));
 
         const listingDays = listing.availability.available_days;
 
-        const dateIsValid = selectedDays.every(day => listingDays.includes(day));
+        const dateIsValid = selectedDays.every((day) =>
+          listingDays.includes(day)
+        );
 
-        const startTimeIsValid = startTime >= getTime(listing.availability.start_time) && startTime < getTime(listing.availability.end_time);
-        const endTimeIsValid = endTime > getTime(listing.availability.start_time) && endTime <= getTime(listing.availability.end_time);
+        const startTimeIsValid =
+          startTime >= getTime(listing.availability.start_time) &&
+          startTime < getTime(listing.availability.end_time);
+        const endTimeIsValid =
+          endTime > getTime(listing.availability.start_time) &&
+          endTime <= getTime(listing.availability.end_time);
 
         return dateIsValid && startTimeIsValid && endTimeIsValid;
       });
     } else {
-      processedListings = processedListings.filter(listing => listing.monthly_booking);
+      processedListings = processedListings.filter(
+        (listing) => listing.monthly_booking
+      );
     }
 
     setListings(processedListings);
   }, [isCasual, startDate, endDate, startTime, endTime, sort]);
 
   const getDaysArray = (start, end) => {
-    for(var arr=[], dt=new Date(start); dt<=end; dt.setDate(dt.getDate()+1)){
+    for (
+      var arr = [], dt = new Date(start);
+      dt <= end;
+      dt.setDate(dt.getDate() + 1)
+    ) {
       arr.push(new Date(dt));
     }
     return arr;
   };
 
   const getTime = (timeString) => {
-    const time = timeString.split(':');
+    const time = timeString.split(":");
     return parseInt(time[0]) + parseInt(time[1]) / 60;
-  }
+  };
 
   return (
     <div className="relative flex w-full mt-6" style={{ height: "79.8vh" }}>
       <ListingsSideBar />
       <GoogleMaps />
     </div>
-  )
-}
+  );
+};
 
-export default SearchListings
+export default SearchListings;
