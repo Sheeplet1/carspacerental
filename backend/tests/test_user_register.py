@@ -26,8 +26,8 @@ def test_successful_registration(client, mock_db):
     assert user is not None
     assert user["email"] == conftest.TEST_EMAIL
     assert user["password"] == conftest.TEST_PW_HASH
-    assert user["phone_number"] == [conftest.TEST_PN]
-    assert user["payment_information"] == {}
+    assert user["phone_number"] == conftest.TEST_PN
+    assert user["payment_details"] == []
     assert user["bookings"] == []
     assert user["reviews"] == []
     assert user["listings"] == []

@@ -36,7 +36,7 @@ def admin_register(data: dict) -> ObjectId:
         "first_name":  data["first_name"],
         "last_name": data["last_name"],
         "phone_number": [data["phone_number"]],
-        "payment_information": {},
+        "payment_details": [],
         "bookings": [],
         "reviews": [],
         "listings": [],

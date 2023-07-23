@@ -26,16 +26,19 @@ def new():
     if "address" not in data:
         return { "error": "Valid address is required" }, 400
 
-    if "hourly_price" not in data or not str(data["hourly_price"]).replace('.', '', 1).isdigit():
-        return { "error": "Valid hourly price is required" }, 400
+    if "hourly_rate" not in data and "monthly_rate" not in data:
+        return { "error": "Valid rate is required" }, 400
 
-    if "daily_price" not in data or not str(data["daily_price"]).replace('.', '', 1).isdigit():
-        return { "error": "Valid daily price is required" }, 400
+    if "hourly_rate" in data and not str(data["hourly_rate"]).replace('.', '', 1).isdigit():
+        return { "error": "Valid hourly rate is required" }, 400
 
-    if "space_type" not in data:
+    if "monthly_rate" in data and not str(data["monthly_rate"]).replace('.', '', 1).isdigit():
+        return { "error": "Valid monthly rate is required" }, 400
+
+    if "listing_type" not in data:
         return { "error": "Valid car space type is required" }, 400
 
-    if "max_size" not in data:
+    if "max_vehicle_size" not in data:
         return { "error": "Valid max vehicle size is required" }, 400
 
     if "description" not in data:
@@ -44,8 +47,17 @@ def new():
     if "access_type" not in data:
         return { "error": "Valid access type is required" }, 400
 
-    if "images" not in data:
+    if "photos" not in data:
         return { "error": "Valid images are required" }, 400
+
+    if "instructions" not in data:
+        return { "error": "Valid instructions are required" }, 400
+
+    if "availability" not in data:
+        return { "error": "Valid availability is required" }, 400
+
+    if "electric_charging" not in data:
+        return { "error": "Valid electric charging is required" }, 400
 
     listing_id = listings_db.new(user_id, data)
 

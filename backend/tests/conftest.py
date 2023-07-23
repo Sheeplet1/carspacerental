@@ -42,14 +42,23 @@ LISTING_STUB = {
     "address": {
         "street": "unsw"
     },
-    "hourly_price": 4.2,
-    "daily_price": 100,
-    "space_type": "Driveway",
-    "max_size": "SUV",
+    "hourly_rate": 4.2,
+    "monthly_rate": 100,
+    "listing_type": "Driveway",
+    "max_vehicle_size": "SUV",
     "description": "none",
     "access_type": "key card",
-    "images": ["image1", "image2"],
-    "features": ["ev"]
+    "photos": ["image1", "image2"],
+    "safety_features": ["ev"],
+    "amenities": ["amenities"],
+    "electric_charging": "yes?",
+    "instructions": "instructions",
+    "availability": {
+        "is_24_7": True,
+        "start_time": "time",
+        "end_time": "time",
+        "available_days": [],
+    },
 }
 
 BOOKING_STUB = {

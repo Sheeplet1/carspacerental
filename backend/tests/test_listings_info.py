@@ -58,12 +58,12 @@ def test_put_valid(client, mock_db, user_token):
     resp = client.post('/listings/new', headers=user_token, json=conftest.LISTING_STUB.copy())
     listing_id = resp.json["listing_id"]
 
-    assert mock_db["Listings"].find_one()["space_type"] == "Driveway"
+    assert mock_db["Listings"].find_one()["listing_type"] == "Driveway"
     resp = client.put(f'/listings/{listing_id}', headers=user_token, json={
-        "space_type": "new type"
+        "listing_type": "new type"
     })
     assert resp.status_code == conftest.OK
-    assert mock_db["Listings"].find_one()["space_type"] == "new type"
+    assert mock_db["Listings"].find_one()["listing_type"] == "new type"
 
 def test_put_invalid_key(client, user_token):
     """
@@ -116,12 +116,12 @@ def test_admin_put(client, mock_db, user_token, admin_token):
     resp = client.post('/listings/new', headers=user_token, json=conftest.LISTING_STUB.copy())
     listing_id = resp.json["listing_id"]
 
-    assert mock_db["Listings"].find_one()["space_type"] == "Driveway"
+    assert mock_db["Listings"].find_one()["listing_type"] == "Driveway"
     resp = client.put(f'/listings/{listing_id}', headers=admin_token, json={
-        "space_type": "new type"
+        "listing_type": "new type"
     })
     assert resp.status_code == conftest.OK
-    assert mock_db["Listings"].find_one()["space_type"] == "new type"
+    assert mock_db["Listings"].find_one()["listing_type"] == "new type"
 
 def test_admin_delete(client, mock_db, user_token, admin_token):
     """

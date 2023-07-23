@@ -18,7 +18,7 @@ def test_valid(client, mock_db, user_token):
 
     user["_id"] = str(user["_id"])
     user.pop("password")
-    user.pop("payment_information")
+    user.pop("payment_details")
 
     assert resp.json == user
 
