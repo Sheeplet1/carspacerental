@@ -1,17 +1,31 @@
 "use client";
 
-import React from "react";
-import LoginSidebar from "@components/LoginSideBar";
-import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Button } from "flowbite-react";
+import PropTypes from "prop-types";
 
-const ParkingSpotDetails = () => {
-  const router = useRouter();
-
+const ParkingSpotDetails = ({
+  prevStep,
+  nextStep,
+  selectedTypeOfSpot,
+  setSelectedTypeOfSpot,
+  selectedMaxVehicleSize,
+  setSelectedMaxVehicleSize,
+  selectedAccessType,
+  setSelectedAccessType,
+  selectedElectricCharging,
+  setSelectedElectricCharging,
+}) => {
   const typeOfSpot = ["Carport", "Driveway", "Garage", "Parking Lot"];
 
-  const maxVehicleSize = ["Bike", "Hatchback", "Sedan", "4WD/SUV", "Van"];
+  const maxVehicleSize = [
+    "Bike",
+    "Hatchback",
+    "Sedan",
+    "4WD/SUV",
+    "Van",
+    "Truck",
+  ];
 
   const accessType = [
     "None",
@@ -25,6 +39,7 @@ const ParkingSpotDetails = () => {
   ];
 
   const electricCharging = [
+    "None",
     "Wall (AU/NZ)",
     "Type 1 (SAE J-1772)",
     "Type 2",
@@ -36,13 +51,10 @@ const ParkingSpotDetails = () => {
   const [isAccessTypeOpen, setIsAccessTypeOpen] = useState(false);
   const [isElectricChargingOpen, setIsElectricChargingOpen] = useState(false);
 
-  const [selectedTypeOfSpot, setSelectedTypeOfSpot] = useState("");
-  const [selectedMaxVehicleSize, setSelectedMaxVehicleSize] = useState("");
-  const [selectedAccessType, setSelectedAccessType] = useState("");
-  const [selectedElectricCharging, setSelectedElectricCharging] = useState("");
-
   const [typeOfSpotError, setTypeOfSpotError] = useState("");
   const [maxVehicleSizeError, setMaxVehicleSizeError] = useState("");
+  const [accessTypeError, setAccessTypeError] = useState("");
+  const [electricChargingError, setElectricChargingError] = useState("");
 
   const toggleDropdown = (dropdownName) => {
     switch (dropdownName) {
@@ -90,36 +102,45 @@ const ParkingSpotDetails = () => {
   const selectAccessType = (access) => {
     setSelectedAccessType(access);
     setIsAccessTypeOpen(false);
+    setAccessTypeError("");
   };
 
   const selectElectricCharging = (charging) => {
     setSelectedElectricCharging(charging);
     setIsElectricChargingOpen(false);
+    setElectricChargingError("");
   };
 
   const handleNextClick = () => {
-    if (selectedTypeOfSpot === "" || selectedMaxVehicleSize === "") {
-      if (selectedTypeOfSpot === "") {
-        setTypeOfSpotError("Type of Spot is required");
-      } else {
-        setTypeOfSpotError("");
-      }
-      if (selectedMaxVehicleSize === "") {
-        setMaxVehicleSizeError("Max. Vehicle Size is required");
-      } else {
-        setMaxVehicleSizeError("");
-      }
-    } else {
-      router.push("/list-your-spot/parking-spot-details/describe-parking-spot");
+    const isTypeOfSpotExist = !!selectedTypeOfSpot;
+    setTypeOfSpotError(isTypeOfSpotExist ? "" : "This field is required");
+
+    const isMaxVehicleSizeExist = !!selectedMaxVehicleSize;
+    setMaxVehicleSizeError(
+      isMaxVehicleSizeExist ? "" : "This field is required"
+    );
+
+    const isAccessTypeExist = !!selectedAccessType;
+    setAccessTypeError(isAccessTypeExist ? "" : "This field is required");
+
+    const isElectricChargingExist = !!selectedElectricCharging;
+    setElectricChargingError(
+      isElectricChargingExist ? "" : "This field is required"
+    );
+
+    if (
+      isTypeOfSpotExist &&
+      isMaxVehicleSizeExist &&
+      isAccessTypeExist &&
+      isElectricChargingExist
+    ) {
+      nextStep();
     }
   };
 
   return (
-    <div className="flex flex-row w-full mt-12">
-      <div className="w-1/3">
-        <LoginSidebar />
-      </div>
-      <div className="relative bottom-14 flex flex-col mr-44">
+    <div className="flex flex-col w-full h-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto">
+      <div className="flex flex-col w-full">
         <h1 className="heading_text mb-5">Tell us about your parking spot.</h1>
 
         <h2 className="text-lg font-bold">Space Details</h2>
@@ -151,7 +172,7 @@ const ParkingSpotDetails = () => {
                 {typeOfSpot.map((spot, index) => (
                   <li key={index}>
                     <button
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="px-4 w-full py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       onClick={() => selectTypeOfSpot(spot)}
                     >
                       {spot}
@@ -162,9 +183,7 @@ const ParkingSpotDetails = () => {
             </div>
           )}
         </div>
-        {typeOfSpotError && (
-          <p className="text-red-500 text-xs mt-1">{typeOfSpotError}</p>
-        )}
+        <p className="error_text">{typeOfSpotError}</p>
 
         <label className="mt-2 mb-1">Max. Vehicle Size</label>
         <div className="relative">
@@ -193,7 +212,7 @@ const ParkingSpotDetails = () => {
                 {maxVehicleSize.map((size, index) => (
                   <li key={index}>
                     <button
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       onClick={() => selectMaxVehicleSize(size)}
                     >
                       {size}
@@ -204,19 +223,19 @@ const ParkingSpotDetails = () => {
             </div>
           )}
         </div>
-        {maxVehicleSizeError && (
-          <p className="text-red-500 text-xs mt-1">{maxVehicleSizeError}</p>
-        )}
+        <p className="error_text">{maxVehicleSizeError}</p>
 
         <h6 className="text-lg font-bold mt-4">
-          How can drivers access this space? (optional)
+          How can drivers access this space?
         </h6>
         <label className="mt-2 mb-1">Access Details:</label>
         <div className="relative">
           <button
             id="dropdownDefaultButton-accessType"
             data-dropdown-toggle="accessType"
-            className="text-gray-500 text-left bg-white w-96 border-b border-black p-2 mb-4"
+            className={`text-gray-500 text-left bg-white w-96 border-b border-black p-2 ${
+              accessTypeError ? "border-red-500" : ""
+            }`}
             type="button"
             onClick={() => toggleDropdown("accessType")}
           >
@@ -236,7 +255,7 @@ const ParkingSpotDetails = () => {
                 {accessType.map((accType, index) => (
                   <li key={index}>
                     <button
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       onClick={() => selectAccessType(accType)}
                     >
                       {accType}
@@ -247,16 +266,19 @@ const ParkingSpotDetails = () => {
             </div>
           )}
         </div>
+        <p className="error_text">{accessTypeError}</p>
 
         <h6 className="text-lg font-bold mt-4">
-          Any other details? (optional)
+          Does your spot have EV charging?
         </h6>
-        <label className="mt-2 mb-1">Other Features:</label>
+        <label className="mt-2 mb-1">Electric Charging:</label>
         <div className="relative">
           <button
             id="dropdownDefaultButton-elecCharging"
             data-dropdown-toggle="electricCharging"
-            className="text-gray-500 text-left bg-white w-96 border-b border-black p-2 mb-4"
+            className={`text-gray-500 text-left bg-white w-96 border-b border-black p-2 ${
+              electricChargingError ? "border-red-500" : ""
+            }`}
             type="button"
             onClick={() => toggleDropdown("electricCharging")}
           >
@@ -276,7 +298,7 @@ const ParkingSpotDetails = () => {
                 {electricCharging.map((elecCharge, index) => (
                   <li key={index}>
                     <button
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       onClick={() => selectElectricCharging(elecCharge)}
                     >
                       {elecCharge}
@@ -287,14 +309,18 @@ const ParkingSpotDetails = () => {
             </div>
           )}
         </div>
+        <p className="error_text">{electricChargingError}</p>
 
-        <div className="flex justify-between">
-          <Link href="/list-your-spot">
-            <button className="blue_btn">Back</button>
-          </Link>
-          <button className="blue_btn" onClick={handleNextClick}>
+        <div className="flex justify-between w-96 mt-4">
+          <Button className="bg-custom-orange rounded-full" onClick={prevStep}>
+            Back
+          </Button>
+          <Button
+            className="bg-custom-orange rounded-full"
+            onClick={handleNextClick}
+          >
             Next
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -302,3 +328,16 @@ const ParkingSpotDetails = () => {
 };
 
 export default ParkingSpotDetails;
+
+ParkingSpotDetails.propTypes = {
+  prevStep: PropTypes.func.isRequired,
+  nextStep: PropTypes.func.isRequired,
+  selectedTypeOfSpot: PropTypes.string.isRequired,
+  setSelectedTypeOfSpot: PropTypes.func.isRequired,
+  selectedMaxVehicleSize: PropTypes.string.isRequired,
+  setSelectedMaxVehicleSize: PropTypes.func.isRequired,
+  selectedAccessType: PropTypes.string.isRequired,
+  setSelectedAccessType: PropTypes.func.isRequired,
+  selectedElectricCharging: PropTypes.string.isRequired,
+  setSelectedElectricCharging: PropTypes.func.isRequired,
+};

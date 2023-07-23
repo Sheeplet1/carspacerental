@@ -14,6 +14,7 @@ const PaymentDetailsModal = ({
   number,
   date,
   cvvNo,
+  isEdit,
 }) => {
   const [cardNo, setCardNo] = useState(number);
   const [expiryDate, setExpiryDate] = useState(date);
@@ -112,9 +113,11 @@ const PaymentDetailsModal = ({
   };
 
   const closeModal = () => {
-    setCardNo("");
-    setExpiryDate("");
-    setCvv("");
+    if (!isEdit) {
+      setCardNo("");
+      setExpiryDate("");
+      setCvv("");
+    }
     setCardNoError("");
     setExpiryDateError("");
     setCvvError("");
@@ -224,4 +227,5 @@ PaymentDetailsModal.propTypes = {
   number: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   cvvNo: PropTypes.number.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };

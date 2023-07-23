@@ -15,6 +15,7 @@ const VehicleDetailsModal = ({
   type,
   make,
   model,
+  isEdit,
 }) => {
   const [vehicleRegistration, setVehicleRegistration] = useState(registration);
   const [vehicleType, setVehicleType] = useState(type);
@@ -25,6 +26,13 @@ const VehicleDetailsModal = ({
   const [vehicleMakeError, setVehicleMakeError] = useState("");
   const [vehicleModelError, setVehicleModelError] = useState("");
   const { user, updateUser } = useContext(UserContext);
+
+  useEffect(() => {
+    setVehicleRegistration(registration);
+    setVehicleType(type);
+    setVehicleMake(make);
+    setVehicleModel(model);
+  }, [registration, type, make, model, showVehicleDetailsModal]);
 
   const ref = useRef(null);
 
@@ -75,10 +83,12 @@ const VehicleDetailsModal = ({
   };
 
   const closeModal = () => {
-    setVehicleRegistration("");
-    setVehicleType("");
-    setVehicleMake("");
-    setVehicleModel("");
+    if (!isEdit) {
+      setVehicleRegistration("");
+      setVehicleType("");
+      setVehicleMake("");
+      setVehicleModel("");
+    }
     setVehicleRegistrationError("");
     setVehicleTypeError("");
     setVehicleMakeError("");
@@ -202,4 +212,5 @@ VehicleDetailsModal.propTypes = {
   type: PropTypes.string.isRequired,
   make: PropTypes.string.isRequired,
   model: PropTypes.string.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import UserContext from "@contexts/UserContext";
 import LoginSideBar from "@components/LoginSideBar";
 import PaymentDetailsModal from "@components/PaymentDetailsModal";
@@ -12,7 +12,14 @@ import { makeRequest } from "@utils/utils";
 const PaymentDetails = () => {
   const router = useRouter();
   const { user, updateUser } = useContext(UserContext);
-  const [showPaymentDetailsModal, setShowPaymentDetailsModal] = useState(false);
+  const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
+  const [showPaymentDetailsModal, setShowPaymentDetailsModal] = useState(
+    user.payment_details.map(() => false)
+  );
+
+  useEffect(() => {
+    setShowPaymentDetailsModal(user.payment_details.map(() => false));
+  }, [user.payment_details]);
 
   const formatCardNumber = (cardNumber) => {
     return `**** **** **** ${cardNumber.slice(-4)}`;
@@ -37,7 +44,7 @@ const PaymentDetails = () => {
         <LoginSideBar />
       </div>
       <div
-        className="flex flex-col w-2/3 justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
+        className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
         style={{ maxHeight: "600px" }}
       >
         <div className="flex flex-col w-full">
@@ -53,13 +60,14 @@ const PaymentDetails = () => {
                 Back to Profile
               </Button>
               <PaymentDetailsModal
-                showPaymentDetailsModal={showPaymentDetailsModal}
-                setShowPaymentDetailsModal={setShowPaymentDetailsModal}
+                showPaymentDetailsModal={showAddPaymentModal}
+                setShowPaymentDetailsModal={setShowAddPaymentModal}
                 btnTitle="Add Payment"
                 modalHeader="Add Payment Details"
                 number={""}
                 date={""}
                 cvvNo={0}
+                isEdit={false}
               />
             </div>
           </div>
@@ -76,13 +84,20 @@ const PaymentDetails = () => {
               </p>
               <div className="flex gap-4 flex-end">
                 <PaymentDetailsModal
-                  showPaymentDetailsModal={showPaymentDetailsModal}
-                  setShowPaymentDetailsModal={setShowPaymentDetailsModal}
+                  showPaymentDetailsModal={showPaymentDetailsModal[index]}
+                  setShowPaymentDetailsModal={(value) => {
+                    const newShowPaymentDetailsModal = [
+                      ...showPaymentDetailsModal,
+                    ];
+                    newShowPaymentDetailsModal[index] = value;
+                    setShowPaymentDetailsModal(newShowPaymentDetailsModal);
+                  }}
                   btnTitle="Edit"
                   modalHeader="Edit Payment Details"
                   number={payment.card_number}
                   date={payment.expiry_date}
                   cvvNo={payment.cvv}
+                  isEdit={true}
                 />
                 <Button
                   className="bg-custom-orange"

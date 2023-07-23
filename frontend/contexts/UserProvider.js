@@ -9,7 +9,9 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(
-    typeof window !== "undefined" && window.localStorage
+    typeof window !== "undefined" &&
+      window.localStorage &&
+      localStorage.getItem("token")
       ? localStorage.getItem("token")
       : ""
   );

@@ -112,7 +112,16 @@ export const checkPasswordValidation = (password) => {
   return "";
 };
 
-export const fileToDataUrl = (file) => {
+const readAsDataURL = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("File Reading Error"));
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+};
+
+export const fileToDataUrl = async (file) => {
   const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
   const valid = validFileTypes.find((type) => type === file.type);
   if (!valid) {
@@ -120,14 +129,12 @@ export const fileToDataUrl = (file) => {
       error: "provided file is not a png, jpg or jpeg image.",
     };
   }
-
-  const reader = new FileReader();
-  const dataUrlPromise = new Promise((resolve, reject) => {
-    reader.onerror = reject;
-    reader.onload = () => resolve(reader.result);
-  });
-  reader.readAsDataURL(file);
-  return dataUrlPromise;
+  try {
+    const dataUrl = await readAsDataURL(file);
+    return dataUrl;
+  } catch (error) {
+    return { error: error.message };
+  }
 };
 
 export const testListings = [
@@ -147,7 +154,7 @@ export const testListings = [
       lng: 151.2090295,
       place_id: "ChIJP3Sa8ziYEmsRUKgyFmh9AQM",
     },
-    type: "Carport",
+    listing_type: "Carport",
     max_vehicle_size: "Bike",
     access_type: "Key",
     ev_charging: true,
@@ -199,7 +206,7 @@ export const testListings = [
       lng: 151.205218,
       place_id: "ChIJN5s-J0eYEmsRB0M-gC7P0SI",
     },
-    type: "Garage",
+    listing_type: "Garage",
     max_vehicle_size: "Compact Car",
     access_type: "Code",
     ev_charging: false,
@@ -243,7 +250,7 @@ export const testListings = [
       lng: 151.207209,
       place_id: "ChIJCd4MtTWYEmsRJtiG64nMoFQ",
     },
-    type: "Parking Lot",
+    listing_type: "Parking Lot",
     max_vehicle_size: "SUV",
     access_type: "Ticket",
     ev_charging: true,
@@ -295,7 +302,7 @@ export const testListings = [
       lng: 151.209349,
       place_id: "ChIJ92S4pgmYEmsRy6g2mhCWeTk",
     },
-    type: "Underground Garage",
+    listing_type: "Underground Garage",
     max_vehicle_size: "Sedan",
     access_type: "Remote Control",
     ev_charging: false,
@@ -347,7 +354,7 @@ export const testListings = [
       lng: 151.208775,
       place_id: "ChIJG6G9eXKuEmsRRWJi-EhWdtQ",
     },
-    type: "Open Parking Space",
+    listing_type: "Open Parking Space",
     max_vehicle_size: "Motorcycle",
     access_type: "Free",
     ev_charging: false,

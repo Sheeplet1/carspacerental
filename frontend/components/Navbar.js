@@ -50,7 +50,7 @@ export const Navbar = () => {
                 About
               </p>
             </Link>
-            <Link href={user ? "/list-your-spot" : "/login"}>
+            <Link href={user ? "/listings" : "/login"}>
               <p className="cursor-pointer hover:underline hover:text-orange-500 text-xl">
                 List Your Spot
               </p>
@@ -138,7 +138,7 @@ export const Navbar = () => {
                       Find a Spot
                     </p>
                   </Link>
-                  <Link href="/manage-bookings">
+                  <Link href="/bookings">
                     <p
                       className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
                       role="menuitem"
@@ -149,7 +149,7 @@ export const Navbar = () => {
                       Manage Bookings
                     </p>
                   </Link>
-                  <Link href="/list-your-spot">
+                  <Link href="/listings">
                     <p
                       className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
                       role="menuitem"

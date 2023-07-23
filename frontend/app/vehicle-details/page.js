@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import UserContext from "@contexts/UserContext";
 import LoginSideBar from "@components/LoginSideBar";
 import VehicleDetailsModal from "@components/VehicleDetailsModal";
@@ -11,7 +11,14 @@ import { makeRequest } from "@utils/utils";
 const VehicleDetails = () => {
   const router = useRouter();
   const { user, updateUser } = useContext(UserContext);
-  const [showVehicleDetailsModal, setShowVehicleDetailsModal] = useState(false);
+  const [showAddVehicleModal, setShowAddVehicleModal] = useState(false);
+  const [showVehicleDetailsModal, setShowVehicleDetailsModal] = useState(
+    user.vehicle_details.map(() => false)
+  );
+
+  useEffect(() => {
+    setShowVehicleDetailsModal(user.vehicle_details.map(() => false));
+  }, [user.vehicle_details]);
 
   const handleDeleteVehicle = async (vehicle) => {
     const body = {
@@ -33,7 +40,7 @@ const VehicleDetails = () => {
         <LoginSideBar />
       </div>
       <div
-        className="flex flex-col w-2/3 justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
+        className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
         style={{ maxHeight: "600px" }}
       >
         <div className="flex flex-col w-full">
@@ -47,14 +54,15 @@ const VehicleDetails = () => {
                 Back to Profile
               </Button>
               <VehicleDetailsModal
-                showVehicleDetailsModal={showVehicleDetailsModal}
-                setShowVehicleDetailsModal={setShowVehicleDetailsModal}
+                showVehicleDetailsModal={showAddVehicleModal}
+                setShowVehicleDetailsModal={setShowAddVehicleModal}
                 btnTitle={"Add Vehicle"}
                 modalHeader={"Add Vehicle Details"}
                 registration={""}
                 type={""}
                 make={""}
                 model={""}
+                isEdit={false}
               />
             </div>
           </div>
@@ -72,14 +80,21 @@ const VehicleDetails = () => {
 
               <div className="flex gap-4 flex-end">
                 <VehicleDetailsModal
-                  showVehicleDetailsModal={showVehicleDetailsModal}
-                  setShowVehicleDetailsModal={setShowVehicleDetailsModal}
+                  showVehicleDetailsModal={showVehicleDetailsModal[index]}
+                  setShowVehicleDetailsModal={(value) => {
+                    const newShowVehicleDetailsModal = [
+                      ...showVehicleDetailsModal,
+                    ];
+                    newShowVehicleDetailsModal[index] = value;
+                    setShowVehicleDetailsModal(newShowVehicleDetailsModal);
+                  }}
                   btnTitle={"Edit"}
                   modalHeader={"Edit Vehicle Details"}
                   registration={vehicle.registration_number}
                   type={vehicle.vehicle_type}
                   make={vehicle.vehicle_make}
                   model={vehicle.vehicle_model}
+                  isEdit={true}
                 />
                 <Button
                   className="bg-custom-orange"

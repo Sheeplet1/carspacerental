@@ -49,14 +49,14 @@ export const LoginSidebar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/">
+            <Link href="/bookings">
               <p className="flex py-1 text-lg text-gray-800 hover:underline">
                 Manage Bookings
               </p>
             </Link>
           </li>
           <li>
-            <Link href="/list-your-spot">
+            <Link href="/listings">
               <p className="flex py-1 text-lg text-gray-800 hover:underline">
                 Manage Listings
               </p>
