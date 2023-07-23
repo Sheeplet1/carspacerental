@@ -8,7 +8,7 @@ def test_successful_listing(client, mock_db, user_token):
     THEN check that a '200' (OK) status code is returned and the listing is created
     """
     listing_stub = conftest.LISTING_STUB.copy()
-    
+
     response = client.post('/listings/new', headers=user_token ,
                            json=listing_stub)
     assert response.status_code == conftest.OK
@@ -53,78 +53,89 @@ def test_missing_address(client, user_token):
     }
 
 
-def test_missing_hourly_price(client, user_token):
+def test_missing_hourly_rate(client, user_token):
     """
     GIVEN a Flask application configured for testing
-    WHEN the 'listings/new' is posted with a missing price (POST)
+    WHEN the 'listings/new' is posted with a missing rate (POST)
     THEN check that a '400' (BAD REQUEST) code and suitable message is returned
     """
     test_body = conftest.LISTING_STUB.copy().copy()
-    test_body.pop('hourly_price')
+    test_body.pop('hourly_rate')
+    response = client.post('/listings/new', headers=user_token,
+                           json=test_body)
+    assert response.status_code == conftest.OK
+
+
+def test_missing_monthly_rate(client, user_token):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the 'listings/new' is posted with a missing rate (POST)
+    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
+    """
+    test_body = conftest.LISTING_STUB.copy().copy()
+    test_body.pop("monthly_rate")
+    response = client.post('/listings/new', headers=user_token,
+                           json=test_body)
+    assert response.status_code == conftest.OK
+
+
+def test_missing_rate(client, user_token):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the 'listings/new' is posted with a missing rate (POST)
+    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
+    """
+    test_body = conftest.LISTING_STUB.copy().copy()
+    test_body.pop("monthly_rate")
+    test_body.pop("hourly_rate")
     response = client.post('/listings/new', headers=user_token,
                            json=test_body)
     assert response.status_code == conftest.BAD_REQUEST
     assert response.json == {
-        "error": "Valid hourly price is required",
+        "error": "Valid rate is required",
     }
-    
-    
-def test_missing_daily_price(client, user_token):
+
+
+def test_invalid_hourly_rate(client, user_token):
     """
     GIVEN a Flask application configured for testing
-    WHEN the 'listings/new' is posted with a missing price (POST)
+    WHEN the 'listings/new' is posted with an invalid rate (POST)
     THEN check that a '400' (BAD REQUEST) code and suitable message is returned
     """
     test_body = conftest.LISTING_STUB.copy().copy()
-    test_body.pop("daily_price")
+    test_body["hourly_rate"] = "invalid rate"
     response = client.post('/listings/new', headers=user_token,
                            json=test_body)
     assert response.status_code == conftest.BAD_REQUEST
     assert response.json == {
-        "error": "Valid daily price is required",
+        "error": "Valid hourly rate is required",
     }
 
 
-def test_invalid_hourly_price(client, user_token):
+def test_invalid_monthly_rate(client, user_token):
     """
     GIVEN a Flask application configured for testing
-    WHEN the 'listings/new' is posted with an invalid price (POST)
+    WHEN the 'listings/new' is posted with an invalid rate (POST)
     THEN check that a '400' (BAD REQUEST) code and suitable message is returned
     """
     test_body = conftest.LISTING_STUB.copy().copy()
-    test_body["hourly_price"] = "invalid price"
+    test_body["monthly_rate"] = "invalid rate"
     response = client.post('/listings/new', headers=user_token,
                            json=test_body)
     assert response.status_code == conftest.BAD_REQUEST
     assert response.json == {
-        "error": "Valid hourly price is required",
+        "error": "Valid monthly rate is required",
     }
 
 
-def test_invalid_daily_price(client, user_token):
+def test_missing_listing_type(client, user_token):
     """
     GIVEN a Flask application configured for testing
-    WHEN the 'listings/new' is posted with an invalid price (POST)
+    WHEN the 'listings/new' is posted with a missing listing_type (POST)
     THEN check that a '400' (BAD REQUEST) code and suitable message is returned
     """
     test_body = conftest.LISTING_STUB.copy().copy()
-    test_body["daily_price"] = "invalid price"
-    response = client.post('/listings/new', headers=user_token,
-                           json=test_body)
-    assert response.status_code == conftest.BAD_REQUEST
-    assert response.json == {
-        "error": "Valid daily price is required",
-    }
-
-
-def test_missing_space_type(client, user_token):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the 'listings/new' is posted with a missing space_type (POST)
-    THEN check that a '400' (BAD REQUEST) code and suitable message is returned
-    """
-    test_body = conftest.LISTING_STUB.copy().copy()
-    test_body.pop("space_type")
+    test_body.pop("listing_type")
     response = client.post('/listings/new', headers=user_token,
                            json=test_body)
     assert response.status_code == conftest.BAD_REQUEST
@@ -133,14 +144,14 @@ def test_missing_space_type(client, user_token):
     }
 
 
-def test_missing_max_size(client, user_token):
+def test_missing_max_vehicle_size(client, user_token):
     """
     GIVEN a Flask application configured for testing
-    WHEN the 'listings/new' is posted with a missing max_size (POST)
+    WHEN the 'listings/new' is posted with a missing max_vehicle_size (POST)
     THEN check that a '400' (BAD REQUEST) code and suitable message is returned
     """
     test_body = conftest.LISTING_STUB.copy().copy()
-    test_body.pop("max_size")
+    test_body.pop("max_vehicle_size")
     response = client.post('/listings/new', headers=user_token,
                            json=test_body)
     assert response.status_code == conftest.BAD_REQUEST
@@ -188,7 +199,7 @@ def test_missing_images(client, user_token):
     THEN check that a '400' (BAD REQUEST) code and suitable message is returned
     """
     test_body = conftest.LISTING_STUB.copy().copy()
-    test_body.pop("images")
+    test_body.pop("photos")
     response = client.post('/listings/new', headers=user_token,
                            json=test_body)
     assert response.status_code == conftest.BAD_REQUEST

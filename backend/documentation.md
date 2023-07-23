@@ -149,7 +149,7 @@
 >     "email": "example@gmail.com",
 >     "first_name": "example_first",
 >     "last_name": "example_last",
->     "payment_information": {
+>     "payment_details": {
 >       TODO
 >     },
 >     "listings": [],
@@ -536,7 +536,7 @@
 | `first_name`          | string   | "first"                              |
 | `last_name`           | string   | "last"                               |
 | `phone_number`        | Array    | ["0412345678"]                       |
-| `payment_information` | Object   | {TODO}                               |
+| `payment_details`     | Object   | {TODO}                               |
 | `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `reviews`             | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |

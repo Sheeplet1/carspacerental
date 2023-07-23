@@ -66,7 +66,7 @@ def get_user(user_id):
 
     invalid_keys = [
         "password",
-        "payment_information",
+        "payment_details",
     ]
 
     for key in invalid_keys:
