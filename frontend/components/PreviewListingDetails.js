@@ -3,6 +3,8 @@ import { Button, Carousel } from "flowbite-react";
 import Image from "next/image";
 import { Tooltip, Chip } from "@mui/material";
 import { makeRequest } from "@utils/utils";
+import UserContext from "@contexts/UserContext";
+import { useContext } from "react";
 
 const PreviewListingDetails = ({
   prevStep,
@@ -24,6 +26,7 @@ const PreviewListingDetails = ({
   safetyFeatures,
   amenities,
 }) => {
+  const { updateUser } = useContext(UserContext);
   const formatTime = (time) => {
     if (time === 0) return "12:00 AM";
     if (time === 12) return "12:00 PM";
@@ -62,6 +65,7 @@ const PreviewListingDetails = ({
     if (response.error) {
       console.log(response.error);
     } else {
+      updateUser();
       nextStep();
     }
   };

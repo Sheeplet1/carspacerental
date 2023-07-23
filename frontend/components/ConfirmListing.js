@@ -2,14 +2,9 @@
 
 import { Button } from "flowbite-react";
 import PropTypes from "prop-types";
-import UserContext from "@contexts/UserContext";
-import { useContext } from "react";
 
 const ConfirmListing = ({ nextStep }) => {
-  const { updateUser } = useContext(UserContext);
-
   const handleNextClick = () => {
-    updateUser();
     nextStep();
   };
 

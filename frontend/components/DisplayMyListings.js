@@ -3,16 +3,12 @@ import { Button, Card } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import UserContext from "@contexts/UserContext";
 import { useContext } from "react";
-import { makeRequest, testListings } from "@utils/utils";
+import { makeRequest } from "@utils/utils";
 import PropTypes from "prop-types";
 
 const DisplayMyListings = ({ nextStep }) => {
   const router = useRouter();
-  const { updateUser } = useContext(UserContext);
-
-  const user = {
-    listings: testListings,
-  };
+  const { user, updateUser } = useContext(UserContext);
 
   const handleDeleteListing = async (listing) => {
     const body = {
@@ -27,9 +23,10 @@ const DisplayMyListings = ({ nextStep }) => {
       updateUser();
     }
   };
+
   return (
     <div
-      className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
+      className="flex flex-col w-full h-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
       style={{ maxHeight: "600px" }}
     >
       <div className="flex flex-col w-full">

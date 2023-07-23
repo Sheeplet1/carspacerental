@@ -3,12 +3,7 @@ import ListingsSideBar from "@components/ListingsSideBar";
 import GoogleMaps from "@components/GoogleMaps";
 import { useContext, useEffect, useState } from "react";
 import SearchContext from "@contexts/SearchContext";
-import {
-  getNextHour,
-  calculateDistanceInKm,
-  makeRequest,
-  testListings,
-} from "@utils/utils";
+import { getNextHour, calculateDistanceInKm, makeRequest } from "@utils/utils";
 import { useSearchParams } from "next/navigation";
 
 const SearchListings = () => {
@@ -27,7 +22,7 @@ const SearchListings = () => {
     setMinEndTime,
     sort,
   } = useContext(SearchContext);
-  const [originalListings, setOriginalListings] = useState(testListings);
+  const [originalListings, setOriginalListings] = useState([]);
   useEffect(() => {
     if (startDate > endDate) {
       setEndDate(new Date(startDate));
@@ -69,7 +64,7 @@ const SearchListings = () => {
       if (response.error) {
         console.log(response.error);
       } else {
-        if (response.data.length !== 0) {
+        if (response.listings.length !== 0) {
           setOriginalListings(response.data);
         }
       }
@@ -80,10 +75,9 @@ const SearchListings = () => {
 
   useEffect(() => {
     let processedListings = [...originalListings];
-
     if (isCasual) {
       processedListings = processedListings.filter((listing) => {
-        if (listing.hourly_rate) return false;
+        if (!listing.hourly_rate) return false;
 
         if (listing.availability.is_24_7) return true;
 

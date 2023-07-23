@@ -159,8 +159,8 @@ FeaturesAndDetails.propTypes = {
   nextStep: PropTypes.func.isRequired,
   photos: PropTypes.array.isRequired,
   setPhotos: PropTypes.func.isRequired,
-  safetyFeatures: PropTypes.string.isRequired,
+  safetyFeatures: PropTypes.array.isRequired,
   setSafetyFeatures: PropTypes.func.isRequired,
-  amenities: PropTypes.string.isRequired,
+  amenities: PropTypes.array.isRequired,
   setAmenities: PropTypes.func.isRequired,
 };

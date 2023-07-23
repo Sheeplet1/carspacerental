@@ -1,6 +1,6 @@
-"use strict";
+"use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import UserContext from "@contexts/UserContext";
 import { makeRequest } from "@utils/makeRequest";
 import PropTypes from "prop-types";
@@ -8,13 +8,24 @@ import PropTypes from "prop-types";
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(
-    typeof window !== "undefined" &&
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const localToken =
+      typeof window !== "undefined" &&
       window.localStorage &&
       localStorage.getItem("token")
-      ? localStorage.getItem("token")
-      : ""
-  );
+        ? localStorage.getItem("token")
+        : "";
+
+    setToken(localToken);
+
+    if (localToken) {
+      updateUser();
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   const updateUser = useCallback(async () => {
     const response = await makeRequest("/user/profile", "GET");
@@ -25,18 +36,17 @@ const UserProvider = ({ children }) => {
       setUser(response);
     }
     setLoading(false);
+  }, [token]);
+
+  const handleSetToken = useCallback((newToken) => {
+    setToken(newToken);
+    localStorage.setItem("token", newToken);
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      updateUser();
-    } else {
-      setLoading(false); // In case there is no token in local storage, we should also set loading to false
-    }
-  }, [token, updateUser]);
-
   return (
-    <UserContext.Provider value={{ user, setUser, setToken, updateUser }}>
+    <UserContext.Provider
+      value={{ user, setUser, setToken: handleSetToken, updateUser }}
+    >
       {!loading && children}
     </UserContext.Provider>
   );

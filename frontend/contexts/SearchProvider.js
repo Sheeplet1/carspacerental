@@ -1,13 +1,12 @@
 import { useState } from "react";
 import SearchContext from "@contexts/SearchContext";
 import { getNextHour, getDate } from "@utils/utils";
-import { testListings } from "@utils/utils";
 import PropTypes from "prop-types";
 
 const SearchProvider = ({ children }) => {
   const [isCasual, setIsCasual] = useState(true);
   const [addressData, setAddressData] = useState(null);
-  const [listings, setListings] = useState(testListings);
+  const [listings, setListings] = useState([]);
   const [selectedListing, setSelectedListing] = useState(null);
   const [isBooking, setIsBooking] = useState(false);
   const [startTime, setStartTime] = useState(getNextHour());

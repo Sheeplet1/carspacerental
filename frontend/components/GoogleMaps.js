@@ -50,9 +50,7 @@ export const GoogleMaps = () => {
             }}
             label={{
               text: `$${
-                isCasual
-                  ? listing.pricing.hourly_rate
-                  : listing.pricing.monthly_rate
+                isCasual ? listing.hourly_rate : listing.monthly_rate
               }/${isCasual ? "hr" : "mth"}`,
               color: "#fff",
               fontSize: "7px",

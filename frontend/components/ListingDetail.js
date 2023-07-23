@@ -76,7 +76,7 @@ const ListingDetail = () => {
         <div className="flex justify-between items-center mb-4">
           <div>
             <h1 className="text-3xl text-gray-500">
-              {selectedListing.type} on {selectedListing.address.street}
+              {selectedListing.listing_type} on {selectedListing.address.street}
             </h1>
           </div>
         </div>
