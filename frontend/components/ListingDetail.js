@@ -153,8 +153,8 @@ const ListingDetail = () => {
         <div className="font-bold text-2xl text-gray-500">
           $
           {isCasual
-            ? `${selectedListing.pricing.hourly_rate}/hr`
-            : `${selectedListing.pricing.monthly_rate}/mth`}
+            ? `${selectedListing.hourly_rate}/hr`
+            : `${selectedListing.monthly_rate}/mth`}
         </div>
         <div>
           <button
@@ -164,13 +164,13 @@ const ListingDetail = () => {
             Book for $
             {isCasual
               ? calculateTotalPrice(
-                  selectedListing.pricing.hourly_rate,
+                  selectedListing.hourly_rate,
                   startDate,
                   endDate,
                   startTime,
                   endTime
                 )
-              : selectedListing.pricing.monthly_rate}
+              : selectedListing.monthly_rate}
           </button>
         </div>
       </div>

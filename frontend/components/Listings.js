@@ -49,7 +49,9 @@ const Listings = () => {
                     {listing.address.street}, {listing.address.city}
                   </h3>
                   <p className="text-xs text-gray-500">
-                    {isCasual && `$${listing.pricing.hourly_rate}/hr`}
+                    {isCasual
+                      ? `$${listing.hourly_rate}/hr`
+                      : `$${listing.monthly_rate}/mth`}
                   </p>
                 </div>
                 <div className="flex flex-col h-1/2 pt-3">
@@ -76,13 +78,13 @@ const Listings = () => {
                     <p className="text-xl font-bold text-gray-800 ml-2 mb-4">
                       {isCasual
                         ? `$${calculateTotalPrice(
-                            listing.pricing.hourly_rate,
+                            listing.hourly_rate,
                             startDate,
                             endDate,
                             startTime,
                             endTime
                           )}`
-                        : `$${listing.pricing.monthly_rate}/mth`}
+                        : `$${listing.monthly_rate}/mth`}
                     </p>
                   </div>
                 </div>

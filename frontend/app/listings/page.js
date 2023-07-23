@@ -20,8 +20,6 @@ const MyListings = () => {
   const [selectedElectricCharging, setSelectedElectricCharging] = useState("");
   const [describeParkingSpace, setDescribeParkingSpace] = useState("");
   const [driverInstructions, setDriverInstructions] = useState("");
-  const [isHourlyActive, setIsHourlyActive] = useState(false);
-  const [isMonthlyActive, setIsMonthlyActive] = useState(false);
   const [hourlyPrice, setHourlyPrice] = useState("");
   const [monthlyPrice, setMonthlyPrice] = useState("");
   const [isAvailble24Hours, setIsAvailble24Hours] = useState(false);
@@ -84,10 +82,6 @@ const MyListings = () => {
           <SetPrice
             prevStep={() => setStep(3)}
             nextStep={() => setStep(5)}
-            isHourlyActive={isHourlyActive}
-            setIsHourlyActive={setIsHourlyActive}
-            isMonthlyActive={isMonthlyActive}
-            setIsMonthlyActive={setIsMonthlyActive}
             hourlyPrice={hourlyPrice}
             setHourlyPrice={setHourlyPrice}
             monthlyPrice={monthlyPrice}
@@ -127,8 +121,6 @@ const MyListings = () => {
             selectedElectricCharging={selectedElectricCharging}
             describeParkingSpace={describeParkingSpace}
             driverInstructions={driverInstructions}
-            isHourlyActive={isHourlyActive}
-            isMonthlyActive={isMonthlyActive}
             hourlyPrice={hourlyPrice}
             monthlyPrice={monthlyPrice}
             isAvailble24Hours={isAvailble24Hours}

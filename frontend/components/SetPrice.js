@@ -8,10 +8,6 @@ import TimePicker from "@components/TimePicker";
 const SetPrice = ({
   prevStep,
   nextStep,
-  isHourlyActive,
-  setIsHourlyActive,
-  isMonthlyActive,
-  setIsMonthlyActive,
   hourlyPrice,
   setHourlyPrice,
   monthlyPrice,
@@ -27,6 +23,8 @@ const SetPrice = ({
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [minEndTime, setMinEndTime] = useState(startTime + 1);
+  const [isHourlyActive, setIsHourlyActive] = useState(false);
+  const [isMonthlyActive, setIsMonthlyActive] = useState(false);
 
   const daysOfWeek = [
     "Sunday",
@@ -247,10 +245,6 @@ export default SetPrice;
 SetPrice.propTypes = {
   prevStep: PropTypes.func.isRequired,
   nextStep: PropTypes.func.isRequired,
-  isHourlyActive: PropTypes.bool.isRequired,
-  setIsHourlyActive: PropTypes.func.isRequired,
-  isMonthlyActive: PropTypes.bool.isRequired,
-  setIsMonthlyActive: PropTypes.func.isRequired,
   hourlyPrice: PropTypes.string.isRequired,
   setHourlyPrice: PropTypes.func.isRequired,
   monthlyPrice: PropTypes.string.isRequired,

@@ -14,8 +14,6 @@ const PreviewListingDetails = ({
   selectedElectricCharging,
   describeParkingSpace,
   driverInstructions,
-  isHourlyActive,
-  isMonthlyActive,
   hourlyPrice,
   monthlyPrice,
   isAvailble24Hours,
@@ -41,12 +39,6 @@ const PreviewListingDetails = ({
       electric_charging: selectedElectricCharging,
       description: describeParkingSpace,
       instructions: driverInstructions,
-      casual_booking: isHourlyActive,
-      monthly_booking: isMonthlyActive,
-      pricing: {
-        hourly_rate: hourlyPrice,
-        monthly_rate: monthlyPrice,
-      },
       photos,
       availability: {
         is_24_7: isAvailble24Hours,
@@ -57,6 +49,14 @@ const PreviewListingDetails = ({
       safety_features: safetyFeatures,
       amenities,
     };
+
+    if (hourlyPrice.trim() !== "") {
+      body.hourly_rate = hourlyPrice;
+    }
+
+    if (monthlyPrice.trim() !== "") {
+      body.monthly_rate = monthlyPrice;
+    }
 
     const response = await makeRequest("/listings/new", "POST", body);
     if (response.error) {
@@ -113,8 +113,8 @@ const PreviewListingDetails = ({
 
           <p className="mt-2 text-gray-600">
             <span className="font-bold">Pricing: </span>{" "}
-            {isHourlyActive && `Hourly - $${hourlyPrice}, `}
-            {isMonthlyActive && `Monthly - $${monthlyPrice}`}
+            {hourlyPrice.length != 0 && `Hourly - $${hourlyPrice}`}
+            {monthlyPrice.length != 0 && `Monthly - $${monthlyPrice}`}
           </p>
 
           <p className="mt-2 text-gray-600">
@@ -193,8 +193,6 @@ PreviewListingDetails.propTypes = {
   selectedElectricCharging: PropTypes.string.isRequired,
   describeParkingSpace: PropTypes.string.isRequired,
   driverInstructions: PropTypes.string.isRequired,
-  isHourlyActive: PropTypes.bool.isRequired,
-  isMonthlyActive: PropTypes.bool.isRequired,
   hourlyPrice: PropTypes.string.isRequired,
   monthlyPrice: PropTypes.string.isRequired,
   isAvailble24Hours: PropTypes.bool.isRequired,

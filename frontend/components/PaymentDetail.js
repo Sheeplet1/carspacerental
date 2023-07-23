@@ -74,13 +74,13 @@ const PaymentDetail = () => {
       price: `${
         isCasual
           ? calculateTotalPrice(
-              selectedListing.pricing.hourly_rate,
+              selectedListing.hourly_rate,
               startDate,
               endDate,
               startTime,
               endTime
             )
-          : selectedListing.pricing.monthly_rate
+          : selectedListing.monthly_rate
       }`,
     };
 
@@ -145,13 +145,13 @@ const PaymentDetail = () => {
           <div>
             {isCasual
               ? `$${calculateTotalPrice(
-                  selectedListing.pricing.hourly_rate,
+                  selectedListing.hourly_rate,
                   startDate,
                   endDate,
                   startTime,
                   endTime
                 )}`
-              : `$${selectedListing.pricing.monthly_rate}/mth`}
+              : `$${selectedListing.monthly_rate}/mth`}
           </div>
         </div>
         <hr className="border-t-2 border-gray-300 mb-4" />
@@ -193,13 +193,13 @@ const PaymentDetail = () => {
           <div>
             {isCasual
               ? `$${calculateTotalPrice(
-                  selectedListing.pricing.hourly_rate,
+                  selectedListing.hourly_rate,
                   startDate,
                   endDate,
                   startTime,
                   endTime
                 )}`
-              : `$${selectedListing.pricing.monthly_rate}/mth`}
+              : `$${selectedListing.monthly_rate}/mth`}
           </div>
         </div>
         <hr className="border-t-2 border-gray-300 mb-4" />
@@ -224,13 +224,13 @@ const PaymentDetail = () => {
         <div className="font-bold text-2xl text-gray-500">
           {isCasual
             ? `$${calculateTotalPrice(
-                selectedListing.pricing.hourly_rate,
+                selectedListing.hourly_rate,
                 startDate,
                 endDate,
                 startTime,
                 endTime
               )}`
-            : `$${selectedListing.pricing.monthly_rate}/mth`}
+            : `$${selectedListing.monthly_rate}/mth`}
         </div>
         <div>
           <button

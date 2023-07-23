@@ -81,7 +81,38 @@ const SearchListings = () => {
   useEffect(() => {
     let processedListings = [...originalListings];
 
-    // Sorting
+    if (isCasual) {
+      processedListings = processedListings.filter((listing) => {
+        if (listing.hourly_rate) return false;
+
+        if (listing.availability.is_24_7) return true;
+
+        const selectedDays = getDaysArray(
+          new Date(startDate),
+          new Date(endDate)
+        ).map((date) => date.toLocaleString("en-us", { weekday: "long" }));
+
+        const listingDays = listing.availability.available_days;
+
+        const dateIsValid = selectedDays.every((day) =>
+          listingDays.includes(day)
+        );
+
+        const startTimeIsValid =
+          startTime >= getTime(listing.availability.start_time) &&
+          startTime < getTime(listing.availability.end_time);
+        const endTimeIsValid =
+          endTime > getTime(listing.availability.start_time) &&
+          endTime <= getTime(listing.availability.end_time);
+
+        return dateIsValid && startTimeIsValid && endTimeIsValid;
+      });
+    } else {
+      processedListings = processedListings.filter(
+        (listing) => listing.monthly_rate
+      );
+    }
+
     processedListings.sort((a, b) => {
       switch (sort) {
         case "distance":
@@ -112,45 +143,12 @@ const SearchListings = () => {
                 );
         case "price":
           return isCasual
-            ? a.pricing.hourly_rate - b.pricing.hourly_rate
-            : a.pricing.monthly_rate - b.pricing.monthly_rate;
+            ? a.hourly_rate - b.hourly_rate
+            : a.monthly_rate - b.monthly_rate;
         default:
           return 0;
       }
     });
-
-    // Filtering
-    if (isCasual) {
-      processedListings = processedListings.filter((listing) => {
-        if (!listing.casual_booking) return false;
-
-        if (listing.availability.is_24_7) return true;
-
-        const selectedDays = getDaysArray(
-          new Date(startDate),
-          new Date(endDate)
-        ).map((date) => date.toLocaleString("en-us", { weekday: "long" }));
-
-        const listingDays = listing.availability.available_days;
-
-        const dateIsValid = selectedDays.every((day) =>
-          listingDays.includes(day)
-        );
-
-        const startTimeIsValid =
-          startTime >= getTime(listing.availability.start_time) &&
-          startTime < getTime(listing.availability.end_time);
-        const endTimeIsValid =
-          endTime > getTime(listing.availability.start_time) &&
-          endTime <= getTime(listing.availability.end_time);
-
-        return dateIsValid && startTimeIsValid && endTimeIsValid;
-      });
-    } else {
-      processedListings = processedListings.filter(
-        (listing) => listing.monthly_booking
-      );
-    }
 
     setListings(processedListings);
   }, [isCasual, startDate, endDate, startTime, endTime, sort]);
