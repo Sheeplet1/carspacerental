@@ -1,16 +1,15 @@
 "use client";
 
 import { Button, Modal, Label } from "flowbite-react";
-import { useState, useRef, useEffect, useContext } from "react";
-import { makeRequest } from "@utils/utils";
-import UserContext from "@contexts/UserContext";
+import { useState, useRef, useEffect } from "react";
+import { useUser } from "@contexts/UserProvider";
 import PropTypes from "prop-types";
 
 const EditProfileModal = ({
   showEditProfileModal,
   setShowEditProfileModal,
 }) => {
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useUser();
   const [email, setEmail] = useState(user.email);
   const [firstName, setFirstName] = useState(user.first_name);
   const [lastName, setLastName] = useState(user.last_name);
@@ -74,13 +73,7 @@ const EditProfileModal = ({
         last_name: lastName,
         phone_number: phoneNumber,
       };
-      const response = await makeRequest("/user/profile", "PUT", body);
-      if (response.error) {
-        console.log(response.error);
-      } else {
-        updateUser(response);
-        closeModal();
-      }
+      updateUser(body);
     }
   };
 

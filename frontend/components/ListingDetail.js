@@ -2,16 +2,16 @@ import { Tooltip, Chip } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
 import { calculateTotalPrice, makeRequest } from "@utils/utils";
-import UserContext from "@contexts/UserContext";
+import { useUser } from "@contexts/UserProvider";
 import SearchContext from "@contexts/SearchContext";
 import { useRouter } from "next/navigation";
 
 const ListingDetail = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const {
     selectedListing,
     startDate,

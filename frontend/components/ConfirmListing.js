@@ -3,7 +3,7 @@
 import { Button } from "flowbite-react";
 import PropTypes from "prop-types";
 
-const ConfirmListing = ({ nextStep }) => {
+const ConfirmListing = ({ nextStep, edit }) => {
   const handleNextClick = () => {
     nextStep();
   };
@@ -11,11 +11,11 @@ const ConfirmListing = ({ nextStep }) => {
   return (
     <div className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto mt-12">
       <h1 className="heading_text text-3xl text-gray-700 mb-5">
-        Listing Confirmed!
+        Listing {edit.id ? "Updated" : "Created"}
       </h1>
 
       <p className="mb-5">
-        Congratulations! Your spot has been listed successfully.
+        Your listing has been {edit.id ? "updated" : "created"} successfully!
       </p>
 
       <div className="flex mt-4">
@@ -33,5 +33,6 @@ const ConfirmListing = ({ nextStep }) => {
 export default ConfirmListing;
 
 ConfirmListing.propTypes = {
-  nextStep: PropTypes.func,
+  nextStep: PropTypes.func.isRequired,
+  edit: PropTypes.object,
 };

@@ -28,6 +28,8 @@ def new(user_id: ObjectId, data: dict) -> ObjectId:
 
     collection = db.get_database()["Listings"]
     collection.insert_one(listing_doc)
+
+    db.get_database()['UserAccount'].update_one({"_id": user_id}, {"$push": {"listings": id}})
     return id
 
 def get(listing_id: ObjectId) -> Optional[dict]:

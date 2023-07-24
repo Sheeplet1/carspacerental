@@ -1,9 +1,8 @@
 "use client";
 
 import { Button, Modal, Label } from "flowbite-react";
-import { useState, useRef, useEffect, useContext } from "react";
-import { makeRequest } from "@utils/utils";
-import UserContext from "@contexts/UserContext";
+import { useState, useRef, useEffect } from "react";
+import { useUser } from "@contexts/UserProvider";
 import PropTypes from "prop-types";
 
 const PaymentDetailsModal = ({
@@ -22,7 +21,7 @@ const PaymentDetailsModal = ({
   const [cardNoError, setCardNoError] = useState("");
   const [expiryDateError, setExpiryDateError] = useState("");
   const [cvvError, setCvvError] = useState("");
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useUser();
 
   const ref = useRef(null);
 
@@ -72,8 +71,6 @@ const PaymentDetailsModal = ({
       };
 
       const paymentDetails = user.payment_details.filter((p) => {
-        console.log(p.card_number);
-        console.log(cardNo);
         return p.card_number !== cardNo;
       });
 
@@ -81,13 +78,8 @@ const PaymentDetailsModal = ({
         payment_details: [...paymentDetails, newPaymentDetail],
       };
 
-      const response = await makeRequest("/user/profile", "PUT", body);
-      if (response.error) {
-        console.log(response.error);
-      } else {
-        updateUser();
-        closeModal();
-      }
+      updateUser(body);
+      closeModal();
     }
   };
 

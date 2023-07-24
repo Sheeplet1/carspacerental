@@ -49,6 +49,7 @@ const ListYourSpot = ({ prevStep, nextStep, address, setAddress }) => {
               className="border border-transparent w-full h-12 px-3 rounded-full shadow-md text-base outline-none overflow-ellipsis overflow-hidden whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 placeholder-black-400"
               onSearch={searchClick}
               showSearchButton={false}
+              initialValue={address.formatted_address}
             />
           </div>
           <p className="error_text">{addressError}</p>

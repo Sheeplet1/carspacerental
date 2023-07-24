@@ -1,13 +1,14 @@
 "use client";
 
 import Sidebar from "@components/Sidebar";
+import LoginSidebar from "@components/LoginSideBar";
+import { useUser } from "@contexts/UserProvider";
 
 const Help = () => {
+  const { user } = useUser();
   return (
     <div className="flex flex-row w-full justify-between mt-12">
-      <div className="w-1/3">
-        <Sidebar />
-      </div>
+      <div className="w-1/3">{user ? <LoginSidebar /> : <Sidebar />}</div>
       <div className="flex flex-col w-full">
         <h1 className="heading_text">Frequently Asked Questions</h1>
 

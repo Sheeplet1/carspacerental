@@ -37,11 +37,68 @@ const MyListings = () => {
   const [photos, setPhotos] = useState([]);
   const [safetyFeatures, setSafetyFeatures] = useState([]);
   const [amenities, setAmenities] = useState([]);
+  const [edit, setEdit] = useState({ id: "" });
+
+  const resetFields = () => {
+    setAddress({});
+    setSelectedTypeOfSpot("");
+    setSelectedMaxVehicleSize("");
+    setSelectedAccessType("");
+    setSelectedElectricCharging("");
+    setDescribeParkingSpace("");
+    setDriverInstructions("");
+    setHourlyPrice("");
+    setMonthlyPrice("");
+    setIsAvailble24Hours(false);
+    setStartTime(0);
+    setEndTime(0);
+    setAvailableDays({
+      Monday: true,
+      Tuesday: true,
+      Wednesday: true,
+      Thursday: true,
+      Friday: true,
+      Saturday: true,
+      Sunday: true,
+    });
+    setPhotos([]);
+    setSafetyFeatures([]);
+    setAmenities([]);
+    setEdit({});
+  };
+
+  const handleEditListing = (listing) => {
+    setAddress(listing.address);
+    setSelectedTypeOfSpot(listing.listing_type);
+    setSelectedMaxVehicleSize(listing.max_vehicle_size);
+    setSelectedAccessType(listing.access_type);
+    setSelectedElectricCharging(listing.electric_charging);
+    setDescribeParkingSpace(listing.description);
+    setDriverInstructions(listing.instructions);
+    setHourlyPrice(listing.hourly_rate ? listing.hourly_rate.toString() : "");
+    setMonthlyPrice(
+      listing.monthly_rate ? listing.monthly_rate.toString() : ""
+    );
+    setIsAvailble24Hours(listing.availability.is_24_7);
+    setStartTime(listing.availability.start_time);
+    setEndTime(listing.availability.end_time);
+    setAvailableDays(listing.availability.available_days);
+    setPhotos(listing.photos);
+    setSafetyFeatures(listing.safety_features);
+    setAmenities(listing.amenities);
+    setEdit({ id: listing._id });
+    setStep(1);
+  };
 
   const renderStep = () => {
     switch (step) {
       case 0:
-        return <DisplayMyListings nextStep={() => setStep(1)} />;
+        return (
+          <DisplayMyListings
+            nextStep={() => setStep(1)}
+            handleEditListing={handleEditListing}
+          />
+        );
       case 1:
         return (
           <ListYourSpot
@@ -130,10 +187,12 @@ const MyListings = () => {
             photos={photos}
             safetyFeatures={safetyFeatures}
             amenities={amenities}
+            resetFields={resetFields}
+            edit={edit}
           />
         );
       case 7:
-        return <ConfirmListing nextStep={() => setStep(0)} />;
+        return <ConfirmListing nextStep={() => setStep(0)} edit={edit} />;
       default:
         return <DisplayMyListings nextStep={() => setStep(1)} />;
     }

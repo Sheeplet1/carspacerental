@@ -1,17 +1,16 @@
 "use client";
 
-import { useState, useContext, useEffect } from "react";
-import UserContext from "@contexts/UserContext";
+import { useState, useEffect } from "react";
 import LoginSideBar from "@components/LoginSideBar";
 import PaymentDetailsModal from "@components/PaymentDetailsModal";
 import { Button, Card } from "flowbite-react";
 import { FaRegCreditCard } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { makeRequest } from "@utils/utils";
+import { useUser } from "@contexts/UserProvider";
 
 const PaymentDetails = () => {
   const router = useRouter();
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useUser();
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
   const [showPaymentDetailsModal, setShowPaymentDetailsModal] = useState(
     user.payment_details.map(() => false)
@@ -31,12 +30,7 @@ const PaymentDetails = () => {
         (p) => p.card_number !== payment.card_number
       ),
     };
-    const response = await makeRequest("/user/profile", "PUT", body);
-    if (response.error) {
-      console.log(response.error);
-    } else {
-      updateUser();
-    }
+    updateUser(body);
   };
   return (
     <div className="flex flex-row w-full mt-12 bg-gray-100">

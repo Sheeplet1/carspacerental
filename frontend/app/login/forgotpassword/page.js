@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
 import Sidebar from "@components/Sidebar";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { makeRequest } from "@utils/makeRequest";
+import { makeRequest } from "@utils/utils";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");

@@ -2,11 +2,9 @@
 
 import React from "react";
 import Sidebar from "@components/Sidebar";
-import { checkPasswordValidation } from "@utils/validatePassword";
-import { makeRequest } from "@utils/makeRequest";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import UserContext from "@contexts/UserContext";
+import { checkPasswordValidation } from "@utils/utils";
+import { useState } from "react";
+import { useUser } from "@contexts/UserProvider";
 
 const Register = () => {
   const [showFurtherRegistration, setShowFurtherRegistration] = useState(false);
@@ -23,8 +21,7 @@ const Register = () => {
   const [lastNameError, setLastNameError] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
 
-  const router = useRouter();
-  const { setToken } = useContext(UserContext);
+  const { register } = useUser();
 
   const validateRegister = () => {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -94,16 +91,7 @@ const Register = () => {
         last_name: lastName,
         phone_number: phoneNumber,
       };
-
-      const response = await makeRequest("/auth/register", "POST", body);
-      if (response.error) {
-        setEmailError(response.error);
-        setShowFurtherRegistration(false);
-      } else {
-        localStorage.setItem("token", response.token);
-        setToken(response.token);
-        router.push("/");
-      }
+      register(body, setEmailError, setShowFurtherRegistration);
     }
   };
 

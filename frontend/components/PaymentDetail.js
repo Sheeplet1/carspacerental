@@ -1,13 +1,13 @@
 import { calculateTotalPrice, makeRequest } from "@utils/utils";
 import { useContext, useState } from "react";
 import SearchContext from "@contexts/SearchContext";
-import UserContext from "@contexts/UserContext";
+import { useUser } from "@contexts/UserProvider";
 import VehicleDetailsModal from "@components/VehicleDetailsModal";
 import PaymentDetailsModal from "@components/PaymentDetailsModal";
 import Select from "react-select";
 
 const PaymentDetail = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const {
     selectedListing,
     startDate,

@@ -1,9 +1,8 @@
 "use client";
 
 import { Button, Modal, Label } from "flowbite-react";
-import { useState, useRef, useEffect, useContext } from "react";
-import { makeRequest } from "@utils/utils";
-import UserContext from "@contexts/UserContext";
+import { useState, useRef, useEffect } from "react";
+import { useUser } from "@contexts/UserProvider";
 import PropTypes from "prop-types";
 
 const VehicleDetailsModal = ({
@@ -25,7 +24,7 @@ const VehicleDetailsModal = ({
   const [vehicleTypeError, setVehicleTypeError] = useState("");
   const [vehicleMakeError, setVehicleMakeError] = useState("");
   const [vehicleModelError, setVehicleModelError] = useState("");
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useUser();
 
   useEffect(() => {
     setVehicleRegistration(registration);
@@ -72,13 +71,8 @@ const VehicleDetailsModal = ({
       const body = {
         vehicle_details: [...vehicleDetails, newVehicleDetail],
       };
-      const response = await makeRequest("/user/profile", "PUT", body);
-      if (response.error) {
-        console.log(response.error);
-      } else {
-        updateUser();
-        closeModal();
-      }
+      updateUser(body);
+      closeModal();
     }
   };
 

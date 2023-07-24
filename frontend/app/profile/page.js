@@ -1,14 +1,15 @@
 "use client";
 
-import { useContext, useState } from "react";
-import UserContext from "@contexts/UserContext";
+import { useState } from "react";
 import LoginSideBar from "@components/LoginSideBar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import EditProfileModal from "@components/EditProfileModal";
+import { useUser } from "@contexts/UserProvider";
+import { AuthRequiredError } from "@errors/exceptions";
 
 const ProfilePage = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const router = useRouter();
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
 
@@ -19,6 +20,10 @@ const ProfilePage = () => {
   const handlePaymentDetails = () => {
     router.push("/payment-details");
   };
+
+  if (!user) {
+    throw new AuthRequiredError();
+  }
 
   return (
     <div className="flex flex-row w-full mt-12 bg-gray-100">

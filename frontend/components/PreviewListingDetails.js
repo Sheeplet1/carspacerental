@@ -3,8 +3,7 @@ import { Button, Carousel } from "flowbite-react";
 import Image from "next/image";
 import { Tooltip, Chip } from "@mui/material";
 import { makeRequest } from "@utils/utils";
-import UserContext from "@contexts/UserContext";
-import { useContext } from "react";
+import { useUser } from "@contexts/UserProvider";
 
 const PreviewListingDetails = ({
   prevStep,
@@ -25,8 +24,10 @@ const PreviewListingDetails = ({
   photos,
   safetyFeatures,
   amenities,
+  resetFields,
+  edit,
 }) => {
-  const { updateUser } = useContext(UserContext);
+  const { fetchUser } = useUser();
   const formatTime = (time) => {
     if (time === 0) return "12:00 AM";
     if (time === 12) return "12:00 PM";
@@ -61,12 +62,24 @@ const PreviewListingDetails = ({
       body.monthly_rate = monthlyPrice;
     }
 
-    const response = await makeRequest("/listings/new", "POST", body);
-    if (response.error) {
-      console.log(response.error);
+    if (edit.id) {
+      const response = await makeRequest(`/listings/${edit.id}`, "PUT", body);
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        fetchUser();
+        resetFields();
+        nextStep();
+      }
     } else {
-      updateUser();
-      nextStep();
+      const response = await makeRequest("/listings/new", "POST", body);
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        fetchUser();
+        resetFields();
+        nextStep();
+      }
     }
   };
 
@@ -118,7 +131,7 @@ const PreviewListingDetails = ({
           <p className="mt-2 text-gray-600">
             <span className="font-bold">Pricing: </span>{" "}
             {hourlyPrice.length != 0 && `Hourly - $${hourlyPrice}`}
-            {monthlyPrice.length != 0 && `Monthly - $${monthlyPrice}`}
+            {monthlyPrice.length != 0 && ` Monthly - $${monthlyPrice}`}
           </p>
 
           <p className="mt-2 text-gray-600">
@@ -128,13 +141,16 @@ const PreviewListingDetails = ({
               : `${formatTime(startTime)} - ${formatTime(endTime)}`}
           </p>
 
-          <p className="mt-2 text-gray-600">
-            <span className="font-bold">Available Days: </span>{" "}
-            {Object.entries(availableDays)
-              .filter(([, v]) => v)
-              .map(([k]) => k)
-              .join(", ")}
-          </p>
+          {!isAvailble24Hours && (
+            <p className="mt-2 text-gray-600">
+              <span className="font-bold">Available Days: </span>{" "}
+              {Object.entries(availableDays)
+                .filter(([, v]) => v)
+                .map(([k]) => k)
+                .join(", ")}
+            </p>
+          )}
+
           <h2 className="mt-5 text-2xl text-gray-700">Safety Features</h2>
           <div className="mt-2">
             {safetyFeatures.map((feature, index) => (
@@ -178,7 +194,7 @@ const PreviewListingDetails = ({
           className="bg-custom-orange rounded-full"
           onClick={handleConfirmClick}
         >
-          Confirm
+          {edit.id ? "Update" : "Create"}
         </Button>
       </div>
     </div>
@@ -206,4 +222,6 @@ PreviewListingDetails.propTypes = {
   photos: PropTypes.array.isRequired,
   safetyFeatures: PropTypes.array.isRequired,
   amenities: PropTypes.array.isRequired,
+  resetFields: PropTypes.func.isRequired,
+  edit: PropTypes.object.isRequired,
 };

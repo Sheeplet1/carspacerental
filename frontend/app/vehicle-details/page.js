@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, useContext, useEffect } from "react";
-import UserContext from "@contexts/UserContext";
+import { useState, useEffect } from "react";
+import { useUser } from "@contexts/UserProvider";
 import LoginSideBar from "@components/LoginSideBar";
 import VehicleDetailsModal from "@components/VehicleDetailsModal";
 import { Button, Card } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { makeRequest } from "@utils/utils";
 
 const VehicleDetails = () => {
   const router = useRouter();
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useUser();
   const [showAddVehicleModal, setShowAddVehicleModal] = useState(false);
   const [showVehicleDetailsModal, setShowVehicleDetailsModal] = useState(
     user.vehicle_details.map(() => false)
@@ -26,12 +25,7 @@ const VehicleDetails = () => {
         (v) => v.registration_number !== vehicle.registration_number
       ),
     };
-    const response = await makeRequest("/user/profile", "PUT", body);
-    if (response.error) {
-      console.log(response.error);
-    } else {
-      updateUser();
-    }
+    updateUser(body);
   };
 
   return (

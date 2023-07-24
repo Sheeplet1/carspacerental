@@ -1,10 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import UserContext from "@contexts/UserContext";
-import { useContext } from "react";
+import { useUser } from "@contexts/UserProvider";
 
 export const LoginSidebar = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
 
   return (
     <div className="flex flex-col shrink-1 w-64 h-96 bg-white p-5 rounded-3xl shadow-md gap-6">

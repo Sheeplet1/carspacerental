@@ -1,5 +1,3 @@
-"use client";
-
 import SearchProvider from "@contexts/SearchProvider";
 import SearchListings from "@components/SearchListings";
 

@@ -1,14 +1,21 @@
 import { FaCar, FaClock, FaMoneyBillWave, FaTrash } from "react-icons/fa";
 import { Button, Card } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import UserContext from "@contexts/UserContext";
-import { useContext } from "react";
-import { makeRequest } from "@utils/utils";
+import { useUser } from "@contexts/UserProvider";
 import PropTypes from "prop-types";
+import { makeRequest } from "@utils/utils";
+import { useEffect, useState } from "react";
 
-const DisplayMyListings = ({ nextStep }) => {
+const DisplayMyListings = ({ nextStep, handleEditListing }) => {
   const router = useRouter();
-  const { user, updateUser } = useContext(UserContext);
+  const { user, updateUser } = useUser();
+  const [listings, setListings] = useState([]);
+
+  const formatTime = (time) => {
+    if (time === 0) return "12:00 AM";
+    if (time === 12) return "12:00 PM";
+    return time < 12 ? `${time}:00 AM` : `${time - 12}:00 PM`;
+  };
 
   const handleDeleteListing = async (listing) => {
     const body = {
@@ -16,13 +23,24 @@ const DisplayMyListings = ({ nextStep }) => {
         (v) => v.listing_id !== listing.listing_id
       ),
     };
-    const response = await makeRequest("/user/profile", "PUT", body);
-    if (response.error) {
-      console.log(response.error);
-    } else {
-      updateUser();
-    }
+    updateUser(body);
   };
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      const listingsData = [];
+      for (const listing of user.listings) {
+        const response = await makeRequest(`/listings/${listing}`, "GET");
+        if (response.error) {
+          console.log(response.error);
+        } else {
+          listingsData.push(response);
+        }
+      }
+      setListings(listingsData);
+    };
+    fetchListings();
+  }, [user.listings]);
 
   return (
     <div
@@ -44,7 +62,7 @@ const DisplayMyListings = ({ nextStep }) => {
             </Button>
           </div>
         </div>
-        {user.listings.map((listing, index) => (
+        {listings.map((listing, index) => (
           <Card
             key={index}
             className="max-w-full mb-5 p-4 shadow-lg rounded-lg flex flex-col justify-between"
@@ -65,7 +83,9 @@ const DisplayMyListings = ({ nextStep }) => {
                 <FaClock className="inline-block mr-2" />
                 {listing.availability.is_24_7
                   ? "24/7"
-                  : `${listing.availability.start_time} - ${listing.availability.end_time}`}
+                  : `${formatTime(
+                      listing.availability.start_time
+                    )} - ${formatTime(listing.availability.end_time)}`}
               </p>
             </div>
 
@@ -92,7 +112,12 @@ const DisplayMyListings = ({ nextStep }) => {
                 <FaTrash className="inline-block mr-2" />
                 Delete
               </Button>
-              <Button className="bg-custom-orange">Edit</Button>
+              <Button
+                className="bg-custom-orange"
+                onClick={() => handleEditListing(listing)}
+              >
+                Edit
+              </Button>
             </div>
           </Card>
         ))}
@@ -105,4 +130,5 @@ export default DisplayMyListings;
 
 DisplayMyListings.propTypes = {
   nextStep: PropTypes.func.isRequired,
+  handleEditListing: PropTypes.func.isRequired,
 };

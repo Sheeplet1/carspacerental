@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import SearchContext from "@contexts/SearchContext";
 import { getNextHour, getDate } from "@utils/utils";

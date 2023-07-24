@@ -3,10 +3,8 @@
 import React from "react";
 import Sidebar from "@components/Sidebar";
 import Link from "next/link";
-import { useState, useContext } from "react";
-import { makeRequest } from "@utils/makeRequest";
-import { useRouter } from "next/navigation";
-import UserContext from "@contexts/UserContext";
+import { useState } from "react";
+import { useUser } from "@contexts/UserProvider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,9 +12,7 @@ const Login = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const router = useRouter();
-  const { setToken } = useContext(UserContext);
-
+  const { login } = useUser();
   const validateLogin = async () => {
     let isEmailExist = !!email;
     setEmailError(isEmailExist ? "" : "This field is required");
@@ -29,14 +25,7 @@ const Login = () => {
         email: email,
         password: password,
       };
-      const response = await makeRequest("/auth/login", "POST", body);
-      if (response.error) {
-        setEmailError(response.error);
-      } else {
-        localStorage.setItem("token", response.token);
-        setToken(response.token);
-        router.push("/");
-      }
+      login(body, setEmailError);
     }
   };
 

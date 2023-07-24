@@ -23,8 +23,8 @@ const SetPrice = ({
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [minEndTime, setMinEndTime] = useState(startTime + 1);
-  const [isHourlyActive, setIsHourlyActive] = useState(false);
-  const [isMonthlyActive, setIsMonthlyActive] = useState(false);
+  const [isHourlyActive, setIsHourlyActive] = useState(hourlyPrice !== "");
+  const [isMonthlyActive, setIsMonthlyActive] = useState(monthlyPrice !== "");
 
   const daysOfWeek = [
     "Sunday",

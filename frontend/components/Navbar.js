@@ -2,21 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import UserContext from "@contexts/UserContext";
+import { useState } from "react";
+import { useUser } from "@contexts/UserProvider";
 
 export const Navbar = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, logout } = useUser();
   const [toggleDropdown, setToggleDropdown] = useState(false);
-
-  const router = useRouter();
-
-  const logOut = () => {
-    router.push("/");
-    localStorage.removeItem("token");
-    setUser(null);
-  };
 
   return (
     <header className="w-full mb-16 pt-3 h-14">
@@ -190,7 +181,7 @@ export const Navbar = () => {
                     id="menu-item-3"
                     onClick={() => {
                       setToggleDropdown(false);
-                      logOut();
+                      logout();
                     }}
                   >
                     Log Out
