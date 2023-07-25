@@ -66,7 +66,8 @@ BOOKING_STUB = {
     "listing_id": TEST_LID,
     "start_time": TEST_START,
     "end_time": TEST_END,
-    "price": 100
+    "price": 100,
+    "recurring": '',
 }
 
 OK = 200

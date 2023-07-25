@@ -14,8 +14,8 @@ def test_successful_booking(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(user_stub)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    
+    stub = conftest.BOOKING_STUB.copy()
     # create booking
     response = client.post('/listings/book', headers=user_token, json=stub)
     assert response.status_code == conftest.OK
@@ -50,10 +50,10 @@ def test_overlapping_bookings(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(user_stub)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
-    stub['start_time'] = '01 Jan 2022 00:00:00'
-    stub['end_time'] = '01 Jan 2024 00:00:00'
+    
+    stub = conftest.BOOKING_STUB.copy()
+    stub['start_time'] = '2022-01-01T00:00:00'
+    stub['end_time'] = '2024-01-01T00:00:00'
     # create and insert booking
     response = client.post('/listings/book', headers=user_token, json=stub)
     assert response.status_code == conftest.OK
@@ -64,7 +64,6 @@ def test_overlapping_bookings(client, mock_db, user_token):
 
     # create another booking which exists in the overlap of an existing booking
     booking_stub = conftest.BOOKING_STUB.copy()
-    booking_stub['start_time'] = '01 Jan 2023 00:00:00'
     response = client.post('listings/book', headers=user_token, json=booking_stub)
     assert response.status_code == conftest.BAD_REQUEST
     assert response.json == {
@@ -85,11 +84,11 @@ def test_insert_between(client, mock_db, user_token):
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
 
     # Booking #1
-    booking_1 = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    booking_1 = conftest.BOOKING_STUB.copy()
     booking_1['end_time'] = '2022-01-08T00:00:00'
 
     # Booking #2
-    booking_2 = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    booking_2 = conftest.BOOKING_STUB.copy()
     booking_2['start_time'] = '2022-01-12T00:00:00'
     booking_2['end_time'] = '2022-01-16T00:00:00'
 
@@ -97,7 +96,7 @@ def test_insert_between(client, mock_db, user_token):
     client.post('/listings/book', headers=user_token, json=booking_2)
 
     # Inserting Booking #3 in between #1 and #2
-    booking_3 = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    booking_3 = conftest.BOOKING_STUB.copy()
     booking_3['start_time'] = '2022-01-09T00:00:00'
     booking_3['end_time'] = '2022-01-11T00:00:00'
     response = client.post('/listings/book', headers=user_token, json=booking_3)
@@ -119,7 +118,7 @@ def test_invalid_token(client, mock_db):
 
     mock_db['UserAccount'].insert_one(user_stub)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    stub = conftest.BOOKING_STUB.copy()
     response = client.post('/listings/book', headers={"Authorization": "invalid"},
                            json=stub)
     assert response.status_code == conftest.UNAUTHORIZED
@@ -194,16 +193,16 @@ def test_missing_end_time(client, user_token):
     assert response.json == {
         "error": "Valid end time is required"
     }
-
+    
 def test_user_books_own_listing(client, user_token, mock_db):
     exist_user = mock_db['UserAccount'].find_one()
-
+    
     exist_user['listings'] = [conftest.TEST_LID]
-
+    
     listing_stub = conftest.LISTING_STUB.copy()
     listing_stub['provider'] = exist_user['_id']
     mock_db['Listings'].insert_one(listing_stub)
-
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+        
+    stub = conftest.BOOKING_STUB.copy()
     resp = client.post('/listings/book', headers=user_token, json=stub)
     assert resp.status_code == conftest.BAD_REQUEST

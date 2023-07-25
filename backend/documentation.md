@@ -115,11 +115,12 @@
 >     "first_name": "example_first",
 >     "last_name": "example_last",
 >     "listings": [],
->     "phone_number": [
->         "0412345678"
->     ],
+>     "phone_number": "0412345678",
+>     "vehicle_details": [],
+>     "payment_details": [],
 >     "reviews": [],
->     "revenue": 0
+>     "revenue": 0,
+>     "is_admin": False,
 > }
 > ```
 
@@ -418,7 +419,8 @@
 >     "listing_id": ObjectId(6496e8e2876de3535cf3aa02)
 >     "start_time": '2022-01-01T00:00:00'
 >     "end_time": '2022-01-23T00:00:00'
->     "price": 100.0
+>     "price": 100.0,
+>     "recurring": '' or 'daily' or 'weekly' or 'biweekly' or 'monthly'
 > }
 > ```
 
@@ -450,7 +452,8 @@
 > | `400`     | `{ "error": "Invalid booking id" }` |
 >
 > Booking Info Example:
-> ```
+>
+> ``` Python
 > {
 >     "_id": str(ObjectId())
 >     "consumer": str(ObjectId())
@@ -458,8 +461,12 @@
 >     "start_time": '2022-01-01T00:00:00'
 >     "end_time": '2022-01-23T00:00:00'
 >     "price": 100.0
+>     "parent": str(ObjectId())
+>     "child": str(ObjectId())
+>     "exclusions": [ObjectId(), ObjectId()]
 > }
 > ```
+>
 </details>
 
 <details>
@@ -473,17 +480,20 @@
 > | Update Info  | path  | str(ObjectId) | Booking ObjectId |
 >
 > Update Info Example:
-> ```
+>
+> ``` Python
 > {
 >     "price": 200.0
 >     "start_time": '2022-01-01T00:00:00'
+>     "end_time": '2022-01-03T02:00:00'
 > }
+> ```
 
 ##### Responses
 
 > | http code | response                            |
 > |-----------|-------------------------------------|
-> | `200`     | `{}`                                |
+> | `200`     | `{ 'booking_id': ObjectId() }`      |
 > | `401`     | `Unauthorized`                      |
 > | `400`     | `{ "error": "Invalid _" }`          |
 
@@ -497,6 +507,19 @@
 > | name         | type  | data type     | description      |
 > |--------------|-------|---------------|------------------|
 > | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+> | `data`       | json  | string        | see example      |
+>
+> Data Info Example:
+>
+> ``` Python
+> {
+>       "start_time": '2022-01-01T10:00:00',
+>       "end_time": '2022-01-01T11:00:00,
+>       "type": 'single' or 'future'
+> }
+> ```
+>
+> Type - user wants to either delete a single or future instance
 
 ##### Responses
 
@@ -535,12 +558,14 @@
 | `password`            | string   | _hashed password string_             |
 | `first_name`          | string   | "first"                              |
 | `last_name`           | string   | "last"                               |
-| `phone_number`        | Array    | ["0412345678"]                       |
-| `payment_details`     | Object   | {TODO}                               |
+| `phone_number`        | string   | "0412345678"                         |
+| `payment_details`     | Array    | [TODO]                               |
 | `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `reviews`             | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `revenue`             | float    | 200.0
+| `revenue`             | float    | 200.0                                |
+| `is_admin`            | bool     | False                                |
+| `vehicle_details`     | Array    | ['Toyota Corolla']                   |
 
 ### Listings
 
@@ -560,14 +585,17 @@
 
 ### Bookings
 
-| Field         | Type     | Example                            |
-| ------------- | -------- | -----------------------------------|
-| `_id`         | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `consumer`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `booking`     | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `start_time`  | str      | 2022-01-01T00:00:00                |
-| `end_time`    | str      | 2022-01-05T00:00:00                |
-| `price`       | float    | 100.0                              |
+| Field         | Type       | Example                            |
+| ------------- | ---------- | -----------------------------------|
+| `_id`         | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `consumer`    | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `listing`     | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `start_time`  | str        | 2022-01-01T00:00:00                |
+| `end_time`    | str        | 2022-01-05T00:00:00                |
+| `price`       | float      | 100.0                              |
+| `parent`      | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `child`       | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `exclusions`  | [ObjectId] | [ObjectId(), ObjectId()]           |
 
 ### Reviews (TODO)
 

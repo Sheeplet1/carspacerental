@@ -15,7 +15,6 @@ def user_register(data: dict) -> ObjectId:
         "phone_number": data["phone_number"],
         "vehicle_details": [],
         "payment_details": [],
-        "current_bookings": [],
         "bookings": [],
         "reviews": [],
         "listings": [],
@@ -40,7 +39,8 @@ def admin_register(data: dict) -> ObjectId:
         "bookings": [],
         "reviews": [],
         "listings": [],
-        "is_admin": True
+        "is_admin": True,
+        "revenue": 0
     }
 
     collection = db.get_database()["UserAccount"]

@@ -22,4 +22,3 @@ def create_app():
     app.register_blueprint(payments.bp)
 
     return app
-

@@ -17,7 +17,7 @@ def test_successful_get(client, mock_db, user_token):
     
     # insert 3 listings & bookings into mock_db 
     base = conftest.BOOKING_STUB.copy()
-    booking_stub1 = helpers.parse_json(base)
+    booking_stub1 = base
     resp = client.post('/listings/book', headers=user_token, json=booking_stub1)
     assert resp.status_code == conftest.OK
     
@@ -33,7 +33,6 @@ def test_successful_get(client, mock_db, user_token):
     booking_stub2['start_time'] = '2023-01-05T00:00:00'
     booking_stub2['end_time'] = '2023-01-09T00:00:00'
     booking_stub2['price'] = 200
-    booking_stub2 = helpers.parse_json(booking_stub2)
     resp = client.post('/listings/book', headers=user_token, json=booking_stub2)
     assert resp.status_code == conftest.OK
     
@@ -49,7 +48,7 @@ def test_successful_get(client, mock_db, user_token):
     booking_stub3['start_time'] = '2023-02-01T10:00:00'
     booking_stub3['end_time'] = '2023-02-02T10:00:00'
     booking_stub3['price'] = 50
-    resp = client.post('/listings/book', headers=user_token, json=helpers.parse_json(booking_stub3))
+    resp = client.post('/listings/book', headers=user_token, json=booking_stub3)
     assert resp.status_code == conftest.OK
 
     # assert bookings are there

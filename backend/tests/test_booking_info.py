@@ -1,6 +1,5 @@
 from bson import ObjectId
 from ..tests import conftest
-from .. import helpers
 
 def test_get_invalid(client, user_token):
     """
@@ -33,8 +32,8 @@ def test_get_exists(client, mock_db, user_token):
     THEN check that a '200' (OK) status code is returned and the booking is returned
     """
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    
+    stub = conftest.BOOKING_STUB.copy()
 
     resp = client.post('/listings/book', headers=user_token, json=stub)
     assert resp.status_code == conftest.OK
@@ -43,7 +42,7 @@ def test_get_exists(client, mock_db, user_token):
         '_id': ObjectId(resp.json['booking_id'])
     })
     assert booking
-
+    
 def test_put_invalid_user(client, user_token, mock_db):
     """
     GIVEN a Flask application configured for testing
@@ -51,7 +50,7 @@ def test_put_invalid_user(client, user_token, mock_db):
     THEN check that a '400' (BAD_REQUEST) status code is returned
     """
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-
+    
     resp = client.post('/auth/register', json={
         "email": "randomuser@gmail.com",
         "password": conftest.TEST_PW,
@@ -62,7 +61,7 @@ def test_put_invalid_user(client, user_token, mock_db):
     alternate_head = {
         "Authorization": "Bearer " + resp.get_json()['token']
     }
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    stub = conftest.BOOKING_STUB.copy()
     resp = client.post('listings/book', headers=alternate_head, json=stub)
     booking_id = resp.json['booking_id']
 
@@ -76,8 +75,8 @@ def test_put_valid(client, mock_db, user_token):
     THEN check that a '200' (OK) status code is returned
     """
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    
+    stub = conftest.BOOKING_STUB.copy()
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
 
@@ -87,11 +86,11 @@ def test_put_valid(client, mock_db, user_token):
     })
     assert resp.status_code == conftest.OK
     assert mock_db['Bookings'].find_one()['price'] == 200
-
+    
 def test_put_invalid_key(client, user_token, mock_db):
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
-    resp = client.post('/listings/book', headers=user_token, json=stub)
+    stub = conftest.BOOKING_STUB.copy()
+    resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
 
     resp = client.put(f'/bookings/{booking_id}', headers=user_token, json={
@@ -104,9 +103,9 @@ def test_put_invalid_key(client, user_token, mock_db):
 
 def test_put_invalid_value(client, mock_db, user_token):
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
-    resp = client.post('/listings/book', headers=user_token, json=stub)
+    
+    stub = conftest.BOOKING_STUB.copy()
+    resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
 
     assert mock_db['Bookings'].find_one()['price'] == 100
@@ -130,7 +129,7 @@ def test_cancel_booking(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(user_stub)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    stub = conftest.BOOKING_STUB.copy()
     resp = client.post('/listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
 
@@ -154,7 +153,7 @@ def test_admin_put(client, mock_db, user_token, admin_token):
     """
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
 
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    stub = conftest.BOOKING_STUB.copy()
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
 
@@ -177,7 +176,7 @@ def test_admin_cancel(client, mock_db, user_token, admin_token):
 
     mock_db['UserAccount'].insert_one(user_stub)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    stub = conftest.BOOKING_STUB.copy()
     resp = client.post('/listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
 
