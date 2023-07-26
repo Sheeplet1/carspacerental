@@ -86,6 +86,7 @@ const MyListings = () => {
     setPhotos(listing.photos);
     setSafetyFeatures(listing.safety_features);
     setAmenities(listing.amenities);
+    console.log(listing);
     setEdit({ id: listing._id });
     setStep(1);
   };

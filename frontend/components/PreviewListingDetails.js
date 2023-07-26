@@ -61,8 +61,9 @@ const PreviewListingDetails = ({
     if (monthlyPrice.trim() !== "") {
       body.monthly_rate = monthlyPrice;
     }
-
+    console.log(edit)
     if (edit.id) {
+      console.log(edit.id)
       const response = await makeRequest(`/listings/${edit.id}`, "PUT", body);
       if (response.error) {
         console.log(response.error);
