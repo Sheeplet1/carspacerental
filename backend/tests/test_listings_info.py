@@ -102,10 +102,18 @@ def test_delete(client, mock_db, user_token):
     resp = client.post('/listings/new', headers=user_token, json=conftest.LISTING_STUB.copy())
     listing_id = resp.json["listing_id"]
 
+    listing = mock_db['Listings'].find_one({'_id': ObjectId(listing_id)})
+
+    user_acc = mock_db['UserAccount'].find_one({'_id': ObjectId(listing['provider'])})
+    assert len(user_acc['listings']) == 1
+    
     resp = client.delete(f'/listings/{listing_id}', headers=user_token)
     assert resp.status_code == conftest.OK
 
+    user_acc = mock_db['UserAccount'].find_one({'_id': ObjectId(listing['provider'])})
+
     assert mock_db["Listings"].find_one() is None
+    assert len(user_acc['listings']) == 0
 
 def test_admin_put(client, mock_db, user_token, admin_token):
     """

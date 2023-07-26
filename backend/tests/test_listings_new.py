@@ -17,6 +17,10 @@ def test_successful_listing(client, mock_db, user_token):
         "_id": ObjectId(response.json["listing_id"])
     })
     assert listing
+    
+    user_id = listing['provider']
+    user_acc = mock_db['UserAccount'].find_one({'_id': user_id})
+    assert user_acc['listings'] == [listing['_id']]
 
     assert ObjectId().is_valid(listing.pop("_id"))
     assert ObjectId().is_valid(listing.pop("provider"))
