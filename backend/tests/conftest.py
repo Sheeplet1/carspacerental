@@ -59,6 +59,7 @@ LISTING_STUB = {
         "end_time": "time",
         "available_days": [],
     },
+    "rating": None,
 }
 
 BOOKING_STUB = {
@@ -68,6 +69,11 @@ BOOKING_STUB = {
     "end_time": TEST_END,
     "price": 100,
     "recurring": '',
+}
+
+REVIEW_STUB = {
+    "rating": 2,
+    "message": "message"
 }
 
 OK = 200
@@ -100,7 +106,6 @@ def client(mock_db):
 
     with patch('backend.db.db.get_database', return_value=mock_db):
         yield client
-
 
 @pytest.fixture
 def user_token(client):
@@ -139,3 +144,33 @@ def admin_token(client):
        "Authorization": "Bearer " + resp.get_json()["token"]
     }
     yield token_head
+
+@pytest.fixture
+def list_book(client, user_token):
+    """
+    Creates a listing and a booking
+    """
+    register_data = {
+        "email": "listing@email.com",
+        "password": TEST_PW + "listing",
+        "first_name": TEST_FIRST_NAME + "listing",
+        "last_name": TEST_LAST_NAME + "listing",
+        "phone_number": "0400023646",
+    }
+
+    resp = client.post('/auth/register', json=register_data)
+    token_head = {
+       "Authorization": "Bearer " + resp.get_json()["token"]
+    }
+
+    listing_stub = LISTING_STUB.copy()
+    resp = client.post('/listings/new', json=listing_stub, headers=token_head)
+    listing_id = resp.get_json()["listing_id"]
+
+
+    booking_stub = BOOKING_STUB.copy()
+    booking_stub["listing_id"] = listing_id
+    resp = client.post('/listings/book', json=booking_stub, headers=user_token)
+    booking_id = resp.get_json()["booking_id"]
+
+    yield listing_id, booking_id

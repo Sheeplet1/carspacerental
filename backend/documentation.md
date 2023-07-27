@@ -121,6 +121,7 @@
 >     "reviews": [],
 >     "revenue": 0,
 >     "is_admin": False,
+>     "rating": 5.0,
 > }
 > ```
 
@@ -158,7 +159,8 @@
 >         "0412345678"
 >     ],
 >     "reviews": [],
->     "revenue": 0
+>     "revenue": 0,
+>     "rating": 5.0,
 > }
 > ```
 
@@ -233,40 +235,53 @@
 > Listing Details:
 > ```
 > {
->   listing_id: ....
->   address: {
->     "formatted_address": "Sydney NSW, Australia",
->     "streetNumber": "",
->     "street": "",
->     "city": "",
->     "state": "NSW",
->     "postcode": "",
->     "country": "Australia",
->     "lat": -33.8688197,
->     "lng": 151.2092955,
->     "place_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
->   },
->   type: 'Carport / Driveway / Garage / Parking Lot',
->   max_vehicle_size: 'Bike / Hatchback / Sedan / 4WD/SUV / Van / Truck',
->   access_type: 'None / Boom Gate / Key / Passcode / Permit / Remote / Ticket / Swipe Card',
->   ev_charging: true / false,
->   description: 'This is a description',
->   instructions: 'This is the instructions',
->   casual_booking: true / false,
->   monthly_booking: true / false,
->   pricing: {
->     "hourly_rate": 100,
->     "monthly_rate": 1000,
->   }
->   photos: [image1, image2, image3]
->   "availability": {
->     "is_24_7": true / false,
->     "start_time": "08:00",
->     "end_time": "17:00",
->     "available_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
->   }
->   "safety_features": ["CCTV", "On-site security", "Well lit"],
->   "amenities": ["Restrooms", "Nearby shopping", "Charging station"],
+>    listing_id: ....
+>    address: {
+>        "formatted_address": "Sydney NSW, Australia",
+>        "streetNumber": "",
+>        "street": "",
+>        "city": "",
+>        "state": "NSW",
+>        "postcode": "",
+>        "country": "Australia",
+>        "lat": -33.8688197,
+>        "lng": 151.2092955,
+>        "place_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
+>    },
+>    type: 'Carport / Driveway / Garage / Parking Lot',
+>    max_vehicle_size: 'Bike / Hatchback / Sedan / 4WD/SUV / Van / Truck',
+>    access_type: 'None / Boom Gate / Key / Passcode / Permit / Remote / Ticket / Swipe Card',
+>    ev_charging: true / false,
+>    description: 'This is a description',
+>    instructions: 'This is the instructions',
+>    casual_booking: true / false,
+>    monthly_booking: true / false,
+>    pricing: {
+>        "hourly_rate": 100,
+>        "monthly_rate": 1000,
+>    }
+>    photos: [image1, image2, image3]
+>    "availability": {
+>        "is_24_7": true / false,
+>        "start_time": "08:00",
+>        "end_time": "17:00",
+>        "available_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+>    }
+>    "safety_features": ["CCTV", "On-site security", "Well lit"],
+>    "amenities": ["Restrooms", "Nearby shopping", "Charging station"],
+>    "rating": 0.5,
+>    "reviews": [
+>        {
+>            "_id": ...,
+>            "user_id": ...,
+>            "booking_id": ...,
+>            "listing_id": ...,
+>            "name": John,
+>            "rating": 2.5,
+>            "message": "this is my review",
+>            "timestamp": "2023-07-26T23:09:38.550716",
+>        }
+>    ]
 > }
 > ```
 
@@ -349,6 +364,19 @@
 >     "features": [
 >         "Electric Vehicle Charging"
 >     ],
+>    "rating": 0.5,
+>    "reviews": [
+>        {
+>            "_id": ...,
+>            "user_id": ...,
+>            "booking_id": ...,
+>            "listing_id": ...,
+>            "name": John,
+>            "rating": 2.5,
+>            "message": "this is my review",
+>            "timestamp": "2023-07-26T23:09:38.550716",
+>        }
+>    ]
 > }
 > ```
 
@@ -362,7 +390,7 @@
 > | name         | type  | data type     | description      |
 > |--------------|-------|---------------|------------------|
 > | `listing_id` | path  | str(ObjectId) | Listing ObjectId |
-> | Update Info  | path  | str(ObjectId) | Listing ObjectId |
+> | Update Info  | body  | Object        | Updating Object  |
 >
 > Update Info Example:
 > ```
@@ -477,7 +505,7 @@
 > | name         | type  | data type     | description      |
 > |--------------|-------|---------------|------------------|
 > | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
-> | Update Info  | path  | str(ObjectId) | Booking ObjectId |
+> | Update Info  | body  | Object        | Updating Object  |
 >
 > Update Info Example:
 >
@@ -547,6 +575,130 @@
 
 </details>
 
+<details>
+  <summary><code>GET</code> <code><b>/bookings/{booking_id}/review</b></code> <code>(get a review for a booking)</code></summary>
+
+##### Parameters
+
+> | name         | type  | data type     | description      |
+> |--------------|-------|---------------|------------------|
+> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+
+##### Responses
+
+> | http code | response                                         |
+> |-----------|--------------------------------------------------|
+> | `200`     | Booking Information Object                       |
+> | `401`     | `Unauthorized`                                   |
+> | `400`     | `{ "error": "Invalid booking id" }`              |
+> | `400`     | `{ "error": "Booking doesn't exist" }`           |
+> | `400`     | `{ "error": "Review does not exist" }`           |
+>
+> Booking Info Example:
+>
+> ``` Python
+> {
+>     "_id": ObjectId(),
+>     "user_id": ObjectId(),
+>     "booking_id": ObjectId(),
+>     "listing_id": ObjectId(),
+>     "name": John,
+>     "rating": 2.5,
+>     "message": "this is my review",
+>     "timestamp": "2023-07-26T23:09:38.550716",
+> }
+> ```
+>
+</details>
+
+<details>
+  <summary><code>PUT</code> <code><b>/bookings/{booking_id}/review</b></code> <code>(update a review for a booking)</code></summary>
+
+##### Parameters
+
+> | name         | type  | data type     | description      |
+> |--------------|-------|---------------|------------------|
+> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+> | Update Info  | body  | Object        | Updating Object  |
+>
+> Update Info Example:
+> ```
+> {
+>     "rating": 5,
+>     "message": "Updated this is great",
+> }
+> ```
+
+##### Responses
+
+> | http code | response                                         |
+> |-----------|--------------------------------------------------|
+> | `200`     | Booking Id                                       |
+> | `401`     | `Unauthorized`                                   |
+> | `400`     | `{ "error": "Invalid booking id" }`              |
+> | `400`     | `{ "error": "Booking doesn't exist" }`           |
+> | `400`     | `{ "error": "Review does not exists" }`     |
+> | `400`     | `{ "error": "Cannot update key" }`               |
+> | `400`     | `{ "error": "Update value has invalid typing" }` |
+>
+</details>
+
+<details>
+  <summary><code>POST</code> <code><b>/bookings/{booking_id}/review</b></code> <code>(add a review for a booking)</code></summary>
+
+##### Parameters
+
+> | name         | type  | data type     | description      |
+> |--------------|-------|---------------|------------------|
+> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+> | Review Info  | body  | Object        | Review Body      |
+>
+> Review Info Example:
+> ```
+> {
+>     "rating": 5,
+>     "message": "Updated this is great",
+> }
+> ```
+
+##### Responses
+
+> | http code | response                                   |
+> |-----------|--------------------------------------------|
+> | `200`     | Booking Id                                 |
+> | `401`     | `Unauthorized`                             |
+> | `400`     | `{ "error": "Invalid booking id" }`        |
+> | `400`     | `{ "error": "Booking doesn't exist" }`     |
+> | `400`     | `{ "error": "Review already exists" }`     |
+> | `400`     | `{ "error": "Valid rating is required" }`  |
+> | `400`     | `{ "error": "Valid message is required" }` |
+>
+</details>
+
+<details>
+  <summary><code>DELETE</code> <code><b>/bookings/{booking_id}/review</b></code> <code>(delete a review on a booking)</code></summary>
+
+##### Parameters
+
+> | name         | type  | data type     | description      |
+> |--------------|-------|---------------|------------------|
+> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+> | Empty Body   | body  | Object        | Body             |
+>
+_An empty body may be required if `415 Unsupported Media Type` error occurs_
+
+##### Responses
+
+> | http code | response                                |
+> |-----------|-----------------------------------------|
+> | `200`     | Booking Id                              |
+> | `401`     | `Unauthorized`                          |
+> | `400`     | `{ "error": "Invalid booking id" }`     |
+> | `400`     | `{ "error": "Booking doesn't exist" }`  |
+> | `400`     | `{ "error": "Review does not exists" }` |
+>
+</details>
+
 ## Database
 
 ### UserAccount
@@ -599,9 +751,13 @@
 
 ### Reviews (TODO)
 
-    - reviewId (primary key)
-    - carSpaceId (foreign key referencing CarSpaces)
-    - userId (foreign key referencing Users)
-    - review
-    - rating
-    - timestamp
+| Field        | Type      | Example                            |
+| -------------| ----------| -----------------------------------|
+| `_id`        | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
+| `user_id`    | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
+| `booking_id` | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
+| `listing_id` | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
+| `name`       | str       | John                               |
+| `rating`     | float     | 2.5                                |
+| `message`    | str       | great message                      |
+| `timestamp`  | str       | 2023-07-26T23:09:38.550716         |

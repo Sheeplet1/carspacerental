@@ -5,6 +5,7 @@ from werkzeug.exceptions import Forbidden
 
 from ..helpers import validate_jwt, is_admin
 from ..db import listings as listings_db
+from ..db import reviews as reviews_db
 
 bp = Blueprint('listings', __name__, url_prefix='/listings')
 
@@ -12,8 +13,9 @@ bp = Blueprint('listings', __name__, url_prefix='/listings')
 def get_all():
     listings = listings_db.all()
     for listing in listings:
-        listing["_id"] = listing["_id"]
-        listing["provider"] = listing["provider"]
+        listing["reviews"] = reviews_db.get_all(listing["_id"])
+    #    listing["_id"] = listing["_id"]
+    #    listing["provider"] = listing["provider"]
     return { "listings": listings }, 200
 
 @bp.route('/new', methods=['POST'])
@@ -78,8 +80,7 @@ def info(listing_id):
         return { "error": "Invalid listing id" }, 400
 
     if request.method == "GET":
-        listing["_id"] = listing["_id"]
-        listing["provider"] = listing["provider"]
+        listing["reviews"] = reviews_db.get_all(listing_id)
         return listing, 200
 
     user_id = validate_jwt(get_jwt_identity())
@@ -93,6 +94,9 @@ def info(listing_id):
         if "_id" in update_data:
             return { "error": "Cannot update id" }, 400
 
+        if "rating" in update_data:
+            return { "error": "Cannot update rating" }, 400
+
         for key, val in update_data.items():
             if key not in listing.keys():
                 return { "error": "Invalid update key" }, 400
@@ -105,4 +109,3 @@ def info(listing_id):
         listings_db.remove_listing(listing_id)
 
     return {}, 200
-

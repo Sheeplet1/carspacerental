@@ -27,7 +27,8 @@ def profile():
             "password",
             "bookings",
             "reviews",
-            "listings"
+            "listings",
+            "rating"
         ]
         for key in invalid_keys:
             if key in update_data:
