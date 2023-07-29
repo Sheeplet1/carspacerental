@@ -24,12 +24,17 @@ def new(user_id: ObjectId, data: dict) -> ObjectId:
         "availability": data["availability"],
         "instructions": data["instructions"],
         "electric_charging": data["electric_charging"],
+        "rating": None,
     }
 
     collection = db.get_database()["Listings"]
     collection.insert_one(listing_doc)
 
-    db.get_database()['UserAccount'].update_one({"_id": user_id}, {"$push": {"listings": id}})
+    db.get_database()['UserAccount'].update_one(
+        {"_id": user_id},
+        {"$push": {"listings": id}}
+    )
+
     return id
 
 def get(listing_id: ObjectId) -> Optional[dict]:
@@ -42,4 +47,13 @@ def update_listing(listing_id: ObjectId, body: dict) -> None:
 
 def remove_listing(listing_id: ObjectId) -> None:
     listings = db.get_database()["Listings"]
+
+    # delete listing from user's profile
+    listing = listings.find_one({'_id': listing_id})
+    user_id = ObjectId(listing['provider'])
+    db.get_database()['UserAccount'].find_one_and_update(
+        {'_id': user_id},
+        {'$pull': {'listings': listing_id}}
+    )
+
     listings.delete_one({ "_id": listing_id })

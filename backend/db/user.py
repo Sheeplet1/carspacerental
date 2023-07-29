@@ -19,7 +19,8 @@ def user_register(data: dict) -> ObjectId:
         "reviews": [],
         "listings": [],
         "is_admin": False,
-        "revenue": 0
+        "revenue": 0,
+        "rating": None,
     }
 
     collection = db.get_database()["UserAccount"]
