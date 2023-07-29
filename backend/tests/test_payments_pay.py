@@ -1,6 +1,5 @@
 from bson import ObjectId
 from ..tests import conftest
-from .. import helpers
 
 def test_successful_pay(client, mock_db, user_token):
     """
@@ -16,7 +15,7 @@ def test_successful_pay(client, mock_db, user_token):
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
     
     # create booking
-    booking_stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    booking_stub = conftest.BOOKING_STUB.copy()
     resp = client.post('/listings/book', headers=user_token, json=booking_stub)
     assert resp.status_code == conftest.OK
     
@@ -57,7 +56,7 @@ def test_incorrect_user_paying(client, user_token, mock_db):
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
     
     # create booking
-    booking_stub = helpers.parse_json(conftest.BOOKING_STUB.copy())
+    booking_stub = conftest.BOOKING_STUB.copy()
     resp = client.post('/listings/book', headers=user_token, json=booking_stub)
     assert resp.status_code == conftest.OK
     

@@ -1,10 +1,11 @@
-'use client'
+"use client";
 
 import "@styles/globals.css";
 
-import { LoadScript } from '@react-google-maps/api';
+import { LoadScript } from "@react-google-maps/api";
 import { Navbar } from "@components/Navbar";
 import UserProvider from "@contexts/UserProvider";
+import PropTypes from "prop-types";
 
 const libraries = ["places"];
 
@@ -17,7 +18,7 @@ export default function RootLayout({ children }) {
             googleMapsApiKey="AIzaSyCzAJ8wm_TYMGNSeMl98tNWvipADyz0JEg"
             libraries={libraries}
           >
-            <main className='app'>
+            <main className="app">
               <Navbar />
               {children}
             </main>
@@ -25,5 +26,9 @@ export default function RootLayout({ children }) {
         </UserProvider>
       </body>
     </html>
-  )
+  );
 }
+
+RootLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};

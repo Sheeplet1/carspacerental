@@ -1,6 +1,21 @@
 from bson import ObjectId
 from ..tests import conftest
 
+LISTING_BODY = {
+    "address": {
+        "street": "test street"
+    },
+    "daily_price": 100,
+    "monthly_price": 400,
+    "space_type": "Driveway",
+    "max_size": "SUV",
+    "description": "test description",
+    "access_type": "key card",
+    "images": ["test base64 image string"],
+    "features": ["test feature"]
+}
+
+
 def test_get_single(client, mock_db, user_token):
     """
     GIVEN a Flask application configured for testing

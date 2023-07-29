@@ -12,18 +12,29 @@ def new(user_id: ObjectId, data: dict) -> ObjectId:
         "_id": id,
         "provider": user_id,
         "address": data["address"],
-        "hourly_price": float(data['hourly_price']),
-        "daily_price": float(data['daily_price']) if data['daily_price'] else None,
-        "space_type": data["space_type"],
-        "max_size": data["max_size"],
+        "hourly_rate": float(data['hourly_rate']) if "hourly_rate" in data else None,
+        "monthly_rate": float(data['monthly_rate']) if 'monthly_rate' in data else None,
+        "listing_type": data["listing_type"],
+        "max_vehicle_size": data["max_vehicle_size"],
         "description": data["description"],
         "access_type": data["access_type"],
-        "images": data["images"],
-        "features": None if "features" not in data else list(data["features"])
+        "photos": data["photos"],
+        "amenities": [] if "amenities" not in data else list(data["amenities"]),
+        "safety_features": [] if "safety_features" not in data else list(data["safety_features"]),
+        "availability": data["availability"],
+        "instructions": data["instructions"],
+        "electric_charging": data["electric_charging"],
+        "rating": None,
     }
 
     collection = db.get_database()["Listings"]
     collection.insert_one(listing_doc)
+
+    db.get_database()['UserAccount'].update_one(
+        {"_id": user_id},
+        {"$push": {"listings": id}}
+    )
+
     return id
 
 def get(listing_id: ObjectId) -> Optional[dict]:
@@ -36,4 +47,13 @@ def update_listing(listing_id: ObjectId, body: dict) -> None:
 
 def remove_listing(listing_id: ObjectId) -> None:
     listings = db.get_database()["Listings"]
+
+    # delete listing from user's profile
+    listing = listings.find_one({'_id': listing_id})
+    user_id = ObjectId(listing['provider'])
+    db.get_database()['UserAccount'].find_one_and_update(
+        {'_id': user_id},
+        {'$pull': {'listings': listing_id}}
+    )
+
     listings.delete_one({ "_id": listing_id })

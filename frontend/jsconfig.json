@@ -9,7 +9,7 @@
       "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"],
       "@contexts/*": ["contexts/*"],
-
+      "@errors/*": ["errors/*"]
     }
   }
 }

@@ -42,14 +42,24 @@ LISTING_STUB = {
     "address": {
         "street": "unsw"
     },
-    "hourly_price": 4.2,
-    "daily_price": 100,
-    "space_type": "Driveway",
-    "max_size": "SUV",
+    "hourly_rate": 4.2,
+    "monthly_rate": 100,
+    "listing_type": "Driveway",
+    "max_vehicle_size": "SUV",
     "description": "none",
     "access_type": "key card",
-    "images": ["image1", "image2"],
-    "features": ["ev"]
+    "photos": ["image1", "image2"],
+    "safety_features": ["ev"],
+    "amenities": ["amenities"],
+    "electric_charging": "yes?",
+    "instructions": "instructions",
+    "availability": {
+        "is_24_7": True,
+        "start_time": "time",
+        "end_time": "time",
+        "available_days": [],
+    },
+    "rating": None,
 }
 
 BOOKING_STUB = {
@@ -57,7 +67,13 @@ BOOKING_STUB = {
     "listing_id": TEST_LID,
     "start_time": TEST_START,
     "end_time": TEST_END,
-    "price": 100
+    "price": 100,
+    "recurring": '',
+}
+
+REVIEW_STUB = {
+    "rating": 2,
+    "message": "message"
 }
 
 OK = 200
@@ -90,7 +106,6 @@ def client(mock_db):
 
     with patch('backend.db.db.get_database', return_value=mock_db):
         yield client
-
 
 @pytest.fixture
 def user_token(client):
@@ -129,3 +144,33 @@ def admin_token(client):
        "Authorization": "Bearer " + resp.get_json()["token"]
     }
     yield token_head
+
+@pytest.fixture
+def list_book(client, user_token):
+    """
+    Creates a listing and a booking
+    """
+    register_data = {
+        "email": "listing@email.com",
+        "password": TEST_PW + "listing",
+        "first_name": TEST_FIRST_NAME + "listing",
+        "last_name": TEST_LAST_NAME + "listing",
+        "phone_number": "0400023646",
+    }
+
+    resp = client.post('/auth/register', json=register_data)
+    token_head = {
+       "Authorization": "Bearer " + resp.get_json()["token"]
+    }
+
+    listing_stub = LISTING_STUB.copy()
+    resp = client.post('/listings/new', json=listing_stub, headers=token_head)
+    listing_id = resp.get_json()["listing_id"]
+
+
+    booking_stub = BOOKING_STUB.copy()
+    booking_stub["listing_id"] = listing_id
+    resp = client.post('/listings/book', json=booking_stub, headers=user_token)
+    booking_id = resp.get_json()["booking_id"]
+
+    yield listing_id, booking_id

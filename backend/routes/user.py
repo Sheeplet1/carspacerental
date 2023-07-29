@@ -27,7 +27,8 @@ def profile():
             "password",
             "bookings",
             "reviews",
-            "listings"
+            "listings",
+            "rating"
         ]
         for key in invalid_keys:
             if key in update_data:
@@ -66,7 +67,7 @@ def get_user(user_id):
 
     invalid_keys = [
         "password",
-        "payment_information",
+        "payment_details",
     ]
 
     for key in invalid_keys:

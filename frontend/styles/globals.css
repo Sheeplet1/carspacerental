@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -12,12 +12,12 @@
   display: flex;
   justify-content: center;
   pointer-events: none;
-  background-color: #F2F1F0;
+  background-color: #f2f1f0;
 }
 
-
-html, body {
-  font-family: 'Poppins', cursive;
+html,
+body {
+  font-family: "Poppins", cursive;
 }
 
 /* Tailwind Styles */
@@ -34,14 +34,13 @@ html, body {
   @apply rounded-full border border-black bg-custom-blue py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center font-semibold text-xl font-inter flex items-center justify-center;
 }
 
-
 .logo_text {
   @apply max-sm:hidden font-semibold text-5xl text-black tracking-wide;
 }
 
 .landing_page_text {
   @apply max-sm:hidden font-semibold text-7xl text-black;
-  font-family: 'Bebas Neue', cursive;
+  font-family: "Bebas Neue", cursive;
 }
 
 .heading_text {

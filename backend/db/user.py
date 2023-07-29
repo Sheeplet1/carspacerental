@@ -15,12 +15,12 @@ def user_register(data: dict) -> ObjectId:
         "phone_number": data["phone_number"],
         "vehicle_details": [],
         "payment_details": [],
-        "current_bookings": [],
         "bookings": [],
         "reviews": [],
         "listings": [],
         "is_admin": False,
-        "revenue": 0
+        "revenue": 0,
+        "rating": None,
     }
 
     collection = db.get_database()["UserAccount"]
@@ -36,11 +36,12 @@ def admin_register(data: dict) -> ObjectId:
         "first_name":  data["first_name"],
         "last_name": data["last_name"],
         "phone_number": [data["phone_number"]],
-        "payment_information": {},
+        "payment_details": [],
         "bookings": [],
         "reviews": [],
         "listings": [],
-        "is_admin": True
+        "is_admin": True,
+        "revenue": 0
     }
 
     collection = db.get_database()["UserAccount"]

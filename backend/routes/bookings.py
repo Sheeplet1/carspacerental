@@ -4,7 +4,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from werkzeug.exceptions import Forbidden
 
 from .. import helpers
-from ..db import bookings, db
+from ..db import bookings, db, reviews
 
 OK = 200
 BAD_REQUEST = 400
@@ -30,22 +30,15 @@ def new():
     if "price" not in data or not str(data["price"]).replace('.', '', 1).isdigit():
         return { "error": "Valid pricing is required" }, BAD_REQUEST
 
+
     # check if user is trying to book their own listing
     listing = db.get_database()['Listings'].find_one({'_id': ObjectId(data['listing_id'])})
     if listing['provider'] == consumer:
         return { 'error': 'User cannot book their own listing' }, BAD_REQUEST
 
-    # check if booking overlaps with existing bookings
-    collection = db.get_database()['Bookings']
-    all_bookings = collection.find()
-
-    for bkn in all_bookings:
-        # if start and end are further ahead
-        if (data['start_time'] > bkn['end_time'] and data['end_time'] > bkn['end_time']) or \
-           (data['start_time'] < bkn['start_time'] and data['end_time'] < bkn['start_time']):
-            continue
-        else:
-            return {"error": "Invalid time slot"}, BAD_REQUEST
+    resp = helpers.check_for_overlaps(data['start_time'], data['end_time'])
+    if resp is not None:
+        return resp
 
     # create booking
     data['consumer'] = consumer
@@ -68,9 +61,6 @@ def info(booking_id):
         return { 'error': "Booking doesn't exist" }, BAD_REQUEST
 
     if request.method == "GET":
-        booking['_id'] = booking['_id']
-        booking['consumer'] = booking['consumer']
-        booking['listing_id'] = booking['listing_id']
         return booking, OK
 
     user_id = helpers.validate_jwt(get_jwt_identity())
@@ -90,10 +80,11 @@ def info(booking_id):
             if not isinstance(val, type(booking[key])):
                 return { 'error': 'Update value has invalid typing' }, BAD_REQUEST
 
-        bookings.update(booking_id, update_data)
-
+        new_id = bookings.update(booking_id, update_data)
+        return { 'booking_id': new_id }, OK
     elif request.method == 'DELETE':
-        bookings.cancel(booking_id)
+        data = request.get_json()
+        bookings.cancel(booking_id, data)
 
     return {}, OK
 
@@ -108,3 +99,65 @@ def completed():
         c_bookings.append(bookings.get(b_id['_id']))
 
     return c_bookings, OK
+
+@bp.route('bookings/<booking_id>/review', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@jwt_required()
+def review(booking_id):
+    user_id = helpers.validate_jwt(get_jwt_identity())
+
+    if not ObjectId.is_valid(booking_id):
+        return { 'error': 'Invalid booking id' }, BAD_REQUEST
+
+    booking_id = ObjectId(booking_id)
+    booking = bookings.get(booking_id)
+
+    if not booking:
+        return { 'error': "Booking doesn't exist" }, BAD_REQUEST
+
+    if booking['consumer'] != user_id and not helpers.is_admin(user_id):
+        raise Forbidden
+
+    if request.method == "POST":
+        data = request.get_json()
+
+        if reviews.get(booking_id):
+            return { 'error': 'Review already exists' }, BAD_REQUEST
+
+        if "rating" not in data:
+            return { 'error': 'Valid rating is required' }, BAD_REQUEST
+
+        if "message" not in data:
+            return { 'error': 'Valid message is required' }, BAD_REQUEST
+
+        id = reviews.new(user_id, booking_id, data)
+        return { 'review_id': id }, OK
+
+    review = reviews.get(booking_id)
+    if not review:
+        return { 'error': 'Review does not exist' }, BAD_REQUEST
+
+    if request.method == "GET":
+        return review, OK
+
+    if request.method == 'PUT':
+        data = request.get_json()
+
+        for key in ["_id", "user_id", "booking_id", "listing_id", "name", "timestamp"]:
+            if key in data:
+                return { 'error': 'Cannot update ' + key }, BAD_REQUEST
+
+
+        for key, val in data.items():
+            if key not in review.keys():
+                return { 'error': 'Invalid update key' }, BAD_REQUEST
+            if not isinstance(val, type(review[key])):
+                return { 'error': 'Update value has invalid typing' }, BAD_REQUEST
+
+        reviews.update(review["_id"], data)
+        return { 'booking_id': review["_id"] }, OK
+
+    if request.method == 'DELETE':
+        data = request.get_json()
+        reviews.delete(review["_id"])
+
+    return {}, OK

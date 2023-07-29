@@ -1,10 +1,17 @@
-'use client'
+"use client";
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { Autocomplete } from '@react-google-maps/api';
-import Image from 'next/image';
+import { useState, useCallback, useRef, useEffect } from "react";
+import { Autocomplete } from "@react-google-maps/api";
+import Image from "next/image";
+import PropTypes from "prop-types";
 
-function SearchBar({ placeholder, onSearch, className, showSearchButton, initialValue }) {
+function SearchBar({
+  placeholder,
+  onSearch,
+  className,
+  showSearchButton,
+  initialValue,
+}) {
   const [autocomplete, setAutocomplete] = useState(null);
   const autocompleteRef = useRef(null);
 
@@ -26,38 +33,38 @@ function SearchBar({ placeholder, onSearch, className, showSearchButton, initial
         return;
       }
 
-      let streetNumber = '';
-      let street = '';
-      let city = '';
-      let state = '';
-      let postcode = '';
-      let country = '';
+      let streetNumber = "";
+      let street = "";
+      let city = "";
+      let state = "";
+      let postcode = "";
+      let country = "";
 
       for (const component of place.address_components) {
         const componentType = component.types[0];
 
         switch (componentType) {
-          case 'street_number': {
-            steetNumber = component.long_name;
+          case "street_number": {
+            streetNumber = component.long_name;
             break;
           }
-          case 'route': {
+          case "route": {
             street = component.long_name;
             break;
           }
-          case 'locality': {
+          case "locality": {
             city = component.long_name;
             break;
           }
-          case 'administrative_area_level_1': {
+          case "administrative_area_level_1": {
             state = component.short_name;
             break;
           }
-          case 'postal_code': {
+          case "postal_code": {
             postcode = component.long_name;
             break;
           }
-          case 'country': {
+          case "country": {
             country = component.long_name;
             break;
           }
@@ -65,19 +72,19 @@ function SearchBar({ placeholder, onSearch, className, showSearchButton, initial
       }
 
       return {
-          formatted_address: place.formatted_address,
-          street_number: streetNumber,
-          street,
-          city,
-          state,
-          postcode,
-          country,
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-          place_id: place.place_id,
+        formatted_address: place.formatted_address,
+        street_number: streetNumber,
+        street,
+        city,
+        state,
+        postcode,
+        country,
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        place_id: place.place_id,
       };
     } else {
-      console.log('Autocomplete is not loaded yet!');
+      console.log("Autocomplete is not loaded yet!");
     }
   };
 
@@ -102,10 +109,7 @@ function SearchBar({ placeholder, onSearch, className, showSearchButton, initial
   return (
     <div className="relative">
       <div className="flex items-center relative">
-        <Autocomplete
-          onLoad={onLoad}
-          onPlaceChanged={onPlaceChanged}
-        >
+        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
           <input
             ref={autocompleteRef}
             type="text"
@@ -114,11 +118,11 @@ function SearchBar({ placeholder, onSearch, className, showSearchButton, initial
             defaultValue={initialValue}
           />
         </Autocomplete>
-        {showSearchButton &&
+        {showSearchButton && (
           <button
             type="submit"
             className="absolute right-0 mt-1 mr-1 transform rounded-full bg-custom-orange w-10 h-10 flex items-center justify-center"
-            style={{ top: '50%', zIndex: 10 }}
+            style={{ top: "50%", zIndex: 10 }}
             onClick={searchClick}
           >
             <Image
@@ -128,10 +132,18 @@ function SearchBar({ placeholder, onSearch, className, showSearchButton, initial
               height={20}
             />
           </button>
-        }
+        )}
       </div>
     </div>
   );
 }
 
 export default SearchBar;
+
+SearchBar.propTypes = {
+  placeholder: PropTypes.string.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired,
+  showSearchButton: PropTypes.bool.isRequired,
+  initialValue: PropTypes.string,
+};

@@ -63,3 +63,10 @@ WEEK 6
 
 - Completed completed-bookings route
 - Almost finished payment integration on backend
+
+------------------------------------------------------------------------------
+WEEK 7
+
+- Mock payment done for backend 
+    - Need to consider refunding process in Sprint 3
+- Starting on Recurring Bookings
