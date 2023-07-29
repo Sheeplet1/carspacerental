@@ -48,7 +48,7 @@ const UserProvider = ({ children }) => {
   };
 
   const fetchUser = async () => {
-    if (token) {
+    if (token && !user) {
       const response = await makeRequest("/user/profile", "GET");
       if (response.error) {
         console.log(response.error);
