@@ -100,7 +100,9 @@ def info(listing_id):
         for key, val in update_data.items():
             if key not in listing.keys():
                 return { "error": "Invalid update key" }, 400
-            if not isinstance(val, type(listing[key])):
+            if (key == "hourly_rate" or key == "monthly_rate") and str(val).replace('.', '', 1).isdigit():
+                continue
+            elif not isinstance(val, type(listing[key])):
                 return { "error": "Update value has invalid type" }, 400
 
         listings_db.update_listing(listing_id, update_data)

@@ -30,7 +30,7 @@ const ListingDetail = () => {
         "GET"
       );
       if (response.error) {
-        console.log(response.error);
+        throw new Error(response.error);
       } else {
         setListingUser(response.data);
       }

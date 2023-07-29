@@ -62,7 +62,7 @@ const SearchListings = () => {
     const fetchData = async () => {
       const response = await makeRequest("/listings", "GET");
       if (response.error) {
-        console.log(response.error);
+        throw new Error(response.error);
       } else {
         if (response.listings.length !== 0) {
           setOriginalListings(response.data);

@@ -6,6 +6,8 @@ import LoginSideBar from "@components/LoginSideBar";
 import VehicleDetailsModal from "@components/VehicleDetailsModal";
 import { Button, Card } from "flowbite-react";
 import { useRouter } from "next/navigation";
+import { AuthRequiredError } from "@errors/exceptions";
+import Image from "next/image";
 
 const VehicleDetails = () => {
   const router = useRouter();
@@ -14,6 +16,11 @@ const VehicleDetails = () => {
   const [showVehicleDetailsModal, setShowVehicleDetailsModal] = useState(
     user.vehicle_details.map(() => false)
   );
+  const [loading, setLoading] = useState(false);
+
+  if (!user) {
+    throw new AuthRequiredError();
+  }
 
   useEffect(() => {
     setShowVehicleDetailsModal(user.vehicle_details.map(() => false));
@@ -25,7 +32,9 @@ const VehicleDetails = () => {
         (v) => v.registration_number !== vehicle.registration_number
       ),
     };
+    setLoading(true);
     updateUser(body);
+    setLoading(false);
   };
 
   return (
@@ -57,48 +66,62 @@ const VehicleDetails = () => {
                 make={""}
                 model={""}
                 isEdit={false}
+                setLoading={setLoading}
               />
             </div>
           </div>
-          {user.vehicle_details.map((vehicle, index) => (
-            <Card key={index} className="max-w-full mb-5">
-              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {vehicle.vehicle_make} {vehicle.vehicle_model}
-              </h5>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Registration Number: {vehicle.registration_number}
-              </p>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Vehicle Type: {vehicle.vehicle_type}
-              </p>
+          {loading ? (
+            <div className="w-full flex-center">
+              <Image
+                src="assets/icons/loader.svg"
+                width={50}
+                height={50}
+                alt="loader"
+                className="object-contain"
+              />
+            </div>
+          ) : (
+            user.vehicle_details.map((vehicle, index) => (
+              <Card key={index} className="max-w-full mb-5">
+                <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {vehicle.vehicle_make} {vehicle.vehicle_model}
+                </h5>
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  Registration Number: {vehicle.registration_number}
+                </p>
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  Vehicle Type: {vehicle.vehicle_type}
+                </p>
 
-              <div className="flex gap-4 flex-end">
-                <VehicleDetailsModal
-                  showVehicleDetailsModal={showVehicleDetailsModal[index]}
-                  setShowVehicleDetailsModal={(value) => {
-                    const newShowVehicleDetailsModal = [
-                      ...showVehicleDetailsModal,
-                    ];
-                    newShowVehicleDetailsModal[index] = value;
-                    setShowVehicleDetailsModal(newShowVehicleDetailsModal);
-                  }}
-                  btnTitle={"Edit"}
-                  modalHeader={"Edit Vehicle Details"}
-                  registration={vehicle.registration_number}
-                  type={vehicle.vehicle_type}
-                  make={vehicle.vehicle_make}
-                  model={vehicle.vehicle_model}
-                  isEdit={true}
-                />
-                <Button
-                  className="bg-custom-orange"
-                  onClick={() => handleDeleteVehicle(vehicle)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </Card>
-          ))}
+                <div className="flex gap-4 flex-end">
+                  <VehicleDetailsModal
+                    showVehicleDetailsModal={showVehicleDetailsModal[index]}
+                    setShowVehicleDetailsModal={(value) => {
+                      const newShowVehicleDetailsModal = [
+                        ...showVehicleDetailsModal,
+                      ];
+                      newShowVehicleDetailsModal[index] = value;
+                      setShowVehicleDetailsModal(newShowVehicleDetailsModal);
+                    }}
+                    btnTitle={"Edit"}
+                    modalHeader={"Edit Vehicle Details"}
+                    registration={vehicle.registration_number}
+                    type={vehicle.vehicle_type}
+                    make={vehicle.vehicle_make}
+                    model={vehicle.vehicle_model}
+                    isEdit={true}
+                    setLoading={setLoading}
+                  />
+                  <Button
+                    className="bg-custom-orange"
+                    onClick={() => handleDeleteVehicle(vehicle)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </div>

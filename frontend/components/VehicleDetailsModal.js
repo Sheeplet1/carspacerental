@@ -15,6 +15,7 @@ const VehicleDetailsModal = ({
   make,
   model,
   isEdit,
+  setLoading,
 }) => {
   const [vehicleRegistration, setVehicleRegistration] = useState(registration);
   const [vehicleType, setVehicleType] = useState(type);
@@ -40,6 +41,8 @@ const VehicleDetailsModal = ({
   }, []);
 
   const clickSave = async () => {
+    setLoading(true);
+
     const isVehicleRegistrationExist = !!vehicleRegistration;
     setVehicleRegistrationError(
       isVehicleRegistrationExist ? "" : "This field is required"
@@ -71,7 +74,9 @@ const VehicleDetailsModal = ({
       const body = {
         vehicle_details: [...vehicleDetails, newVehicleDetail],
       };
+
       updateUser(body);
+      setLoading(false);
       closeModal();
     }
   };
@@ -207,4 +212,5 @@ VehicleDetailsModal.propTypes = {
   make: PropTypes.string.isRequired,
   model: PropTypes.string.isRequired,
   isEdit: PropTypes.bool.isRequired,
+  setLoading: PropTypes.func.isRequired,
 };

@@ -86,7 +86,7 @@ const PaymentDetail = () => {
 
     const response = await makeRequest("/listings/book", "POST", body);
     if (response.error) {
-      console.log(response.error);
+      throw new Error(response.error);
     } else {
       setIsBooking(false);
       setSelectedListing(null);

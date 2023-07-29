@@ -4,6 +4,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { makeRequest } from "@utils/utils";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
+import { AuthRequiredError } from "@errors/exceptions";
 
 const UserContext = createContext();
 
@@ -48,10 +49,10 @@ const UserProvider = ({ children }) => {
   };
 
   const fetchUser = async () => {
-    if (token && !user) {
+    if (token) {
       const response = await makeRequest("/user/profile", "GET");
       if (response.error) {
-        console.log(response.error);
+        throw new AuthRequiredError();
       } else {
         setUser(response);
         setLoading(false);
@@ -64,14 +65,16 @@ const UserProvider = ({ children }) => {
   const updateUser = async (body) => {
     const result = await makeRequest("/user/profile", "PUT", body);
     if (result.error) {
-      console.log(result.error);
+      throw new Error(result.error);
     } else {
       fetchUser();
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    if (!user) {
+      fetchUser();
+    }
   }, [token]);
 
   return (

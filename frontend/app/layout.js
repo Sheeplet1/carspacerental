@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
       <body className="bg-background">
         <UserProvider>
           <LoadScript
-            googleMapsApiKey="AIzaSyDLObtS4lYXqrA_Y_kF6VGxy-ogZFP5-lU"
+            googleMapsApiKey="AIzaSyCzAJ8wm_TYMGNSeMl98tNWvipADyz0JEg"
             libraries={libraries}
           >
             <main className="app">
