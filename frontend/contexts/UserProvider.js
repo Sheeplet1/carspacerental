@@ -17,6 +17,7 @@ const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const register = async (body, setEmailError, setShowFurtherRegistration) => {
+    setLoading(true);
     const response = await makeRequest("/auth/register", "POST", body);
     if (response.error) {
       setEmailError(response.error);
@@ -25,11 +26,12 @@ const UserProvider = ({ children }) => {
       localStorage.setItem("token", response.token);
       setToken(response.token);
       router.push("/");
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const login = async (body, setEmailError) => {
+    setLoading(true);
     const response = await makeRequest("/auth/login", "POST", body);
     if (response.error) {
       setEmailError(response.error);
@@ -37,8 +39,8 @@ const UserProvider = ({ children }) => {
       localStorage.setItem("token", response.token);
       setToken(response.token);
       router.push("/");
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const logout = () => {
@@ -49,26 +51,27 @@ const UserProvider = ({ children }) => {
   };
 
   const fetchUser = async () => {
+    setLoading(true);
     if (token) {
       const response = await makeRequest("/user/profile", "GET");
       if (response.error) {
         throw new AuthRequiredError();
       } else {
         setUser(response);
-        setLoading(false);
       }
-    } else {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const updateUser = async (body) => {
+    setLoading(true);
     const result = await makeRequest("/user/profile", "PUT", body);
     if (result.error) {
       throw new Error(result.error);
     } else {
       fetchUser();
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -79,7 +82,7 @@ const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, register, login, logout, updateUser, fetchUser }}
+      value={{ user, register, login, logout, updateUser, fetchUser, loading }}
     >
       {!loading && children}
     </UserContext.Provider>

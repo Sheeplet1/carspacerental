@@ -33,7 +33,7 @@ const VehicleDetails = () => {
       ),
     };
     setLoading(true);
-    updateUser(body);
+    await updateUser(body);
     setLoading(false);
   };
 

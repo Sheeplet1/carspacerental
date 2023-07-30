@@ -41,8 +41,6 @@ const VehicleDetailsModal = ({
   }, []);
 
   const clickSave = async () => {
-    setLoading(true);
-
     const isVehicleRegistrationExist = !!vehicleRegistration;
     setVehicleRegistrationError(
       isVehicleRegistrationExist ? "" : "This field is required"
@@ -75,8 +73,10 @@ const VehicleDetailsModal = ({
         vehicle_details: [...vehicleDetails, newVehicleDetail],
       };
 
-      updateUser(body);
+      setLoading(true);
+      await updateUser(body);
       setLoading(false);
+
       closeModal();
     }
   };

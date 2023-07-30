@@ -4,9 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useUser } from "@contexts/UserProvider";
+import Loading from "@components/Loading";
 
 export const Navbar = () => {
-  const { user, logout } = useUser();
+  const { user, logout, loading } = useUser();
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   return (
@@ -62,7 +63,11 @@ export const Navbar = () => {
             <p className="logo_text">SFCars</p>
           </div>
         </Link>
-        {user ? (
+        {loading ? (
+          <div className="relative inline-block text-left">
+            <Loading width={30} height={30} />
+          </div>
+        ) : user ? (
           <div
             className="relative inline-block text-left"
             onMouseEnter={() => setToggleDropdown(true)}

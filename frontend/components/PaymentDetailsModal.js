@@ -80,7 +80,7 @@ const PaymentDetailsModal = ({
       };
 
       setLoading(true);
-      updateUser(body);
+      await updateUser(body);
       setLoading(false);
       closeModal();
     }
