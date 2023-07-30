@@ -12,12 +12,11 @@ import Image from "next/image";
 
 const PaymentDetails = () => {
   const router = useRouter();
-  const { user, updateUser } = useUser();
+  const { user, updateUser, loading } = useUser();
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
   const [showPaymentDetailsModal, setShowPaymentDetailsModal] = useState(
     user.payment_details.map(() => false)
   );
-  const [loading, setLoading] = useState(false);
 
   if (!user) {
     throw new AuthRequiredError();
@@ -69,7 +68,6 @@ const PaymentDetails = () => {
                 date={""}
                 cvvNo={0}
                 isEdit={false}
-                setLoading={setLoading}
               />
             </div>
           </div>
@@ -111,7 +109,6 @@ const PaymentDetails = () => {
                     date={payment.expiry_date}
                     cvvNo={payment.cvv}
                     isEdit={true}
-                    setLoading={setLoading}
                   />
                   <Button
                     className="bg-custom-orange"

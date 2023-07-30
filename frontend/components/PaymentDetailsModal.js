@@ -14,7 +14,6 @@ const PaymentDetailsModal = ({
   date,
   cvvNo,
   isEdit,
-  setLoading,
 }) => {
   const [cardNo, setCardNo] = useState(number);
   const [expiryDate, setExpiryDate] = useState(date);
@@ -79,9 +78,7 @@ const PaymentDetailsModal = ({
         payment_details: [...paymentDetails, newPaymentDetail],
       };
 
-      setLoading(true);
-      await updateUser(body);
-      setLoading(false);
+      updateUser(body);
       closeModal();
     }
   };
@@ -223,5 +220,4 @@ PaymentDetailsModal.propTypes = {
   date: PropTypes.string.isRequired,
   cvvNo: PropTypes.number.isRequired,
   isEdit: PropTypes.bool.isRequired,
-  setLoading: PropTypes.func.isRequired,
 };

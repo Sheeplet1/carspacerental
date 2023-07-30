@@ -15,7 +15,6 @@ const VehicleDetailsModal = ({
   make,
   model,
   isEdit,
-  setLoading,
 }) => {
   const [vehicleRegistration, setVehicleRegistration] = useState(registration);
   const [vehicleType, setVehicleType] = useState(type);
@@ -73,9 +72,7 @@ const VehicleDetailsModal = ({
         vehicle_details: [...vehicleDetails, newVehicleDetail],
       };
 
-      setLoading(true);
-      await updateUser(body);
-      setLoading(false);
+      updateUser(body);
 
       closeModal();
     }
@@ -212,5 +209,4 @@ VehicleDetailsModal.propTypes = {
   make: PropTypes.string.isRequired,
   model: PropTypes.string.isRequired,
   isEdit: PropTypes.bool.isRequired,
-  setLoading: PropTypes.func.isRequired,
 };

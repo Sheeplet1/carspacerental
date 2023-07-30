@@ -11,12 +11,11 @@ import Image from "next/image";
 
 const VehicleDetails = () => {
   const router = useRouter();
-  const { user, updateUser } = useUser();
+  const { user, updateUser, loading } = useUser();
   const [showAddVehicleModal, setShowAddVehicleModal] = useState(false);
   const [showVehicleDetailsModal, setShowVehicleDetailsModal] = useState(
     user.vehicle_details.map(() => false)
   );
-  const [loading, setLoading] = useState(false);
 
   if (!user) {
     throw new AuthRequiredError();
@@ -32,9 +31,7 @@ const VehicleDetails = () => {
         (v) => v.registration_number !== vehicle.registration_number
       ),
     };
-    setLoading(true);
-    await updateUser(body);
-    setLoading(false);
+    updateUser(body);
   };
 
   return (
@@ -66,7 +63,6 @@ const VehicleDetails = () => {
                 make={""}
                 model={""}
                 isEdit={false}
-                setLoading={setLoading}
               />
             </div>
           </div>
@@ -110,7 +106,6 @@ const VehicleDetails = () => {
                     make={vehicle.vehicle_make}
                     model={vehicle.vehicle_model}
                     isEdit={true}
-                    setLoading={setLoading}
                   />
                   <Button
                     className="bg-custom-orange"

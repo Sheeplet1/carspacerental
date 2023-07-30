@@ -47,7 +47,6 @@ const UserProvider = ({ children }) => {
   };
 
   const fetchUser = async () => {
-    setLoading(true);
     if (token) {
       const response = await makeRequest("/user/profile", "GET");
       if (response.error) {
@@ -60,14 +59,12 @@ const UserProvider = ({ children }) => {
   };
 
   const updateUser = async (body) => {
-    setLoading(true);
     const result = await makeRequest("/user/profile", "PUT", body);
     if (result.error) {
       throw new Error(result.error);
     } else {
       fetchUser();
     }
-    setLoading(false);
   };
 
   useEffect(() => {

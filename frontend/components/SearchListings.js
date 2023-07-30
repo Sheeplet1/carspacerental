@@ -21,8 +21,11 @@ const SearchListings = () => {
     setMinStartTime,
     setMinEndTime,
     sort,
+    fetchingData,
+    setFetchingData,
   } = useContext(SearchContext);
   const [originalListings, setOriginalListings] = useState([]);
+
   useEffect(() => {
     if (startDate > endDate) {
       setEndDate(new Date(startDate));
@@ -60,92 +63,105 @@ const SearchListings = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setFetchingData(true);
       const response = await makeRequest("/listings", "GET");
       if (response.error) {
         throw new Error(response.error);
       } else {
         if (response.listings.length !== 0) {
-          setOriginalListings(response.data);
+          setOriginalListings(response.listings);
         }
       }
+      setFetchingData(false);
     };
 
     fetchData();
   }, []);
 
   useEffect(() => {
-    let processedListings = [...originalListings];
-    if (isCasual) {
-      processedListings = processedListings.filter((listing) => {
-        if (!listing.hourly_rate) return false;
+    if (!fetchingData) {
+      console.log(originalListings);
+      let processedListings = [...originalListings];
+      if (isCasual) {
+        processedListings = processedListings.filter((listing) => {
+          if (!listing.hourly_rate) return false;
 
-        if (listing.availability.is_24_7) return true;
+          if (listing.availability.is_24_7) return true;
 
-        const selectedDays = getDaysArray(
-          new Date(startDate),
-          new Date(endDate)
-        ).map((date) => date.toLocaleString("en-us", { weekday: "long" }));
+          const selectedDays = getDaysArray(
+            new Date(startDate),
+            new Date(endDate)
+          ).map((date) => date.toLocaleString("en-us", { weekday: "long" }));
 
-        const listingDays = listing.availability.available_days;
+          const listingDays = listing.availability.available_days;
 
-        const dateIsValid = selectedDays.every((day) =>
-          listingDays.includes(day)
+          const dateIsValid = selectedDays.every((day) =>
+            listingDays.includes(day)
+          );
+
+          const startTimeIsValid =
+            startTime >= getTime(listing.availability.start_time) &&
+            startTime < getTime(listing.availability.end_time);
+          const endTimeIsValid =
+            endTime > getTime(listing.availability.start_time) &&
+            endTime <= getTime(listing.availability.end_time);
+
+          return dateIsValid && startTimeIsValid && endTimeIsValid;
+        });
+      } else {
+        processedListings = processedListings.filter(
+          (listing) => listing.monthly_rate
         );
+      }
 
-        const startTimeIsValid =
-          startTime >= getTime(listing.availability.start_time) &&
-          startTime < getTime(listing.availability.end_time);
-        const endTimeIsValid =
-          endTime > getTime(listing.availability.start_time) &&
-          endTime <= getTime(listing.availability.end_time);
-
-        return dateIsValid && startTimeIsValid && endTimeIsValid;
-      });
-    } else {
-      processedListings = processedListings.filter(
-        (listing) => listing.monthly_rate
-      );
-    }
-
-    processedListings.sort((a, b) => {
-      switch (sort) {
-        case "distance":
-          return addressData
-            ? calculateDistanceInKm(
-                addressData.lat,
-                addressData.lng,
-                a.address.lat,
-                a.address.lng
-              ) -
-                calculateDistanceInKm(
+      processedListings.sort((a, b) => {
+        switch (sort) {
+          case "distance":
+            return addressData
+              ? calculateDistanceInKm(
                   addressData.lat,
                   addressData.lng,
-                  b.address.lat,
-                  b.address.lng
-                )
-            : calculateDistanceInKm(
-                searchParams.get("lat"),
-                searchParams.get("lng"),
-                a.address.lat,
-                a.address.lng
-              ) -
-                calculateDistanceInKm(
+                  a.address.lat,
+                  a.address.lng
+                ) -
+                  calculateDistanceInKm(
+                    addressData.lat,
+                    addressData.lng,
+                    b.address.lat,
+                    b.address.lng
+                  )
+              : calculateDistanceInKm(
                   searchParams.get("lat"),
                   searchParams.get("lng"),
-                  b.address.lat,
-                  b.address.lng
-                );
-        case "price":
-          return isCasual
-            ? a.hourly_rate - b.hourly_rate
-            : a.monthly_rate - b.monthly_rate;
-        default:
-          return 0;
-      }
-    });
+                  a.address.lat,
+                  a.address.lng
+                ) -
+                  calculateDistanceInKm(
+                    searchParams.get("lat"),
+                    searchParams.get("lng"),
+                    b.address.lat,
+                    b.address.lng
+                  );
+          case "price":
+            return isCasual
+              ? a.hourly_rate - b.hourly_rate
+              : a.monthly_rate - b.monthly_rate;
+          default:
+            return 0;
+        }
+      });
 
-    setListings(processedListings);
-  }, [isCasual, startDate, endDate, startTime, endTime, sort]);
+      setListings(processedListings);
+    }
+  }, [
+    originalListings,
+    isCasual,
+    startDate,
+    endDate,
+    startTime,
+    endTime,
+    sort,
+  ]);
 
   const getDaysArray = (start, end) => {
     for (
