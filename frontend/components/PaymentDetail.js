@@ -59,7 +59,6 @@ const PaymentDetail = () => {
   };
 
   const clickPay = async () => {
-    // startDate and startTime must be formated like 2022-01-01T00:00:00
     const formattedStartDate = startDate.toISOString().split("T")[0];
     const formattedStartTime = `${startTime}:00:00`;
 
@@ -86,7 +85,7 @@ const PaymentDetail = () => {
 
     const response = await makeRequest("/listings/book", "POST", body);
     if (response.error) {
-      console.log(response.error);
+      throw new Error(response.error);
     } else {
       setIsBooking(false);
       setSelectedListing(null);
@@ -132,6 +131,13 @@ const PaymentDetail = () => {
               <VehicleDetailsModal
                 showVehicleDetailsModal={showVehicleDetailsModal}
                 setShowVehicleDetailsModal={setShowVehicleDetailsModal}
+                btnTitle={"Add Vehicle"}
+                modalHeader={"Add Vehicle Details"}
+                registration={""}
+                type={""}
+                make={""}
+                model={""}
+                isEdit={false}
               />
             )}
           </div>
@@ -215,6 +221,12 @@ const PaymentDetail = () => {
               <PaymentDetailsModal
                 showPaymentDetailsModal={showPaymentDetailsModal}
                 setShowPaymentDetailsModal={setShowPaymentDetailsModal}
+                btnTitle="Add Payment"
+                modalHeader="Add Payment Details"
+                number={""}
+                date={""}
+                cvvNo={0}
+                isEdit={false}
               />
             )}
           </div>
