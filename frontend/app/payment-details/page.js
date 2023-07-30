@@ -39,13 +39,13 @@ const PaymentDetails = () => {
     updateUser(body);
   };
   return (
-    <div className="flex flex-row w-full mt-12 bg-gray-100">
+    <div className="flex flex-row w-full mt-12">
       <div className="rounded-lg p-5">
         <LoginSideBar />
       </div>
       <div
         className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
-        style={{ maxHeight: "600px" }}
+        style={{ height: "70vh" }}
       >
         <div className="flex flex-col w-full">
           <div className="flex flex-row justify-between w-full mb-5">
@@ -81,7 +81,7 @@ const PaymentDetails = () => {
                 className="object-contain"
               />
             </div>
-          ) : (
+          ) : user.payment_details.length > 0 ? (
             user.payment_details.map((payment, index) => (
               <Card key={index} className="max-w-full mb-5">
                 <div className="flex text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -119,6 +119,10 @@ const PaymentDetails = () => {
                 </div>
               </Card>
             ))
+          ) : (
+            <div className="text-xl text-gray-500">
+              No payment details added yet.
+            </div>
           )}
         </div>
       </div>

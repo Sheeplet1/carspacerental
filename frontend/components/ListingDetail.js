@@ -163,15 +163,18 @@ const ListingDetail = () => {
           </div>
         </div>
         <div className="my-4 pb-20">
+          <h2 className="text-lg font-bold mb-2 text-custom-orange">
+            Listed By
+          </h2>
           <div className="flex flex-wrap">
             {listingUser ? (
               <div className="flex items-center space-x-6 my-4">
                 <Image
-                  src={listingUser.image}
+                  src={user.pfp || "/assets/icons/profile.svg"}
                   alt="Listing Image"
                   className="rounded-full"
-                  width={70}
-                  height={70}
+                  width={80}
+                  height={80}
                 />
                 <h2 className="text-2xl font-bold">{listingUser.first_name}</h2>
               </div>
