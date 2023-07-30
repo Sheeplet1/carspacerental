@@ -17,7 +17,6 @@ const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const register = async (body, setEmailError, setShowFurtherRegistration) => {
-    setLoading(true);
     const response = await makeRequest("/auth/register", "POST", body);
     if (response.error) {
       setEmailError(response.error);
@@ -27,11 +26,9 @@ const UserProvider = ({ children }) => {
       setToken(response.token);
       router.push("/");
     }
-    setLoading(false);
   };
 
   const login = async (body, setEmailError) => {
-    setLoading(true);
     const response = await makeRequest("/auth/login", "POST", body);
     if (response.error) {
       setEmailError(response.error);
@@ -40,7 +37,6 @@ const UserProvider = ({ children }) => {
       setToken(response.token);
       router.push("/");
     }
-    setLoading(false);
   };
 
   const logout = () => {
