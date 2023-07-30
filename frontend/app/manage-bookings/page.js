@@ -1,7 +1,5 @@
 "use client";
 
-import React, { useContext, useState } from "react";
-import BookingContext from "@contexts/BookingContext";
 import BookingProvider from "@contexts/BookingProvider";
 import ManageBookings from "@components/MangeBookings";
 
