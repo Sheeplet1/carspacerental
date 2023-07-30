@@ -21,6 +21,8 @@ def user_register(data: dict) -> ObjectId:
         "is_admin": False,
         "revenue": 0,
         "rating": None,
+        "inbox": [],
+        "pfp": ''
     }
 
     collection = db.get_database()["UserAccount"]
@@ -35,13 +37,17 @@ def admin_register(data: dict) -> ObjectId:
         "password": generate_hash(data["password"]),
         "first_name":  data["first_name"],
         "last_name": data["last_name"],
-        "phone_number": [data["phone_number"]],
+        "phone_number": data["phone_number"],
+        "vehicle_details": [],
         "payment_details": [],
         "bookings": [],
         "reviews": [],
         "listings": [],
         "is_admin": True,
-        "revenue": 0
+        "revenue": 0,
+        "rating": None,
+        "inbox": [],
+        "pfp": ''
     }
 
     collection = db.get_database()["UserAccount"]

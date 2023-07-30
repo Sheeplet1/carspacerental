@@ -31,7 +31,7 @@ def new(user_id: ObjectId, booking_id: ObjectId, data: dict) -> ObjectId:
     provider_id = collection.find_one({ "_id": listing_id })["provider"]
 
     provider_listings = list(db.get_database()["Listings"].find({ "provider": provider_id }))
-    user_rating = sum(listing["rating"]for listing in provider_listings) / len(provider_listings)
+    user_rating = sum(listing["rating"] for listing in provider_listings) / len(provider_listings)
 
     collection = db.get_database()["UserAccount"]
     collection.update_one({ "_id": provider_id }, { "$set": { "rating": user_rating } })
