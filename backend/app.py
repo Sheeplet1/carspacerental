@@ -2,7 +2,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from . import config
-from .routes import auth, listings, user, bookings, payments
+from .routes import auth, listings, user, bookings, payments, inbox
 from . import json_encoder
 
 def create_app():
@@ -20,5 +20,6 @@ def create_app():
     app.register_blueprint(user.bp)
     app.register_blueprint(bookings.bp)
     app.register_blueprint(payments.bp)
+    app.register_blueprint(inbox.bp)
 
     return app

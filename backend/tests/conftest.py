@@ -6,11 +6,8 @@ from unittest.mock import patch
 from bson import ObjectId
 from flask_jwt_extended import JWTManager
 
-from ..routes.auth import bp as auth_bp
-from ..routes.listings import bp as listings_bp
-from ..routes.bookings import bp as booking_bp
-from ..routes.user import bp as user_bp
-from ..routes.payments import bp as payments_bp
+from ..routes import auth, listings, bookings, user, payments, inbox
+
 from ..helpers import generate_hash
 from ..json_encoder import CustomJSONProvider
 
@@ -34,6 +31,7 @@ USER_STUB = {
     "first_name": TEST_FIRST_NAME,
     "last_name": TEST_LAST_NAME,
     "phone_number": TEST_PN,
+    "inbox": [],
 }
 
 LISTING_STUB = {
@@ -96,11 +94,13 @@ def client(mock_db):
     app.config["JWT_SECRET_KEY"] = TEST_JWT_KEY
     JWTManager(app)
 
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(listings_bp)
-    app.register_blueprint(booking_bp)
-    app.register_blueprint(user_bp)
-    app.register_blueprint(payments_bp)
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(listings.bp)
+    app.register_blueprint(bookings.bp)
+    app.register_blueprint(user.bp)
+    app.register_blueprint(payments.bp)
+    app.register_blueprint(inbox.bp)
+    
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
 
