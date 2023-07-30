@@ -7,14 +7,20 @@ import { Button, Card } from "flowbite-react";
 import { FaRegCreditCard } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useUser } from "@contexts/UserProvider";
+import { AuthRequiredError } from "@errors/exceptions";
+import Image from "next/image";
 
 const PaymentDetails = () => {
   const router = useRouter();
-  const { user, updateUser } = useUser();
+  const { user, updateUser, loading } = useUser();
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
   const [showPaymentDetailsModal, setShowPaymentDetailsModal] = useState(
     user.payment_details.map(() => false)
   );
+
+  if (!user) {
+    throw new AuthRequiredError();
+  }
 
   useEffect(() => {
     setShowPaymentDetailsModal(user.payment_details.map(() => false));
@@ -65,43 +71,55 @@ const PaymentDetails = () => {
               />
             </div>
           </div>
-          {user.payment_details.map((payment, index) => (
-            <Card key={index} className="max-w-full mb-5">
-              <div className="flex text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                <FaRegCreditCard size={50} />{" "}
-                <div className="mt-3 ml-5">
-                  {formatCardNumber(payment.card_number)}
+          {loading ? (
+            <div className="w-full flex-center">
+              <Image
+                src="assets/icons/loader.svg"
+                width={50}
+                height={50}
+                alt="loader"
+                className="object-contain"
+              />
+            </div>
+          ) : (
+            user.payment_details.map((payment, index) => (
+              <Card key={index} className="max-w-full mb-5">
+                <div className="flex text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  <FaRegCreditCard size={50} />{" "}
+                  <div className="mt-3 ml-5">
+                    {formatCardNumber(payment.card_number)}
+                  </div>
                 </div>
-              </div>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Expiry Date: {payment.expiry_date}
-              </p>
-              <div className="flex gap-4 flex-end">
-                <PaymentDetailsModal
-                  showPaymentDetailsModal={showPaymentDetailsModal[index]}
-                  setShowPaymentDetailsModal={(value) => {
-                    const newShowPaymentDetailsModal = [
-                      ...showPaymentDetailsModal,
-                    ];
-                    newShowPaymentDetailsModal[index] = value;
-                    setShowPaymentDetailsModal(newShowPaymentDetailsModal);
-                  }}
-                  btnTitle="Edit"
-                  modalHeader="Edit Payment Details"
-                  number={payment.card_number}
-                  date={payment.expiry_date}
-                  cvvNo={payment.cvv}
-                  isEdit={true}
-                />
-                <Button
-                  className="bg-custom-orange"
-                  onClick={() => handleDeletePayment(payment)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </Card>
-          ))}
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  Expiry Date: {payment.expiry_date}
+                </p>
+                <div className="flex gap-4 flex-end">
+                  <PaymentDetailsModal
+                    showPaymentDetailsModal={showPaymentDetailsModal[index]}
+                    setShowPaymentDetailsModal={(value) => {
+                      const newShowPaymentDetailsModal = [
+                        ...showPaymentDetailsModal,
+                      ];
+                      newShowPaymentDetailsModal[index] = value;
+                      setShowPaymentDetailsModal(newShowPaymentDetailsModal);
+                    }}
+                    btnTitle="Edit"
+                    modalHeader="Edit Payment Details"
+                    number={payment.card_number}
+                    date={payment.expiry_date}
+                    cvvNo={payment.cvv}
+                    isEdit={true}
+                  />
+                  <Button
+                    className="bg-custom-orange"
+                    onClick={() => handleDeletePayment(payment)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </div>

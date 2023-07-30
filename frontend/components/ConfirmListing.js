@@ -3,8 +3,9 @@
 import { Button } from "flowbite-react";
 import PropTypes from "prop-types";
 
-const ConfirmListing = ({ nextStep, edit }) => {
+const ConfirmListing = ({ nextStep, resetFields, edit }) => {
   const handleNextClick = () => {
+    resetFields();
     nextStep();
   };
 
@@ -34,5 +35,6 @@ export default ConfirmListing;
 
 ConfirmListing.propTypes = {
   nextStep: PropTypes.func.isRequired,
-  edit: PropTypes.object,
+  resetFields: PropTypes.func.isRequired,
+  edit: PropTypes.object.isRequired,
 };

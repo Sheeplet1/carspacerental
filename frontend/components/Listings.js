@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useContext } from "react";
 import SearchContext from "@contexts/SearchContext";
+import { FaStar } from "react-icons/fa";
+import Loading from "@components/Loading";
 
 const Listings = () => {
   const {
@@ -14,12 +16,17 @@ const Listings = () => {
     endTime,
     isCasual,
     addressData,
+    fetchingData,
   } = useContext(SearchContext);
   const searchParams = useSearchParams();
 
   return (
     <div className="mt-4 w-full h-80 overflow-y-auto">
-      {listings.length === 0 ? (
+      {fetchingData ? (
+        <div className="flex justify-center items-center">
+          <Loading width={80} height={80} />
+        </div>
+      ) : listings.length === 0 ? (
         <div className="border border-red-500 text-red-700 bg-red-100 rounded p-2 mb-2">
           <p className="font-bold text-sm mb-2">No available spaces found.</p>
           <p className="font-bold text-sm mb-2">
@@ -36,7 +43,7 @@ const Listings = () => {
             <div className="flex flex-row justify-between">
               <div className="flex justify-between item-center w-1/4">
                 <Image
-                  src={listing.images[0]}
+                  src={listing.photos[0]}
                   alt="Listing Image"
                   width={80}
                   height={80}
@@ -45,9 +52,17 @@ const Listings = () => {
               </div>
               <div className="flex flex-col justify-between w-3/4 ml-4">
                 <div className="flex flex-col h-1/2">
-                  <h3 className="font-bold text-sm text-gray-700">
-                    {listing.address.street}, {listing.address.city}
-                  </h3>
+                  <div className="flex flex-row justify-between">
+                    <h3 className="font-bold text-sm text-gray-700">
+                      {listing.address.street}, {listing.address.city}
+                    </h3>
+                    <div className="flex items-center">
+                      <h3 className="font-bold text-sm text-gray-700">
+                        {listing.rating ? listing.rating : "0"}
+                      </h3>
+                      <FaStar className="ml-1" />
+                    </div>
+                  </div>
                   <p className="text-xs text-gray-500">
                     {isCasual
                       ? `$${listing.hourly_rate}/hr`

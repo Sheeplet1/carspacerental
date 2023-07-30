@@ -24,7 +24,6 @@ const PreviewListingDetails = ({
   photos,
   safetyFeatures,
   amenities,
-  resetFields,
   edit,
 }) => {
   const { fetchUser } = useUser();
@@ -61,24 +60,20 @@ const PreviewListingDetails = ({
     if (monthlyPrice.trim() !== "") {
       body.monthly_rate = monthlyPrice;
     }
-    console.log(edit)
     if (edit.id) {
-      console.log(edit.id)
       const response = await makeRequest(`/listings/${edit.id}`, "PUT", body);
       if (response.error) {
-        console.log(response.error);
+        throw new Error(response.error);
       } else {
         fetchUser();
-        resetFields();
         nextStep();
       }
     } else {
       const response = await makeRequest("/listings/new", "POST", body);
       if (response.error) {
-        console.log(response.error);
+        throw new Error(response.error);
       } else {
         fetchUser();
-        resetFields();
         nextStep();
       }
     }
@@ -223,6 +218,5 @@ PreviewListingDetails.propTypes = {
   photos: PropTypes.array.isRequired,
   safetyFeatures: PropTypes.array.isRequired,
   amenities: PropTypes.array.isRequired,
-  resetFields: PropTypes.func.isRequired,
   edit: PropTypes.object.isRequired,
 };

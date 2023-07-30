@@ -9,6 +9,8 @@ import { calculateTotalPrice, makeRequest } from "@utils/utils";
 import { useUser } from "@contexts/UserProvider";
 import SearchContext from "@contexts/SearchContext";
 import { useRouter } from "next/navigation";
+import { FaStar } from "react-icons/fa";
+import Loading from "@components/Loading";
 
 const ListingDetail = () => {
   const { user } = useUser();
@@ -26,13 +28,14 @@ const ListingDetail = () => {
   useEffect(() => {
     const fetchListingUser = async () => {
       const response = await makeRequest(
-        `/users/${selectedListing.user_id}`,
+        `/user/${selectedListing.provider}`,
         "GET"
       );
       if (response.error) {
-        console.log(response.error);
+        throw new Error(response.error);
       } else {
-        setListingUser(response.data);
+        setListingUser(response);
+        console.log(response);
       }
     };
 
@@ -57,7 +60,7 @@ const ListingDetail = () => {
           <BiSolidLeftArrow />
         </button>
         <Image
-          src={selectedListing.images[imageIndex]}
+          src={selectedListing.photos[imageIndex]}
           alt="Listing Image"
           className="rounded"
           width={500}
@@ -65,7 +68,7 @@ const ListingDetail = () => {
         />
         <button
           onClick={() =>
-            setImageIndex((imageIndex + 1) % selectedListing.images.length)
+            setImageIndex((imageIndex + 1) % selectedListing.photos.length)
           }
           className="absolute right-0 top-50 z-10 bg-gray-200 p-2 rounded-full"
         >
@@ -119,7 +122,7 @@ const ListingDetail = () => {
             ))}
           </div>
         </div>
-        <div>
+        <div className="my-4">
           <h2 className="text-lg font-bold mb-2 text-custom-orange">
             Amenities
           </h2>
@@ -131,9 +134,37 @@ const ListingDetail = () => {
             ))}
           </div>
         </div>
-        <div>
+        <div className="my-4">
+          <h2 className="text-lg font-bold mb-2 text-custom-orange">Reviews</h2>
           <div className="flex flex-wrap">
-            {listingUser && (
+            {selectedListing.reviews.length === 0 ? (
+              <div>No Reviews Yet</div>
+            ) : (
+              selectedListing.reviews.map((review, index) => (
+                <div key={index} className="border border-gray-300 p-2 mb-2">
+                  <div className="flex flex-row justify-between items-center">
+                    <h3 className="font-bold text-sm text-gray-700">
+                      {review.name}
+                    </h3>
+                    <div className="flex items-center">
+                      <h3 className="font-bold text-sm text-gray-700">
+                        {review.rating}
+                      </h3>
+                      <FaStar className="ml-1" />
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-500">{review.message}</p>
+                  <p className="text-xs text-gray-400">
+                    {new Date(review.timestamp).toLocaleDateString()}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+        <div className="my-4 pb-20">
+          <div className="flex flex-wrap">
+            {listingUser ? (
               <div className="flex items-center space-x-6 my-4">
                 <Image
                   src={listingUser.image}
@@ -143,6 +174,10 @@ const ListingDetail = () => {
                   height={70}
                 />
                 <h2 className="text-2xl font-bold">{listingUser.first_name}</h2>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-6 my-4">
+                <Loading width={40} height={40} />
               </div>
             )}
           </div>
