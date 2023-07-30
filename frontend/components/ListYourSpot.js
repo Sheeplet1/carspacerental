@@ -32,7 +32,7 @@ const ListYourSpot = ({ prevStep, nextStep, address, setAddress }) => {
   };
 
   return (
-    <div className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto mt-12">
+    <div className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto">
       <div className="flex flex-col w-full">
         <h1 className="heading_text text-3xl text-gray-700">List your spot!</h1>
 

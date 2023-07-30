@@ -4,7 +4,7 @@ import LoginSideBar from "@components/LoginSideBar";
 import { useUser } from "@contexts/UserProvider";
 import { AuthRequiredError } from "@errors/exceptions";
 
-const ProfilePage = () => {
+const Analytics = () => {
   const { user } = useUser();
 
   if (!user) {
@@ -27,4 +27,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default Analytics;

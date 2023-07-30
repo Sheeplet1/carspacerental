@@ -54,7 +54,7 @@ const DisplayMyListings = ({ nextStep, handleEditListing, resetFields }) => {
   return (
     <div
       className="flex flex-col w-full h-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
-      style={{ maxHeight: "600px" }}
+      style={{ height: "70vh" }}
     >
       <div className="flex flex-col w-full">
         <div className="flex flex-row justify-between w-full mb-5">
@@ -81,7 +81,7 @@ const DisplayMyListings = ({ nextStep, handleEditListing, resetFields }) => {
               className="object-contain"
             />
           </div>
-        ) : (
+        ) : listings.length > 0 ? (
           listings.map((listing, index) => (
             <Card
               key={index}
@@ -141,6 +141,8 @@ const DisplayMyListings = ({ nextStep, handleEditListing, resetFields }) => {
               </div>
             </Card>
           ))
+        ) : (
+          <div className="text-xl text-gray-500">No listings to display</div>
         )}
       </div>
     </div>

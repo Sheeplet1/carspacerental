@@ -33,7 +33,10 @@ const DescribeParkingSpot = ({
   };
 
   return (
-    <div className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto">
+    <div
+      className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
+      style={{ height: "70vh" }}
+    >
       <div className="flex flex-col w-full">
         <h1 className="heading_text text-3xl text-gray-700 mb-5">
           Describe your parking spot.

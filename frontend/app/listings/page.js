@@ -216,7 +216,7 @@ const MyListings = () => {
       <div className="rounded-lg p-5">
         <LoginSideBar />
       </div>
-      <div>{renderStep()}</div>
+      {renderStep()}
     </div>
   );
 };
