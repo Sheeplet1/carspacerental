@@ -5,4 +5,18 @@ Week 3
 - Was assigned to do Login page
 
 Week 4
-- Did pages: Main Login, Forgot Password
+- Login page
+- Forgot Password page
+
+Week 5
+- Help page
+- List You Spot page
+- Parking Spot Details page
+- Describe Parking Spot page
+- Set Price page
+- Spot Listed Confirmation page
+
+Week 9
+- Wallet Page
+- Withdraw Modal
+- Confirm Modal
