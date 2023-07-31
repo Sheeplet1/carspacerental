@@ -32,6 +32,7 @@ USER_STUB = {
     "last_name": TEST_LAST_NAME,
     "phone_number": TEST_PN,
     "inbox": [],
+    "wallet": 0,
 }
 
 LISTING_STUB = {

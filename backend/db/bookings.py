@@ -21,6 +21,7 @@ def new(data: dict) -> ObjectId:
         "price": float(data['price']),
         "recurring": data['recurring'],
         "exclusions": [],
+        "paid": False,
     }
     booking_id = bookings.insert_one(booking_doc).inserted_id
 

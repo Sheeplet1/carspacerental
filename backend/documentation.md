@@ -699,6 +699,95 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 >
 </details>
 
+### Payments
+
+<details>
+  <summary><code>POST</code> <code><b>/pay</b></code> <code>(customer can pay booking)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `bill_id`     | path     | ObjectId  | bill id             |
+> | `use_wallet`  | body     | bool      | pay through wallet? |
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     | { amount_received: x } for listing provider          |
+> | `401`     | `Unauthorized`                                       |
+> | `400`     | `{ "error": "Valid bill id is required" }            |
+> | `400`     | `{ "error": "Valid payment option is required" }`    |
+> | `400`     | `{ "error": "Incorrect user is paying" }`            |
+> | `400`     | `{ "error": "Wallet does not have enough balance" }` |
+
+</details>
+
+<details>
+  <summary><code>POST</code> <code><b>/top-up</b></code> <code>(customer can topup their wallet)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `user_id`     | header   | ObjectId  | user id             |
+> | `amt`         | body     | float     | amount to topup     |
+
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     |                                                      |
+> | `400`     | `{ "error": "Valid user id is required" }            |
+> | `400`     | `{ "error": "Valid amount is required" }`            |
+> | `400`     | `{ "error": "Wallet does not have enough balance" }` |
+
+</details>
+
+<details>
+  <summary><code>POST</code> <code><b>/withdraw</b></code> <code>(customer can withdraw money from their wallet)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `user_id`     | header   | ObjectId  | user id             |
+> | `amt`         | body     | float     | amount to withdraw  |
+
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     |                                                      |
+> | `400`     | `{ "error": "Valid user id is required" }            |
+> | `400`     | `{ "error": "Valid amount is required" }`            |
+> | `400`     | `{ "error": "Wallet does not have enough balance" }` |
+
+</details>
+
+<details>
+  <summary><code>POST</code> <code><b>/bill</b></code> <code>(bill a customer for a booking)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `booking_id`  | body     | ObjectId  | booking id          |
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     |                                                      |
+> | `400`     | `{ "error": "User does not exist in system" }        |
+> | `400`     | `{ "error": "Valid booking is required" }`           |
+
+</details>
+
+
 ## Database
 
 ### UserAccount
@@ -748,6 +837,7 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 | `parent`      | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `child`       | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `exclusions`  | [ObjectId] | [ObjectId(), ObjectId()]           |
+| `paid`        | bool       | False                              |
 
 ### Reviews (TODO)
 
