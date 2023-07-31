@@ -10,8 +10,11 @@ import FeaturesAndDetails from "@components/FeaturesAndDetails";
 import PreviewListingDetails from "@components/PreviewListingDetails";
 import ConfirmListing from "@components/ConfirmListing";
 import { useState } from "react";
+import { useUser } from "@contexts/UserProvider";
+import { AuthRequiredError } from "@errors/exceptions";
 
 const MyListings = () => {
+  const { user } = useUser();
   const [step, setStep] = useState(0);
   const [address, setAddress] = useState({});
   const [selectedTypeOfSpot, setSelectedTypeOfSpot] = useState("");
@@ -86,7 +89,6 @@ const MyListings = () => {
     setPhotos(listing.photos);
     setSafetyFeatures(listing.safety_features);
     setAmenities(listing.amenities);
-    console.log(listing);
     setEdit({ id: listing._id });
     setStep(1);
   };
@@ -98,6 +100,7 @@ const MyListings = () => {
           <DisplayMyListings
             nextStep={() => setStep(1)}
             handleEditListing={handleEditListing}
+            resetFields={resetFields}
           />
         );
       case 1:
@@ -188,23 +191,32 @@ const MyListings = () => {
             photos={photos}
             safetyFeatures={safetyFeatures}
             amenities={amenities}
-            resetFields={resetFields}
             edit={edit}
           />
         );
       case 7:
-        return <ConfirmListing nextStep={() => setStep(0)} edit={edit} />;
+        return (
+          <ConfirmListing
+            nextStep={() => setStep(0)}
+            resetFields={resetFields}
+            edit={edit}
+          />
+        );
       default:
         return <DisplayMyListings nextStep={() => setStep(1)} />;
     }
   };
+
+  if (!user) {
+    throw new AuthRequiredError();
+  }
 
   return (
     <div className="flex flex-row w-full mt-12">
       <div className="rounded-lg p-5">
         <LoginSideBar />
       </div>
-      <div>{renderStep()}</div>
+      {renderStep()}
     </div>
   );
 };

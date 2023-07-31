@@ -71,7 +71,9 @@ const VehicleDetailsModal = ({
       const body = {
         vehicle_details: [...vehicleDetails, newVehicleDetail],
       };
+
       updateUser(body);
+
       closeModal();
     }
   };

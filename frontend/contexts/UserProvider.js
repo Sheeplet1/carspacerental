@@ -4,6 +4,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { makeRequest } from "@utils/utils";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
+import { AuthRequiredError } from "@errors/exceptions";
 
 const UserContext = createContext();
 
@@ -24,7 +25,6 @@ const UserProvider = ({ children }) => {
       localStorage.setItem("token", response.token);
       setToken(response.token);
       router.push("/");
-      setLoading(false);
     }
   };
 
@@ -36,7 +36,6 @@ const UserProvider = ({ children }) => {
       localStorage.setItem("token", response.token);
       setToken(response.token);
       router.push("/");
-      setLoading(false);
     }
   };
 
@@ -51,32 +50,32 @@ const UserProvider = ({ children }) => {
     if (token) {
       const response = await makeRequest("/user/profile", "GET");
       if (response.error) {
-        console.log(response.error);
+        throw new AuthRequiredError();
       } else {
         setUser(response);
-        setLoading(false);
       }
-    } else {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const updateUser = async (body) => {
     const result = await makeRequest("/user/profile", "PUT", body);
     if (result.error) {
-      console.log(result.error);
+      throw new Error(result.error);
     } else {
       fetchUser();
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    if (!user) {
+      fetchUser();
+    }
   }, [token]);
 
   return (
     <UserContext.Provider
-      value={{ user, register, login, logout, updateUser, fetchUser }}
+      value={{ user, register, login, logout, updateUser, fetchUser, loading }}
     >
       {!loading && children}
     </UserContext.Provider>

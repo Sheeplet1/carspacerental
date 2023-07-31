@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import LoginSideBar from "@components/LoginSideBar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import EditProfileModal from "@components/EditProfileModal";
 import { useUser } from "@contexts/UserProvider";
 import { AuthRequiredError } from "@errors/exceptions";
+import { fileToDataUrl } from "@utils/utils";
 
 const ProfilePage = () => {
-  const { user } = useUser();
+  const { user, updateUser } = useUser();
   const router = useRouter();
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+
+  const hiddenFileInput = useRef(null);
 
   const handleVehicleDetails = () => {
     router.push("/vehicle-details");
@@ -25,12 +28,29 @@ const ProfilePage = () => {
     throw new AuthRequiredError();
   }
 
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    const dataUrl = await fileToDataUrl(file);
+    const body = {
+      pfp: dataUrl,
+    };
+    updateUser(body);
+  };
+
+  const handleClickChangePhoto = () => {
+    // Programmatically click the hidden file input
+    hiddenFileInput.current.click();
+  };
+
   return (
-    <div className="flex flex-row w-full mt-12 bg-gray-100">
-      <div className="w-1/3rounded-lg p-5">
+    <div className="flex flex-row w-full mt-12">
+      <div className="rounded-lg p-5">
         <LoginSideBar />
       </div>
-      <div className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg">
+      <div
+        className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg"
+        style={{ height: "70vh" }}
+      >
         <div className="flex flex-col w-full">
           <div className="flex flex-row justify-between w-full mb-5">
             <h1 className="heading_text text-3xl text-gray-700">Profile</h1>
@@ -40,13 +60,26 @@ const ProfilePage = () => {
             />
           </div>
           <div className="flex flex-row gap-20">
-            <div className="w-1/5">
+            <div className="w-40 h-40 rounded-full bg-gray-300 cursor-pointer relative hover:bg-gray-400 transition duration-200">
               <Image
-                src="/assets/icons/profile.svg"
+                src={user.pfp || "/assets/icons/profile.svg"}
                 alt="Profile"
-                width={150}
-                height={150}
-                className="object-contain"
+                width={160}
+                height={160}
+                className="w-40 h-40 rounded-full"
+              />
+              <button
+                onClick={handleClickChangePhoto}
+                className="absolute bg-blue-500 text-white py-1 px-2 rounded-md transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 opacity-0 hover:opacity-100 transition-opacity duration-200"
+              >
+                Change Photo
+              </button>
+              <input
+                ref={hiddenFileInput}
+                onChange={handleImageChange}
+                type="file"
+                accept="image/*"
+                className="hidden"
               />
             </div>
             <div className="flex flex-col justify-between w-4/5">

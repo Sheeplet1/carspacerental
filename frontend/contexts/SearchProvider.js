@@ -26,6 +26,7 @@ const SearchProvider = ({ children }) => {
     minStartTime + 1 > 23 ? 0 : minStartTime + 1
   );
   const [sort, setSort] = useState("distance");
+  const [fetchingData, setFetchingData] = useState(true);
 
   return (
     <SearchContext.Provider
@@ -54,6 +55,8 @@ const SearchProvider = ({ children }) => {
         setMinEndTime,
         sort,
         setSort,
+        fetchingData,
+        setFetchingData,
       }}
     >
       {children}
