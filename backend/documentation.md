@@ -215,6 +215,38 @@
 
 </details>
 
+<details>
+  <summary><code>GET</code> <code><b>/user/analytics</b></code> <code>(returns user analytics)</code></summary>
+
+##### Parameters
+
+> | name            | type   | data type | description               |
+> |-----------------|--------|-----------|---------------------------|
+> | `Authorization` | header | string    | "Bearer {token}"          |
+
+##### Responses
+
+> | http code | response                                       |
+> |-----------|------------------------------------------------|
+> | `200`     | `Analytics Body`                               |
+> | `401`     | `Unauthorized`                                 |
+>
+> Update Info Example:
+> ```
+> {
+>     "monthly_revenue": [{
+>         "month": 1,
+>         "revenue": 100.0
+>     }],
+>     "bookings_per_listing": [{
+>         "listing_id": ObjectId(),
+>         "bookings": 2
+>     }],
+>     "total_bookings": 3
+> }
+> ```
+</details>
+
 ### Listings
 
 <details>
@@ -802,7 +834,6 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 | `phone_number`        | string   | "0412345678"                         |
 | `payment_details`     | Array    | [TODO]                               |
 | `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `reviews`             | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `revenue`             | float    | 200.0                                |
 | `is_admin`            | bool     | False                                |
@@ -830,7 +861,7 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 | ------------- | ---------- | -----------------------------------|
 | `_id`         | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `consumer`    | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
-| `listing`     | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `listing_id`  | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `start_time`  | str        | 2022-01-01T00:00:00                |
 | `end_time`    | str        | 2022-01-05T00:00:00                |
 | `price`       | float      | 100.0                              |

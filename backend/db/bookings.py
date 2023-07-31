@@ -5,6 +5,8 @@ from pymongo import ReturnDocument
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
 
+from ..db.listings import get_user_listing_ids
+
 def new(data: dict) -> ObjectId:
     bookings = db.get_database()["Bookings"]
     users = db.get_database()["UserAccount"]
@@ -215,3 +217,9 @@ def create_exclusion(booking_id: ObjectId, body: dict):
     )
 
     return exclusion['_id']
+
+def get_listing_bookings(listing_id: ObjectId) -> list:
+    bookings = db.get_database()["Bookings"]
+
+    return list(bookings.find({"listing_id": listing_id}))
+
