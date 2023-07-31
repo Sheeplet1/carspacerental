@@ -1,9 +1,12 @@
 from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from datetime import datetime
 from bson import ObjectId
 
 from ..helpers import validate_jwt
 from ..db import user as user_db
+from ..db import listings as listings_db
+from ..db import bookings as bookings_db
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
@@ -74,3 +77,36 @@ def get_user(user_id):
         user.pop(key)
 
     return user, 200
+
+@bp.route('/analytics', methods=['GET'])
+@jwt_required()
+def analytics():
+    user_id = validate_jwt(get_jwt_identity())
+
+    listing_ids = listings_db.get_user_listing_ids(user_id)
+    listing_bookings = [bookings_db.get_listing_bookings(listing_id) for listing_id in listing_ids]
+    all_bookings = sorted([booking for listing in listing_bookings for booking in listing], key = lambda d: d['start_time'])
+
+    # Monthly Revenue
+    monthly_revenue = []
+    for booking in all_bookings:
+        booking_month = datetime.fromisoformat(booking["start_time"]).month
+        if not monthly_revenue or booking_month > monthly_revenue[-1]["month"]:
+            monthly_revenue.append({
+                "month": booking_month,
+                "revenue": booking["price"]
+            })
+        else:
+            monthly_revenue[-1]["revenue"] += booking["price"]
+
+    # Bookings Per Listing (Total)
+    total_bookings = [{
+        "listing_id": listing_ids[idx],
+        "bookings": len(listing)
+    } for idx, listing in enumerate(listing_bookings)]
+
+    return {
+        "monthly_revenue": monthly_revenue,
+        "bookings_per_listing": total_bookings,
+        "total_bookings": len(all_bookings)
+    }, 200

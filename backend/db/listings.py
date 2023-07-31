@@ -24,7 +24,7 @@ def new(user_id: ObjectId, data: dict) -> ObjectId:
         "availability": data["availability"],
         "instructions": data["instructions"],
         "electric_charging": data["electric_charging"],
-        "rating": None,
+        "rating": 0,
     }
 
     collection = db.get_database()["Listings"]
@@ -57,3 +57,9 @@ def remove_listing(listing_id: ObjectId) -> None:
     )
 
     listings.delete_one({ "_id": listing_id })
+
+def get_user_listing_ids(user_id: ObjectId) -> list:
+    listings = db.get_database()["Listings"]
+
+    # delete listing from user's profile
+    return list(listings.find({'provider': user_id}, { "_id": 1 }).distinct("_id"))

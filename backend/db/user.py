@@ -22,7 +22,9 @@ def user_register(data: dict) -> ObjectId:
         "revenue": 0,
         "rating": None,
         "inbox": [],
-        "pfp": ''
+        "pfp": '',
+        "wallet": 0,
+        "recent_transactions": []
     }
 
     collection = db.get_database()["UserAccount"]
@@ -47,7 +49,9 @@ def admin_register(data: dict) -> ObjectId:
         "revenue": 0,
         "rating": None,
         "inbox": [],
-        "pfp": ''
+        "pfp": '',
+        "wallet": 0,
+        "recent_transcations": []
     }
 
     collection = db.get_database()["UserAccount"]

@@ -32,6 +32,7 @@ USER_STUB = {
     "last_name": TEST_LAST_NAME,
     "phone_number": TEST_PN,
     "inbox": [],
+    "wallet": 0,
 }
 
 LISTING_STUB = {
@@ -100,7 +101,7 @@ def client(mock_db):
     app.register_blueprint(user.bp)
     app.register_blueprint(payments.bp)
     app.register_blueprint(inbox.bp)
-    
+
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
 
@@ -167,10 +168,11 @@ def list_book(client, user_token):
     resp = client.post('/listings/new', json=listing_stub, headers=token_head)
     listing_id = resp.get_json()["listing_id"]
 
-
     booking_stub = BOOKING_STUB.copy()
     booking_stub["listing_id"] = listing_id
     resp = client.post('/listings/book', json=booking_stub, headers=user_token)
     booking_id = resp.get_json()["booking_id"]
 
-    yield listing_id, booking_id
+    client.post('/listings/new', json=listing_stub, headers=token_head)
+
+    yield listing_id, booking_id, token_head
