@@ -73,7 +73,6 @@ const VehicleDetailsModal = ({
       };
 
       updateUser(body);
-
       closeModal();
     }
   };
@@ -120,8 +119,17 @@ const VehicleDetailsModal = ({
                 type="text"
                 placeholder="QW89BV"
                 value={vehicleRegistration}
-                onChange={(e) => setVehicleRegistration(e.target.value)}
+                onChange={
+                  isEdit
+                    ? undefined
+                    : (e) => setVehicleRegistration(e.target.value)
+                }
               />
+              {isEdit && (
+                <p className="text-gray-400 text-sm mb-4">
+                  You can&apos;t edit vehicle registration number
+                </p>
+              )}
               <p className="error_text">{vehicleRegistrationError}</p>
             </div>
             <div>

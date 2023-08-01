@@ -74,6 +74,7 @@ const EditProfileModal = ({
         phone_number: phoneNumber,
       };
       updateUser(body);
+      closeModal();
     }
   };
 
