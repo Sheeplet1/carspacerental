@@ -112,6 +112,17 @@ export const Navbar = () => {
                       Profile
                     </p>
                   </Link>
+                  <Link href="/analytics">
+                    <p
+                      className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
+                      role="menuitem"
+                      tabIndex="-1"
+                      id="menu-item-0"
+                      onClick={() => setToggleDropdown(false)}
+                    >
+                      Analytics
+                    </p>
+                  </Link>
                   <Link href="/inbox">
                     <p
                       className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
@@ -134,7 +145,7 @@ export const Navbar = () => {
                       Find a Spot
                     </p>
                   </Link>
-                  <Link href="/bookings">
+                  <Link href="/manage-bookings">
                     <p
                       className="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
                       role="menuitem"

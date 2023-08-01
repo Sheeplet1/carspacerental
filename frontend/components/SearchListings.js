@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import SearchContext from "@contexts/SearchContext";
 import { getNextHour, calculateDistanceInKm, makeRequest } from "@utils/utils";
 import { useSearchParams } from "next/navigation";
+import ConfirmListingBookingModal from "@components/ConfirmListingBookingModal";
 
 const SearchListings = () => {
   const searchParams = useSearchParams();
@@ -23,6 +24,8 @@ const SearchListings = () => {
     sort,
     fetchingData,
     setFetchingData,
+    showConfirmListingBookingModal,
+    setShowConfirmListingBookingModal,
   } = useContext(SearchContext);
   const [originalListings, setOriginalListings] = useState([]);
 
@@ -183,6 +186,10 @@ const SearchListings = () => {
     <div className="relative flex w-full mt-6" style={{ height: "79.8vh" }}>
       <ListingsSideBar />
       <GoogleMaps />
+      <ConfirmListingBookingModal
+        showConfirmListingBookingModal={showConfirmListingBookingModal}
+        setShowConfirmListingBookingModal={setShowConfirmListingBookingModal}
+      />
     </div>
   );
 };

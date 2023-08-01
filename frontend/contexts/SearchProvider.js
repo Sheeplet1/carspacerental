@@ -27,6 +27,8 @@ const SearchProvider = ({ children }) => {
   );
   const [sort, setSort] = useState("distance");
   const [fetchingData, setFetchingData] = useState(true);
+  const [showConfirmListingBookingModal, setShowConfirmListingBookingModal] =
+    useState(false);
 
   return (
     <SearchContext.Provider
@@ -57,6 +59,8 @@ const SearchProvider = ({ children }) => {
         setSort,
         fetchingData,
         setFetchingData,
+        showConfirmListingBookingModal,
+        setShowConfirmListingBookingModal,
       }}
     >
       {children}

@@ -144,9 +144,14 @@ const PaymentDetailsModal = ({
                 type="text"
                 placeholder="1234 5678 9012 3456"
                 value={cardNo}
-                onChange={handleCardNoChange}
+                onChange={isEdit ? undefined : handleCardNoChange}
                 maxLength={19}
               />
+              {isEdit && (
+                <p className="text-gray-400 text-sm mb-4">
+                  You can&apos;t edit card number
+                </p>
+              )}
               <p className="error_text">{cardNoError}</p>
             </div>
             <div className="flex justify-between">

@@ -6,7 +6,7 @@ export const LoginSidebar = () => {
   const { user } = useUser();
 
   return (
-    <div className="flex flex-col shrink-1 w-64 h-96 bg-white p-5 rounded-3xl shadow-md gap-6">
+    <div className="flex flex-col shrink-1 w-64 h-full bg-white p-5 rounded-3xl shadow-md gap-6">
       <div className="flex flex-row justify-between">
         <div className="w-1/3">
           <Image
@@ -34,6 +34,13 @@ export const LoginSidebar = () => {
             </Link>
           </li>
           <li>
+            <Link href="/analytics">
+              <p className="flex py-1 text-lg text-gray-800 hover:underline">
+                Analytics
+              </p>
+            </Link>
+          </li>
+          <li>
             <Link href="/inbox">
               <p className="flex py-1 text-lg text-gray-800 hover:underline">
                 Inbox
@@ -48,7 +55,7 @@ export const LoginSidebar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/bookings">
+            <Link href="/manage-bookings">
               <p className="flex py-1 text-lg text-gray-800 hover:underline">
                 Manage Bookings
               </p>

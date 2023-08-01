@@ -17,6 +17,7 @@ const PaymentDetail = () => {
     isCasual,
     setIsBooking,
     setSelectedListing,
+    setShowConfirmListingBookingModal,
   } = useContext(SearchContext);
   const [promoCode, setPromoCode] = useState("");
   const [promoCodeError, setPromoCodeError] = useState("");
@@ -89,6 +90,7 @@ const PaymentDetail = () => {
     } else {
       setIsBooking(false);
       setSelectedListing(null);
+      setShowConfirmListingBookingModal(true);
     }
   };
 
