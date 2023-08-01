@@ -4,7 +4,8 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from werkzeug.exceptions import Forbidden
 
 from .. import helpers
-from ..db import bookings, db, reviews
+from ..db import bookings, reviews, inbox, user as user_db, listings
+from datetime import datetime as dt
 
 OK = 200
 BAD_REQUEST = 400
@@ -16,6 +17,7 @@ bp = Blueprint('bookings', __name__, url_prefix='')
 def new():
     # get user_id from token
     consumer = helpers.validate_jwt(get_jwt_identity())
+    consumer = user_db.get_user(consumer)
     data = request.get_json()
 
     if "listing_id" not in data:
@@ -32,8 +34,8 @@ def new():
 
 
     # check if user is trying to book their own listing
-    listing = db.get_database()['Listings'].find_one({'_id': ObjectId(data['listing_id'])})
-    if listing['provider'] == consumer:
+    listing = listings.get(data['listing_id'])
+    if listing['provider'] == consumer['_id']:
         return { 'error': 'User cannot book their own listing' }, BAD_REQUEST
 
     resp = helpers.check_for_overlaps(data['start_time'], data['end_time'])
@@ -41,11 +43,12 @@ def new():
         return resp
 
     # create booking
-    data['consumer'] = consumer
+    data['consumer'] = consumer['_id']
     booking_id = bookings.new(data)
     response = {
         "booking_id": booking_id
     }
+        
     return response, OK
 
 @bp.route('/bookings/<booking_id>', methods=['GET', 'DELETE', 'PUT'])
@@ -63,11 +66,12 @@ def info(booking_id):
     if request.method == "GET":
         return booking, OK
 
-    user_id = helpers.validate_jwt(get_jwt_identity())
+    consumer = helpers.validate_jwt(get_jwt_identity())
 
-    if booking['consumer'] != user_id and not helpers.is_admin(user_id):
+    if booking['consumer'] != consumer and not helpers.is_admin(consumer):
         raise Forbidden
 
+    
     if request.method == 'PUT':
         update_data = request.get_json()
 
@@ -81,11 +85,14 @@ def info(booking_id):
                 return { 'error': 'Update value has invalid typing' }, BAD_REQUEST
 
         new_id = bookings.update(booking_id, update_data)
+        
         return { 'booking_id': new_id }, OK
-    elif request.method == 'DELETE':
+    
+    elif request.method == 'DELETE':        
         data = request.get_json()
+        
         bookings.cancel(booking_id, data)
-
+        
     return {}, OK
 
 @bp.route('/profile/completed-bookings', methods=['GET'])

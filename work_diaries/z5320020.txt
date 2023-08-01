@@ -70,3 +70,9 @@ WEEK 7
 - Mock payment done for backend 
     - Need to consider refunding process in Sprint 3
 - Starting on Recurring Bookings
+
+-------------------------------------------------------------------------------
+WEEK 8
+
+- Finished recurring bookings
+- Starting on recurring payments

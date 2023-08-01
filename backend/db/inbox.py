@@ -8,8 +8,9 @@ def create(data: dict) -> ObjectId:
     id = ObjectId()
     message_doc = {
         '_id': id,
-        'sender': ObjectId(data['sender']),
-        'recipient': ObjectId(data['recipient']),
+        'sender': 'noreply@sfcars.com.au',
+        'recipient_id': data['recipient_id'],
+        'recipient': data['email'],
         'subject': data['subject'],
         'body': data['body'],
         'timestamp': datetime.now().isoformat()
@@ -17,7 +18,7 @@ def create(data: dict) -> ObjectId:
     
     # push message to user's inbox
     db.get_database()['UserAccount'].update_one(
-        { '_id': ObjectId(data['recipient']) },
+        { '_id': ObjectId(data['recipient_id']) },
         { '$push': { 'inbox': message_doc } }
     )
     

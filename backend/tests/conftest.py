@@ -32,13 +32,23 @@ USER_STUB = {
     "last_name": TEST_LAST_NAME,
     "phone_number": TEST_PN,
     "inbox": [],
+    "wallet": 0,
 }
 
 LISTING_STUB = {
     "_id": TEST_LID,
     "provider": TEST_UID,
     "address": {
-        "street": "unsw"
+        "formatted_address": "123 Pitt Street, Sydney NSW 2000, Australia",
+        "streetNumber": "123",
+        "street": "Pitt Street",
+        "city": "Sydney",
+        "state": "NSW",
+        "postcode": "2000",
+        "country": "Australia",
+        "lat": -33.8688197,
+        "lng": 151.2092955,
+        "place_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
     },
     "hourly_rate": 4.2,
     "monthly_rate": 100,
@@ -57,7 +67,7 @@ LISTING_STUB = {
         "end_time": "time",
         "available_days": [],
     },
-    "rating": None,
+    "rating": 0,
 }
 
 BOOKING_STUB = {
@@ -65,7 +75,7 @@ BOOKING_STUB = {
     "listing_id": TEST_LID,
     "start_time": TEST_START,
     "end_time": TEST_END,
-    "price": 100,
+    "price": 100.0,
     "recurring": '',
 }
 
@@ -100,7 +110,7 @@ def client(mock_db):
     app.register_blueprint(user.bp)
     app.register_blueprint(payments.bp)
     app.register_blueprint(inbox.bp)
-    
+
     os.environ["CONFIG_TYPE"] = 'config.TestingConfig'
     client = app.test_client()
 
@@ -167,10 +177,11 @@ def list_book(client, user_token):
     resp = client.post('/listings/new', json=listing_stub, headers=token_head)
     listing_id = resp.get_json()["listing_id"]
 
-
     booking_stub = BOOKING_STUB.copy()
     booking_stub["listing_id"] = listing_id
     resp = client.post('/listings/book', json=booking_stub, headers=user_token)
     booking_id = resp.get_json()["booking_id"]
 
-    yield listing_id, booking_id
+    client.post('/listings/new', json=listing_stub, headers=token_head)
+
+    yield listing_id, booking_id, token_head

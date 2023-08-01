@@ -215,6 +215,38 @@
 
 </details>
 
+<details>
+  <summary><code>GET</code> <code><b>/user/analytics</b></code> <code>(returns user analytics)</code></summary>
+
+##### Parameters
+
+> | name            | type   | data type | description               |
+> |-----------------|--------|-----------|---------------------------|
+> | `Authorization` | header | string    | "Bearer {token}"          |
+
+##### Responses
+
+> | http code | response                                       |
+> |-----------|------------------------------------------------|
+> | `200`     | `Analytics Body`                               |
+> | `401`     | `Unauthorized`                                 |
+>
+> Update Info Example:
+> ```
+> {
+>     "monthly_revenue": [{
+>         "month": 1,
+>         "revenue": 100.0
+>     }],
+>     "bookings_per_listing": [{
+>         "listing_id": ObjectId(),
+>         "bookings": 2
+>     }],
+>     "total_bookings": 3
+> }
+> ```
+</details>
+
 ### Listings
 
 <details>
@@ -699,6 +731,95 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 >
 </details>
 
+### Payments
+
+<details>
+  <summary><code>POST</code> <code><b>/pay</b></code> <code>(customer can pay booking)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `bill_id`     | path     | ObjectId  | bill id             |
+> | `use_wallet`  | body     | bool      | pay through wallet? |
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     | { amount_received: x } for listing provider          |
+> | `401`     | `Unauthorized`                                       |
+> | `400`     | `{ "error": "Valid bill id is required" }            |
+> | `400`     | `{ "error": "Valid payment option is required" }`    |
+> | `400`     | `{ "error": "Incorrect user is paying" }`            |
+> | `400`     | `{ "error": "Wallet does not have enough balance" }` |
+
+</details>
+
+<details>
+  <summary><code>POST</code> <code><b>/top-up</b></code> <code>(customer can topup their wallet)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `user_id`     | header   | ObjectId  | user id             |
+> | `amt`         | body     | float     | amount to topup     |
+
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     |                                                      |
+> | `400`     | `{ "error": "Valid user id is required" }            |
+> | `400`     | `{ "error": "Valid amount is required" }`            |
+> | `400`     | `{ "error": "Wallet does not have enough balance" }` |
+
+</details>
+
+<details>
+  <summary><code>POST</code> <code><b>/withdraw</b></code> <code>(customer can withdraw money from their wallet)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `user_id`     | header   | ObjectId  | user id             |
+> | `amt`         | body     | float     | amount to withdraw  |
+
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     |                                                      |
+> | `400`     | `{ "error": "Valid user id is required" }            |
+> | `400`     | `{ "error": "Valid amount is required" }`            |
+> | `400`     | `{ "error": "Wallet does not have enough balance" }` |
+
+</details>
+
+<details>
+  <summary><code>POST</code> <code><b>/bill</b></code> <code>(bill a customer for a booking)</code></summary>
+
+##### Parameters
+
+> | name          | type     | data type | description         |
+> |---------------|----------|-----------|---------------------|
+> | `booking_id`  | body     | ObjectId  | booking id          |
+
+##### Responses
+
+> | http code | response                                             |
+> |-----------|------------------------------------------------------|
+> | `200`     |                                                      |
+> | `400`     | `{ "error": "User does not exist in system" }        |
+> | `400`     | `{ "error": "Valid booking is required" }`           |
+
+</details>
+
+
 ## Database
 
 ### UserAccount
@@ -713,7 +834,6 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 | `phone_number`        | string   | "0412345678"                         |
 | `payment_details`     | Array    | [TODO]                               |
 | `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `reviews`             | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
 | `revenue`             | float    | 200.0                                |
 | `is_admin`            | bool     | False                                |
@@ -741,13 +861,14 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 | ------------- | ---------- | -----------------------------------|
 | `_id`         | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `consumer`    | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
-| `listing`     | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `listing_id`  | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `start_time`  | str        | 2022-01-01T00:00:00                |
 | `end_time`    | str        | 2022-01-05T00:00:00                |
 | `price`       | float      | 100.0                              |
 | `parent`      | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `child`       | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
 | `exclusions`  | [ObjectId] | [ObjectId(), ObjectId()]           |
+| `paid`        | bool       | False                              |
 
 ### Reviews (TODO)
 

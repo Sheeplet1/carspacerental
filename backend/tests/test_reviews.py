@@ -84,9 +84,14 @@ def test_post_success(client, mock_db, user_token, list_book):
     assert mock_db["Reviews"].find_one()["rating"] == 2.0
     assert mock_db["Reviews"].find_one()["name"] == "John"
 
-    assert mock_db["Listings"].find_one()["rating"] == 2.0
+    assert mock_db["Listings"].find_one({ "_id": ObjectId(list_book[0]) })["rating"] == 2.0
     provider_id = mock_db["Listings"].find_one()["provider"]
-    assert mock_db["UserAccount"].find_one({ "_id": provider_id })["rating"] == 2.0
+    # User has two listiings so account rating should be 1
+    provider = mock_db["UserAccount"].find_one({ "_id": provider_id })
+    assert provider["rating"] == 1.0
+    
+    # CHECK provider's inbox for notification of review (should have booking and review)
+    assert len(provider['inbox']) == 2
 
 def test_post_existing(client, user_token, list_book):
     """

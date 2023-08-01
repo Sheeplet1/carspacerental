@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Optional
 from bson import ObjectId
-from ..db import bookings, user, db
+from ..db import bookings, user, db, listings, inbox
+from .. import helpers
 
 def new(user_id: ObjectId, booking_id: ObjectId, data: dict) -> ObjectId:
     id = ObjectId()
@@ -30,12 +31,26 @@ def new(user_id: ObjectId, booking_id: ObjectId, data: dict) -> ObjectId:
 
     provider_id = collection.find_one({ "_id": listing_id })["provider"]
 
-    provider_listings = list(db.get_database()["Listings"].find({ "provider": provider_id }))
+    provider_listings = list(listings.get_all(provider_id))
     user_rating = sum(listing["rating"] for listing in provider_listings) / len(provider_listings)
 
     collection = db.get_database()["UserAccount"]
     collection.update_one({ "_id": provider_id }, { "$set": { "rating": user_rating } })
 
+    # notify provider of review
+    provider = user.get_user(provider_id)
+    listing = listings.get(listing_id)
+    notification = helpers.notify_of_review({
+        'recipient_id': provider['_id'],
+        'email': provider['email'],
+        'first_name': provider['first_name'],
+        'address': listing['address'],
+        'name': name,
+        'rating': float(data['rating']),
+        'message': data['message']
+    })
+    inbox.create(notification)
+    
     return id
 
 def get(booking_id: ObjectId) -> Optional[dict]:
