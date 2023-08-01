@@ -203,7 +203,7 @@ def test_cancel_booking(client, mock_db, user_token):
     
     # check that cancellation email was placed into consumer's inbox
     address = conftest.LISTING_STUB['address']
-    short_address = f"{address['streetNumber']} {address['street']}"
+    short_address = f"{address['street_number']} {address['street']}"
     message = mock_db['UserAccount'].find_one()['inbox'][1]
     message.pop('_id')
     message.pop('sender')

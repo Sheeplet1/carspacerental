@@ -3,7 +3,7 @@
 import LoginSideBar from "@components/LoginSideBar";
 import { useUser } from "@contexts/UserProvider";
 import { AuthRequiredError } from "@errors/exceptions";
-import { makeRequest } from "@utils/utils";
+import { analyticsData, makeRequest } from "@utils/utils";
 import { useEffect, useState } from "react";
 import {
   LineChart,
@@ -22,53 +22,32 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const Analytics = () => {
   const { user } = useUser();
-  const [Analytics, setAnalytics] = useState({
-    monthly_revenue: [
-      {
-        month: 1,
-        revenue: 100.0,
-      },
-      {
-        month: 2,
-        revenue: 200.0,
-      },
-      {
-        month: 3,
-        revenue: 150.0,
-      },
-    ],
-    bookings_per_listing: [
-      {
-        listing_id: "ObjectIdPlaceholder1",
-        bookings: 2,
-      },
-      {
-        listing_id: "ObjectIdPlaceholder2",
-        bookings: 3,
-      },
-    ],
-    total_bookings: 5,
-  });
+  const [Analytics, setAnalytics] = useState(analyticsData);
 
-  // useEffect(() => {
-  //   const fetchAnalytics = async () => {
-  //     const response = await makeRequest("/user/analytics", "GET");
-  //     if (response.error) {
-  //       throw new Error(response.error);
-  //     } else {
-  //       setAnalytics(response);
-  //     }
-  //   };
-  //   fetchAnalytics();
-  // }, []);
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      const response = await makeRequest("/user/analytics", "GET");
+      if (response.error) {
+        throw new Error(response.error);
+      } else {
+        setAnalytics(analyticsData);
+      }
+    };
+    fetchAnalytics();
+  }, []);
 
   if (!user) {
     throw new AuthRequiredError();
   }
 
+  const dataWithIndex = Analytics.bookings_per_listing.map((item, index) => ({
+    ...item,
+    index: index + 1, // Add 1 to start the index from 1 instead of 0
+  }));
+
   return (
     <div className="flex flex-row w-full mt-12">
-      <div className="w-1/3 rounded-lg p-5">
+      <div className="rounded-lg p-5">
         <LoginSideBar />
       </div>
       <div
@@ -105,23 +84,30 @@ const Analytics = () => {
                 Bookings per Listing
               </h2>
               {Analytics && Analytics.bookings_per_listing && (
-                <BarChart
-                  width={400}
-                  height={300}
-                  data={Analytics.bookings_per_listing}
-                >
+                <BarChart width={400} height={300} data={dataWithIndex}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="listing_id">
+                  <XAxis dataKey="index">
                     <Label
-                      value="Listing ID"
-                      offset={-5}
+                      value="Listing Index"
+                      offset={-1}
                       position="insideBottom"
                     />
                   </XAxis>
                   <YAxis>
                     <Label value="Bookings" angle={-90} position="insideLeft" />
                   </YAxis>
-                  <Tooltip />
+                  <Tooltip
+                    formatter={(value, name, props) => {
+                      // eslint-disable-next-line react/prop-types
+                      const { payload } = props;
+                      // eslint-disable-next-line react/prop-types
+                      return [
+                        value,
+                        // eslint-disable-next-line react/prop-types
+                        `Address: ${payload.address.formatted_address}`,
+                      ];
+                    }}
+                  />
                   <Bar dataKey="bookings" fill="#8884d8">
                     {Analytics.bookings_per_listing.map((entry, index) => (
                       <Cell

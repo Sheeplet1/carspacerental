@@ -7,6 +7,7 @@ import { Card } from "flowbite-react";
 
 const Inbox = () => {
   const { user } = useUser();
+  console.log(user.inbox);
 
   if (!user) {
     throw new AuthRequiredError();
@@ -18,7 +19,7 @@ const Inbox = () => {
         <LoginSideBar />
       </div>
       <div
-        className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg"
+        className="flex flex-col w-full justify-between ml-5 p-5 bg-white shadow-md rounded-lg overflow-auto"
         style={{ height: "70vh" }}
       >
         <div className="flex flex-col w-full">
@@ -26,23 +27,27 @@ const Inbox = () => {
             <h1 className="heading_text text-3xl text-gray-700">Inbox</h1>
           </div>
           {user.inbox.length > 0 ? (
-            user.inbox.map((message) => (
-              <Card key={message._id} className="mb-4">
-                <Card.Header>{message.subject}</Card.Header>
-                <Card.Body>
+            user.inbox.map((message, index) => {
+              const formattedBody = message.body.replace(/\n/g, "<br />");
+              return (
+                <Card key={index} className="mb-4">
+                  <h1 className="heading_text text-2xl text-gray-700">
+                    {message.subject}
+                  </h1>
                   <p>
                     <strong>Sender:</strong> {message.sender}
                   </p>
                   <p>
-                    <strong>Message:</strong> {message.body}
+                    <strong>Message:</strong>
+                    <div dangerouslySetInnerHTML={{ __html: formattedBody }} />
                   </p>
                   <p>
                     <strong>Time:</strong>{" "}
                     {new Date(message.timestamp).toLocaleString()}
                   </p>
-                </Card.Body>
-              </Card>
-            ))
+                </Card>
+              );
+            })
           ) : (
             <div className="text-xl text-gray-500">
               No messages in your inbox

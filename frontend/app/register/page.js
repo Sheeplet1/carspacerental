@@ -148,7 +148,6 @@ const Register = () => {
               <p className="error_text">{phoneNumberError}</p>
             </div>
           </label>
-
           <div className="flex justify-between w-96">
             <button
               className="blue_btn"

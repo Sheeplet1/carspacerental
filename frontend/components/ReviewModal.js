@@ -3,20 +3,31 @@
 import { Button, Modal } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useUser } from "@contexts/UserProvider";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { makeRequest } from "@utils/utils";
 
 const ReviewModal = ({ showReviewModal, setShowReviewModal, booking }) => {
   const { fetchUser } = useUser();
   const [review, setReview] = useState("");
   const [rating, setRating] = useState("");
 
+  const ref = useRef(null);
+
+  useEffect(() => {
+    ref.current = document.body;
+  }, []);
+
   const handleReview = async () => {
     const body = {
       rating: parseInt(rating),
       message: review,
     };
-
-    const response = await fetch(`/bookings/${booking.id}/review`, body);
+    console.log(booking);
+    const response = await makeRequest(
+      `/bookings/${booking._id}/review`,
+      "POST",
+      body
+    );
     if (response.error) {
       throw new Error(response.error);
     } else {
@@ -33,7 +44,11 @@ const ReviewModal = ({ showReviewModal, setShowReviewModal, booking }) => {
       >
         Leave a Review
       </Button>
-      <Modal show={showReviewModal} onClose={() => setShowReviewModal(false)}>
+      <Modal
+        show={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        root={ref.current}
+      >
         <Modal.Header className="bg-custom-orange text-white">
           Leave a Review
         </Modal.Header>

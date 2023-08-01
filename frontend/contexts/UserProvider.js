@@ -17,7 +17,7 @@ const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const register = async (body, setEmailError, setShowFurtherRegistration) => {
-    const response = await makeRequest("/auth/register", "POST", body);
+    const response = await makeRequest("/auth/register/admin", "POST", body);
     if (response.error) {
       setEmailError(response.error);
       setShowFurtherRegistration(false);

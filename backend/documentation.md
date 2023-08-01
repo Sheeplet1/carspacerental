@@ -10,10 +10,11 @@
 ##### Parameters
 
 > | name             | type | data type | description   |
-> |------------------|------|-----------|---------------|
+> | ---------------- | ---- | --------- | ------------- |
 > | Register Details | body | Object    | New User data |
 >
 > Register Details:
+>
 > ```
 > {
 >     "email": "example@email.com",
@@ -27,7 +28,7 @@
 ##### Responses
 
 > | http code | response                      |
-> |-----------|-------------------------------|
+> | --------- | ----------------------------- |
 > | `200`     | `{ "token": str(ObjectId) }`  |
 > | `400`     | `{ "error": "_ is required"}` |
 
@@ -39,10 +40,11 @@
 ##### Parameters
 
 > | name          | type | data type | description     |
-> |---------------|------|-----------|-----------------|
+> | ------------- | ---- | --------- | --------------- |
 > | Login Details | body | Object    | Login User data |
 >
 > Login Details:
+>
 > ```
 > {
 >     "email": "example@email.com",
@@ -53,7 +55,7 @@
 ##### Responses
 
 > | http code | response                                  |
-> |-----------|-------------------------------------------|
+> | --------- | ----------------------------------------- |
 > | `200`     | `{ "token": str(ObjectId) }`              |
 > | `400`     | `{ "error": "Invalid email or password"}` |
 
@@ -65,10 +67,11 @@
 ##### Parameters
 
 > | name             | type | data type | description   |
-> |------------------|------|-----------|---------------|
+> | ---------------- | ---- | --------- | ------------- |
 > | Register Details | body | Object    | New User data |
 >
 > Register Details:
+>
 > ```
 > {
 >     "email": "example@email.com",
@@ -82,7 +85,7 @@
 ##### Responses
 
 > | http code | response                      |
-> |-----------|-------------------------------|
+> | --------- | ----------------------------- |
 > | `200`     | `{ "token": str(ObjectId) }`  |
 > | `400`     | `{ "error": "_ is required"}` |
 
@@ -96,17 +99,18 @@
 ##### Parameters
 
 > | name      | type | data type | description   |
-> |-----------|------|-----------|---------------|
+> | --------- | ---- | --------- | ------------- |
 > | `user_id` | path | string    | User ObjectId |
 
 ##### Responses
 
 > | http code | response                        |
-> |-----------|---------------------------------|
+> | --------- | ------------------------------- |
 > | `200`     | User Data Object                |
 > | `400`     | `{ "error": "Invalid user id"}` |
 >
 > User Data Object:
+>
 > ```
 > {
 >     "_id": "6496e8e2876de3535cf3aa02",
@@ -133,17 +137,18 @@
 ##### Parameters
 
 > | name            | type   | data type | description      |
-> |-----------------|--------|-----------|------------------|
+> | --------------- | ------ | --------- | ---------------- |
 > | `Authorization` | header | string    | "Bearer {token}" |
 
 ##### Responses
 
 > | http code | response         |
-> |-----------|------------------|
+> | --------- | ---------------- |
 > | `200`     | User Data Object |
 > | `401`     | `Unauthorized`   |
 >
 > User Data Object:
+>
 > ```
 > {
 >     "_id": "6496e8e2876de3535cf3aa02",
@@ -172,23 +177,25 @@
 ##### Parameters
 
 > | name            | type   | data type | description               |
-> |-----------------|--------|-----------|---------------------------|
+> | --------------- | ------ | --------- | ------------------------- |
 > | `Authorization` | header | string    | "Bearer {token}"          |
 > | Update Info     | body   | object    | Information to be updated |
 >
 > Update Info Example:
+>
 > ```
 > {
 >     "first_name": "new_first_name",
 >     "last_name": "new_last_name"
 > }
 > ```
+>
 > _Note: for array typed fields, you must send the whole array to update_
 
 ##### Responses
 
 > | http code | response                                       |
-> |-----------|------------------------------------------------|
+> | --------- | ---------------------------------------------- |
 > | `200`     | `{}`                                           |
 > | `401`     | `Unauthorized`                                 |
 > | `400`     | `{ "error": "Cannot update <key>" }`           |
@@ -202,16 +209,16 @@
 
 ##### Parameters
 
-> | name            | type   | data type | description               |
-> |-----------------|--------|-----------|---------------------------|
-> | `Authorization` | header | string    | "Bearer {token}"          |
+> | name            | type   | data type | description      |
+> | --------------- | ------ | --------- | ---------------- |
+> | `Authorization` | header | string    | "Bearer {token}" |
 
 ##### Responses
 
-> | http code | response                                       |
-> |-----------|------------------------------------------------|
-> | `200`     | `{}`                                           |
-> | `401`     | `Unauthorized`                                 |
+> | http code | response       |
+> | --------- | -------------- |
+> | `200`     | `{}`           |
+> | `401`     | `Unauthorized` |
 
 </details>
 
@@ -220,18 +227,19 @@
 
 ##### Parameters
 
-> | name            | type   | data type | description               |
-> |-----------------|--------|-----------|---------------------------|
-> | `Authorization` | header | string    | "Bearer {token}"          |
+> | name            | type   | data type | description      |
+> | --------------- | ------ | --------- | ---------------- |
+> | `Authorization` | header | string    | "Bearer {token}" |
 
 ##### Responses
 
-> | http code | response                                       |
-> |-----------|------------------------------------------------|
-> | `200`     | `Analytics Body`                               |
-> | `401`     | `Unauthorized`                                 |
+> | http code | response         |
+> | --------- | ---------------- |
+> | `200`     | `Analytics Body` |
+> | `401`     | `Unauthorized`   |
 >
 > Update Info Example:
+>
 > ```
 > {
 >     "monthly_revenue": [{
@@ -245,6 +253,7 @@
 >     "total_bookings": 3
 > }
 > ```
+
 </details>
 
 ### Listings
@@ -254,23 +263,24 @@
 
 ##### Parameters
 
-> | name   | type   | data type | description |
-> |--------|--------|-----------|-------------|
-> | `None` |        |           |             |
+> | name   | type | data type | description |
+> | ------ | ---- | --------- | ----------- |
+> | `None` |      |           |             |
 
 ##### Responses
 
 > | http code | response                         |
-> |-----------|----------------------------------|
+> | --------- | -------------------------------- |
 > | `200`     | `{ "listings": Listings Array }` |
 >
 > Listing Details:
+>
 > ```
 > {
 >    listing_id: ....
 >    address: {
 >        "formatted_address": "Sydney NSW, Australia",
->        "streetNumber": "",
+>        "street_number": "",
 >        "street": "",
 >        "city": "",
 >        "state": "NSW",
@@ -325,11 +335,12 @@
 ##### Parameters
 
 > | name             | type   | data type | description      |
-> |------------------|--------|-----------|------------------|
+> | ---------------- | ------ | --------- | ---------------- |
 > | `Authorization`  | header | string    | "Bearer {token}" |
 > | New Listing Info | body   | object    | Listing Object   |
 >
 > Update Info Example:
+>
 > ```
 > {
 >     "address": {
@@ -352,7 +363,7 @@
 ##### Responses
 
 > | http code | response                                   |
-> |-----------|--------------------------------------------|
+> | --------- | ------------------------------------------ |
 > | `200`     | `{}`                                       |
 > | `401`     | `Unauthorized`                             |
 > | `400`     | `{ "error": "Valid <field> is required" }` |
@@ -364,19 +375,20 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `listing_id` | path  | str(ObjectId) | Listing ObjectId |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `listing_id` | path | str(ObjectId) | Listing ObjectId |
 
 ##### Responses
 
 > | http code | response                            |
-> |-----------|-------------------------------------|
+> | --------- | ----------------------------------- |
 > | `200`     | Listing Information Object          |
 > | `401`     | `Unauthorized`                      |
 > | `400`     | `{ "error": "Invalid listing id" }` |
 >
 > Listing Info Example:
+>
 > ```
 > {
 >     "_id": str(ObjectId())
@@ -419,24 +431,26 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `listing_id` | path  | str(ObjectId) | Listing ObjectId |
-> | Update Info  | body  | Object        | Updating Object  |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `listing_id` | path | str(ObjectId) | Listing ObjectId |
+> | Update Info  | body | Object        | Updating Object  |
 >
 > Update Info Example:
+>
 > ```
 > {
 >     "daily_price": 6,
 >     "space_type": "Garage",
 > }
 > ```
+>
 > _Note: for array typed fields, you must send the whole array to update_
 
 ##### Responses
 
 > | http code | response                            |
-> |-----------|-------------------------------------|
+> | --------- | ----------------------------------- |
 > | `200`     | `{}`                                |
 > | `401`     | `Unauthorized`                      |
 > | `400`     | `{ "error": "Invalid listing id" }` |
@@ -448,14 +462,14 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `listing_id` | path  | str(ObjectId) | Listing ObjectId |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `listing_id` | path | str(ObjectId) | Listing ObjectId |
 
 ##### Responses
 
 > | http code | response       |
-> |-----------|----------------|
+> | --------- | -------------- |
 > | `200`     | `{}`           |
 > | `401`     | `Unauthorized` |
 
@@ -468,11 +482,12 @@
 
 ##### Parameters
 
-> | name             | type | data type | description      |
-> |------------------|------|-----------|------------------|
-> | Booking Details  | body | Object    | New booking data |
+> | name            | type | data type | description      |
+> | --------------- | ---- | --------- | ---------------- |
+> | Booking Details | body | Object    | New booking data |
 >
 > Booking Details:
+>
 > ```
 > {
 >     "consumer": ObjectId(6496e8e2876de3535cf3aa02)
@@ -487,7 +502,7 @@
 ##### Responses
 
 > | http code | response                          |
-> |-----------|-----------------------------------|
+> | --------- | --------------------------------- |
 > | `200`     | `{ "token": str(ObjectId) }`      |
 > | `400`     | `{ "error": "_ is required"}`     |
 > | `400`     | `{ "error": "Invalid time slot"}` |
@@ -499,21 +514,21 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `booking_id` | path | str(ObjectId) | Booking ObjectId |
 
 ##### Responses
 
 > | http code | response                            |
-> |-----------|-------------------------------------|
+> | --------- | ----------------------------------- |
 > | `200`     | Booking Information Object          |
 > | `401`     | `Unauthorized`                      |
 > | `400`     | `{ "error": "Invalid booking id" }` |
 >
 > Booking Info Example:
 >
-> ``` Python
+> ```Python
 > {
 >     "_id": str(ObjectId())
 >     "consumer": str(ObjectId())
@@ -526,7 +541,7 @@
 >     "exclusions": [ObjectId(), ObjectId()]
 > }
 > ```
->
+
 </details>
 
 <details>
@@ -534,14 +549,14 @@
 
 ##### PARAMETERS
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
-> | Update Info  | body  | Object        | Updating Object  |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `booking_id` | path | str(ObjectId) | Booking ObjectId |
+> | Update Info  | body | Object        | Updating Object  |
 >
 > Update Info Example:
 >
-> ``` Python
+> ```Python
 > {
 >     "price": 200.0
 >     "start_time": '2022-01-01T00:00:00'
@@ -551,11 +566,11 @@
 
 ##### Responses
 
-> | http code | response                            |
-> |-----------|-------------------------------------|
-> | `200`     | `{ 'booking_id': ObjectId() }`      |
-> | `401`     | `Unauthorized`                      |
-> | `400`     | `{ "error": "Invalid _" }`          |
+> | http code | response                       |
+> | --------- | ------------------------------ |
+> | `200`     | `{ 'booking_id': ObjectId() }` |
+> | `401`     | `Unauthorized`                 |
+> | `400`     | `{ "error": "Invalid _" }`     |
 
 </details>
 
@@ -564,14 +579,14 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
-> | `data`       | json  | string        | see example      |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `booking_id` | path | str(ObjectId) | Booking ObjectId |
+> | `data`       | json | string        | see example      |
 >
 > Data Info Example:
 >
-> ``` Python
+> ```Python
 > {
 >       "start_time": '2022-01-01T10:00:00',
 >       "end_time": '2022-01-01T11:00:00,
@@ -584,7 +599,7 @@
 ##### Responses
 
 > | http code | response       |
-> |-----------|----------------|
+> | --------- | -------------- |
 > | `200`     | `{}`           |
 > | `401`     | `Unauthorized` |
 
@@ -595,14 +610,14 @@
 
 ##### Parameters
 
-> | name            | type   | data type | description               |
-> |-----------------|--------|-----------|---------------------------|
-> | `Authorization` | header | string    | "Bearer {token}"          |
+> | name            | type   | data type | description      |
+> | --------------- | ------ | --------- | ---------------- |
+> | `Authorization` | header | string    | "Bearer {token}" |
 
 ##### Responses
 
 > | http code | response                    |
-> |-----------|-----------------------------|
+> | --------- | --------------------------- |
 > | `200`     | `{}` or `[{booking_infos}]` |
 
 </details>
@@ -612,23 +627,23 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `booking_id` | path | str(ObjectId) | Booking ObjectId |
 
 ##### Responses
 
-> | http code | response                                         |
-> |-----------|--------------------------------------------------|
-> | `200`     | Booking Information Object                       |
-> | `401`     | `Unauthorized`                                   |
-> | `400`     | `{ "error": "Invalid booking id" }`              |
-> | `400`     | `{ "error": "Booking doesn't exist" }`           |
-> | `400`     | `{ "error": "Review does not exist" }`           |
+> | http code | response                               |
+> | --------- | -------------------------------------- |
+> | `200`     | Booking Information Object             |
+> | `401`     | `Unauthorized`                         |
+> | `400`     | `{ "error": "Invalid booking id" }`    |
+> | `400`     | `{ "error": "Booking doesn't exist" }` |
+> | `400`     | `{ "error": "Review does not exist" }` |
 >
 > Booking Info Example:
 >
-> ``` Python
+> ```Python
 > {
 >     "_id": ObjectId(),
 >     "user_id": ObjectId(),
@@ -640,7 +655,7 @@
 >     "timestamp": "2023-07-26T23:09:38.550716",
 > }
 > ```
->
+
 </details>
 
 <details>
@@ -648,12 +663,13 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
-> | Update Info  | body  | Object        | Updating Object  |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `booking_id` | path | str(ObjectId) | Booking ObjectId |
+> | Update Info  | body | Object        | Updating Object  |
 >
 > Update Info Example:
+>
 > ```
 > {
 >     "rating": 5,
@@ -664,15 +680,15 @@
 ##### Responses
 
 > | http code | response                                         |
-> |-----------|--------------------------------------------------|
+> | --------- | ------------------------------------------------ |
 > | `200`     | Booking Id                                       |
 > | `401`     | `Unauthorized`                                   |
 > | `400`     | `{ "error": "Invalid booking id" }`              |
 > | `400`     | `{ "error": "Booking doesn't exist" }`           |
-> | `400`     | `{ "error": "Review does not exists" }`     |
+> | `400`     | `{ "error": "Review does not exists" }`          |
 > | `400`     | `{ "error": "Cannot update key" }`               |
 > | `400`     | `{ "error": "Update value has invalid typing" }` |
->
+
 </details>
 
 <details>
@@ -680,12 +696,13 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
-> | Review Info  | body  | Object        | Review Body      |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `booking_id` | path | str(ObjectId) | Booking ObjectId |
+> | Review Info  | body | Object        | Review Body      |
 >
 > Review Info Example:
+>
 > ```
 > {
 >     "rating": 5,
@@ -696,7 +713,7 @@
 ##### Responses
 
 > | http code | response                                   |
-> |-----------|--------------------------------------------|
+> | --------- | ------------------------------------------ |
 > | `200`     | Booking Id                                 |
 > | `401`     | `Unauthorized`                             |
 > | `400`     | `{ "error": "Invalid booking id" }`        |
@@ -704,7 +721,7 @@
 > | `400`     | `{ "error": "Review already exists" }`     |
 > | `400`     | `{ "error": "Valid rating is required" }`  |
 > | `400`     | `{ "error": "Valid message is required" }` |
->
+
 </details>
 
 <details>
@@ -712,23 +729,23 @@
 
 ##### Parameters
 
-> | name         | type  | data type     | description      |
-> |--------------|-------|---------------|------------------|
-> | `booking_id` | path  | str(ObjectId) | Booking ObjectId |
-> | Empty Body   | body  | Object        | Body             |
+> | name         | type | data type     | description      |
+> | ------------ | ---- | ------------- | ---------------- |
+> | `booking_id` | path | str(ObjectId) | Booking ObjectId |
+> | Empty Body   | body | Object        | Body             |
 >
-_An empty body may be required if `415 Unsupported Media Type` error occurs_
+> _An empty body may be required if `415 Unsupported Media Type` error occurs_
 
 ##### Responses
 
 > | http code | response                                |
-> |-----------|-----------------------------------------|
+> | --------- | --------------------------------------- |
 > | `200`     | Booking Id                              |
 > | `401`     | `Unauthorized`                          |
 > | `400`     | `{ "error": "Invalid booking id" }`     |
 > | `400`     | `{ "error": "Booking doesn't exist" }`  |
 > | `400`     | `{ "error": "Review does not exists" }` |
->
+
 </details>
 
 ### Payments
@@ -738,15 +755,15 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 
 ##### Parameters
 
-> | name          | type     | data type | description         |
-> |---------------|----------|-----------|---------------------|
-> | `bill_id`     | path     | ObjectId  | bill id             |
-> | `use_wallet`  | body     | bool      | pay through wallet? |
+> | name         | type | data type | description         |
+> | ------------ | ---- | --------- | ------------------- |
+> | `bill_id`    | path | ObjectId  | bill id             |
+> | `use_wallet` | body | bool      | pay through wallet? |
 
 ##### Responses
 
 > | http code | response                                             |
-> |-----------|------------------------------------------------------|
+> | --------- | ---------------------------------------------------- |
 > | `200`     | { amount_received: x } for listing provider          |
 > | `401`     | `Unauthorized`                                       |
 > | `400`     | `{ "error": "Valid bill id is required" }            |
@@ -761,16 +778,15 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 
 ##### Parameters
 
-> | name          | type     | data type | description         |
-> |---------------|----------|-----------|---------------------|
-> | `user_id`     | header   | ObjectId  | user id             |
-> | `amt`         | body     | float     | amount to topup     |
-
+> | name      | type   | data type | description     |
+> | --------- | ------ | --------- | --------------- |
+> | `user_id` | header | ObjectId  | user id         |
+> | `amt`     | body   | float     | amount to topup |
 
 ##### Responses
 
 > | http code | response                                             |
-> |-----------|------------------------------------------------------|
+> | --------- | ---------------------------------------------------- |
 > | `200`     |                                                      |
 > | `400`     | `{ "error": "Valid user id is required" }            |
 > | `400`     | `{ "error": "Valid amount is required" }`            |
@@ -783,16 +799,15 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 
 ##### Parameters
 
-> | name          | type     | data type | description         |
-> |---------------|----------|-----------|---------------------|
-> | `user_id`     | header   | ObjectId  | user id             |
-> | `amt`         | body     | float     | amount to withdraw  |
-
+> | name      | type   | data type | description        |
+> | --------- | ------ | --------- | ------------------ |
+> | `user_id` | header | ObjectId  | user id            |
+> | `amt`     | body   | float     | amount to withdraw |
 
 ##### Responses
 
 > | http code | response                                             |
-> |-----------|------------------------------------------------------|
+> | --------- | ---------------------------------------------------- |
 > | `200`     |                                                      |
 > | `400`     | `{ "error": "Valid user id is required" }            |
 > | `400`     | `{ "error": "Valid amount is required" }`            |
@@ -805,80 +820,79 @@ _An empty body may be required if `415 Unsupported Media Type` error occurs_
 
 ##### Parameters
 
-> | name          | type     | data type | description         |
-> |---------------|----------|-----------|---------------------|
-> | `booking_id`  | body     | ObjectId  | booking id          |
+> | name         | type | data type | description |
+> | ------------ | ---- | --------- | ----------- |
+> | `booking_id` | body | ObjectId  | booking id  |
 
 ##### Responses
 
-> | http code | response                                             |
-> |-----------|------------------------------------------------------|
-> | `200`     |                                                      |
-> | `400`     | `{ "error": "User does not exist in system" }        |
-> | `400`     | `{ "error": "Valid booking is required" }`           |
+> | http code | response                                      |
+> | --------- | --------------------------------------------- |
+> | `200`     |                                               |
+> | `400`     | `{ "error": "User does not exist in system" } |
+> | `400`     | `{ "error": "Valid booking is required" }`    |
 
 </details>
-
 
 ## Database
 
 ### UserAccount
 
-| Field                 | Type     | Example                              |
-| --------------------- | -------- | ------------------------------------ |
-| `_id`                 | ObjectId | ObjectId(6496e8e2876de3535cf3aa02)   |
-| `email`               | string   | "user@email.com"                     |
-| `password`            | string   | _hashed password string_             |
-| `first_name`          | string   | "first"                              |
-| `last_name`           | string   | "last"                               |
-| `phone_number`        | string   | "0412345678"                         |
-| `payment_details`     | Array    | [TODO]                               |
-| `bookings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `listings`            | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `revenue`             | float    | 200.0                                |
-| `is_admin`            | bool     | False                                |
-| `vehicle_details`     | Array    | ['Toyota Corolla']                   |
+| Field             | Type     | Example                              |
+| ----------------- | -------- | ------------------------------------ |
+| `_id`             | ObjectId | ObjectId(6496e8e2876de3535cf3aa02)   |
+| `email`           | string   | "user@email.com"                     |
+| `password`        | string   | _hashed password string_             |
+| `first_name`      | string   | "first"                              |
+| `last_name`       | string   | "last"                               |
+| `phone_number`    | string   | "0412345678"                         |
+| `payment_details` | Array    | [TODO]                               |
+| `bookings`        | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `listings`        | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `revenue`         | float    | 200.0                                |
+| `is_admin`        | bool     | False                                |
+| `vehicle_details` | Array    | ['Toyota Corolla']                   |
 
 ### Listings
 
-| Field           | Type     | Example                            |
-| -------------   | -------- | -----------------------------------|
-| `_id`           | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `provider`      | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `address`       | Object   | {TODO}                             |
-| `hourly_price`  | float    | 5.0                                |
-| `daily_price`   | float    | 100.0                              |
-| `space_type`    | string   | "Driveway"                         |
-| `max_size`      | string   | "SUV"                              |
-| `description`   | string   | "Listing Description"              |
-| `access_type`   | string   | "Key Card"                         |
-| `images`        | Array    | ["Base64 encoded image"]           |
-| `features`      | Array    | ["Electric Charging"]              |
+| Field          | Type     | Example                            |
+| -------------- | -------- | ---------------------------------- |
+| `_id`          | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `provider`     | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `address`      | Object   | {TODO}                             |
+| `hourly_price` | float    | 5.0                                |
+| `daily_price`  | float    | 100.0                              |
+| `space_type`   | string   | "Driveway"                         |
+| `max_size`     | string   | "SUV"                              |
+| `description`  | string   | "Listing Description"              |
+| `access_type`  | string   | "Key Card"                         |
+| `images`       | Array    | ["Base64 encoded image"]           |
+| `features`     | Array    | ["Electric Charging"]              |
 
 ### Bookings
 
-| Field         | Type       | Example                            |
-| ------------- | ---------- | -----------------------------------|
-| `_id`         | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
-| `consumer`    | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
-| `listing_id`  | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
-| `start_time`  | str        | 2022-01-01T00:00:00                |
-| `end_time`    | str        | 2022-01-05T00:00:00                |
-| `price`       | float      | 100.0                              |
-| `parent`      | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
-| `child`       | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
-| `exclusions`  | [ObjectId] | [ObjectId(), ObjectId()]           |
-| `paid`        | bool       | False                              |
+| Field        | Type       | Example                            |
+| ------------ | ---------- | ---------------------------------- |
+| `_id`        | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `consumer`   | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `listing_id` | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `start_time` | str        | 2022-01-01T00:00:00                |
+| `end_time`   | str        | 2022-01-05T00:00:00                |
+| `price`      | float      | 100.0                              |
+| `parent`     | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `child`      | ObjectId   | ObjectId(6496e8e2876de3535cf3aa02) |
+| `exclusions` | [ObjectId] | [ObjectId(), ObjectId()]           |
+| `paid`       | bool       | False                              |
 
 ### Reviews (TODO)
 
-| Field        | Type      | Example                            |
-| -------------| ----------| -----------------------------------|
-| `_id`        | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
-| `user_id`    | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
-| `booking_id` | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
-| `listing_id` | ObjectId  | ObjectId(6496e8e2876de3535cf3aa02) |
-| `name`       | str       | John                               |
-| `rating`     | float     | 2.5                                |
-| `message`    | str       | great message                      |
-| `timestamp`  | str       | 2023-07-26T23:09:38.550716         |
+| Field        | Type     | Example                            |
+| ------------ | -------- | ---------------------------------- |
+| `_id`        | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `user_id`    | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `booking_id` | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `listing_id` | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
+| `name`       | str      | John                               |
+| `rating`     | float    | 2.5                                |
+| `message`    | str      | great message                      |
+| `timestamp`  | str      | 2023-07-26T23:09:38.550716         |

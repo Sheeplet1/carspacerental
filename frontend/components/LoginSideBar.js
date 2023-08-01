@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "@contexts/UserProvider";
 
-export const LoginSidebar = () => {
+const LoginSidebar = () => {
   const { user } = useUser();
 
   return (
@@ -33,6 +33,15 @@ export const LoginSidebar = () => {
               </p>
             </Link>
           </li>
+          {user.is_admin && (
+            <li>
+              <Link href="/admin">
+                <p className="flex py-1 text-lg text-gray-800 hover:underline">
+                  Admin
+                </p>
+              </Link>
+            </li>
+          )}
           <li>
             <Link href="/analytics">
               <p className="flex py-1 text-lg text-gray-800 hover:underline">

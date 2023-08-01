@@ -43,7 +43,7 @@ def test_successful_booking(client, mock_db, user_token):
     
     # Check consumer's inbox contains confirmation email
     address = conftest.LISTING_STUB['address']
-    short_address = f"{address['streetNumber']} {address['street']}"
+    short_address = f"{address['street_number']} {address['street']}"
     message = acc['inbox'][0]
     message.pop('_id')
     message.pop('sender')
@@ -83,7 +83,7 @@ def test_successful_booking(client, mock_db, user_token):
         'subject': 'Your listing has been booked!',
         'body': textwrap.dedent(f"""Dear {provider['first_name']},
             
-            We are pleased to inform you that your listing @ {address['streetNumber']} {address['street']} has been booked!
+            We are pleased to inform you that your listing @ {address['street_number']} {address['street']} has been booked!
             
             Details:
             - Listing: {booking['listing_id']},

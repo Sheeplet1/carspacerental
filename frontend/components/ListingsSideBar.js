@@ -45,7 +45,6 @@ const ListingsSideBar = () => {
         <hr className="border-t-2 border-gray-300" />
         <Listings />
       </div>
-
       {selectedListing && (
         <motion.div
           initial={{ x: 300, opacity: 0 }}

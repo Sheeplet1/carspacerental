@@ -35,7 +35,6 @@ const ListingDetail = () => {
         throw new Error(response.error);
       } else {
         setListingUser(response);
-        console.log(response);
       }
     };
 

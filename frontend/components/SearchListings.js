@@ -83,7 +83,6 @@ const SearchListings = () => {
 
   useEffect(() => {
     if (!fetchingData) {
-      console.log(originalListings);
       let processedListings = [...originalListings];
       if (isCasual) {
         processedListings = processedListings.filter((listing) => {

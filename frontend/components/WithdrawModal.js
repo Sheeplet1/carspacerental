@@ -16,7 +16,6 @@ const WithdrawModal = ({
   amount,
 }) => {
   const [showPaymentDetailsModal, setShowPaymentDetailsModal] = useState(false);
-  const [withdrawPaymentDetails, setWithdrawPaymentDetails] = useState(payment_details);
   const [withdrawAmount, setWithdrawAmount] = useState(amount);
   const [withdrawAmountError, setWithdrawAmountError] = useState("");
   const { user } = useUser();
@@ -27,7 +26,6 @@ const WithdrawModal = ({
   }));
 
   useEffect(() => {
-    setWithdrawPaymentDetails(payment_details);
     setWithdrawAmount(amount);
   }, [payment_details, amount, showWithdrawModal]);
 
@@ -43,8 +41,8 @@ const WithdrawModal = ({
 
     if (isAmountExist) {
       const body = {
-        amt: parseFloat(withdrawAmount)
-      }
+        amt: parseFloat(withdrawAmount),
+      };
       const response = await makeRequest("/withdraw", "POST", body);
       if (response.error) {
         throw new Error(response.error);
@@ -59,24 +57,30 @@ const WithdrawModal = ({
     setWithdrawAmountError("");
     setWithdrawAmount("");
     setShowWithdrawModal(false);
-  }
+  };
 
   return (
     <div>
       <Button
-        className='bg-custom-orange hover:bg-custom-orange-dark text-white'
-        onClick={() => setShowWithdrawModal(true)}>Withdraw</Button>
+        className="bg-custom-orange hover:bg-custom-orange-dark text-white"
+        onClick={() => setShowWithdrawModal(true)}
+      >
+        Withdraw
+      </Button>
 
       <Modal
         show={showWithdrawModal}
         onClose={closeWithdrawModal}
-        root={ref.current}>
-        <Modal.Header className="bg-custom-orange text-white">Withdraw Details</Modal.Header>
+        root={ref.current}
+      >
+        <Modal.Header className="bg-custom-orange text-white">
+          Withdraw Details
+        </Modal.Header>
 
         <Modal.Body>
           <div>
             <div className="flex flex-col">
-              <Label htmlFor="small" value="Payment Method"/>
+              <Label htmlFor="small" value="Payment Method" />
               <div>
                 {user.payment_details.length !== 0 ? (
                   <Select
@@ -129,9 +133,9 @@ const WithdrawModal = ({
       </Modal>
     </div>
   );
-}
+};
 
-export default WithdrawModal
+export default WithdrawModal;
 
 WithdrawModal.propTypes = {
   showWithdrawModal: PropTypes.bool.isRequired,

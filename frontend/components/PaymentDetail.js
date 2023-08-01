@@ -61,14 +61,18 @@ const PaymentDetail = () => {
 
   const clickPay = async () => {
     const formattedStartDate = startDate.toISOString().split("T")[0];
-    const formattedStartTime = `${startTime}:00:00`;
+    const formattedStartTime = `${
+      startTime.toString().length == 1 ? "0" : ""
+    }${startTime}:00:00`;
 
     const formattedEndDate = endDate.toISOString().split("T")[0];
-    const formattedEndTime = `${endTime}:00:00`;
+    const formattedEndTime = `${
+      endTime.toString().length == 1 ? "0" : ""
+    }${endTime}:00:00`;
 
     const body = {
       consumer: user._id,
-      listing_id: selectedListing.listing_id,
+      listing_id: selectedListing._id,
       start_time: `${formattedStartDate}T${formattedStartTime}`,
       end_time: `${formattedEndDate}T${formattedEndTime}`,
       price: `${
@@ -82,6 +86,7 @@ const PaymentDetail = () => {
             )
           : selectedListing.monthly_rate
       }`,
+      recurring: "",
     };
 
     const response = await makeRequest("/listings/book", "POST", body);

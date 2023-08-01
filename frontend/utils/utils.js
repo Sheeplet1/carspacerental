@@ -136,3 +136,87 @@ export const fileToDataUrl = async (file) => {
     return { error: error.message };
   }
 };
+
+export const analyticsData = {
+  monthly_revenue: [
+    {
+      month: 1,
+      revenue: 100.0,
+    },
+    {
+      month: 2,
+      revenue: 200.0,
+    },
+    {
+      month: 3,
+      revenue: 150.0,
+    },
+    {
+      month: 4,
+      revenue: 300.0,
+    },
+  ],
+  bookings_per_listing: [
+    {
+      address: {
+        formatted_address: "200 George St, Sydney NSW 2000, Australia",
+        streetNumber: "200",
+        street: "George St",
+        city: "Sydney",
+        state: "NSW",
+        postcode: "2000",
+        country: "Australia",
+        lat: -33.866615,
+        lng: 151.209296,
+        place_id: "ChIJK_7h_GEUEmsRdEHvGDCmOoI",
+      },
+      bookings: 2,
+    },
+    {
+      address: {
+        formatted_address: "1 George St, Parramatta NSW 2150, Australia",
+        streetNumber: "1",
+        street: "George St",
+        city: "Parramatta",
+        state: "NSW",
+        postcode: "2150",
+        country: "Australia",
+        lat: -33.814582,
+        lng: 151.003056,
+        place_id: "ChIJGfyi2kKkEmsRHUrV4aIIAJI",
+      },
+      bookings: 1,
+    },
+    {
+      address: {
+        formatted_address: "1 Martin Place, Sydney NSW 2000, Australia",
+        streetNumber: "1",
+        street: "Martin Place",
+        city: "Sydney",
+        state: "NSW",
+        postcode: "2000",
+        country: "Australia",
+        lat: -33.867591,
+        lng: 151.209292,
+        place_id: "ChIJz7AZn02uEmsRJazZfbu1w0w",
+      },
+      bookings: 3,
+    },
+    {
+      address: {
+        formatted_address: "330 George St, Sydney NSW 2000, Australia",
+        streetNumber: "330",
+        street: "George St",
+        city: "Sydney",
+        state: "NSW",
+        postcode: "2000",
+        country: "Australia",
+        lat: -33.86714,
+        lng: 151.207114,
+        place_id: "ChIJT4XuTjCuEmsRcJazZfbu1W0",
+      },
+      bookings: 4,
+    },
+  ],
+  total_bookings: 10,
+};

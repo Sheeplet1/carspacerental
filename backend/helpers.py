@@ -180,7 +180,7 @@ def check_exclusions(parent_id: ObjectId, parent_start, parent_end, new_start, n
 ########################### INBOX MESSAGE TEMPLATES ###########################
 def email_cx_booking_confirmation(data: dict) -> Optional[dict]:
     address = data['address'] 
-    short_address = address['streetNumber'] + ' ' + address['street']
+    short_address = address['street_number'] + ' ' + address['street']
     consumer_message = {
         'recipient_id': data['recipient_id'],
         'email': data['email'],
@@ -208,7 +208,7 @@ def email_cx_booking_confirmation(data: dict) -> Optional[dict]:
 
 def email_cx_booking_cancellation(data: dict) -> Optional[dict]:
     address = data['address'] 
-    short_address = address['streetNumber'] + ' ' + address['street']
+    short_address = address['street_number'] + ' ' + address['street']
     consumer_message = {
         'recipient_id': data['recipient_id'],
         'email': data['email'],
@@ -230,7 +230,7 @@ def email_cx_booking_cancellation(data: dict) -> Optional[dict]:
 
 def email_provider_booking(data: dict) -> Optional[dict]:
     address = data['address'] 
-    short_address = address['streetNumber'] + ' ' + address['street']
+    short_address = address['street_number'] + ' ' + address['street']
     provider_message = {
         'recipient_id': data['recipient_id'],
         'email': data['email'],
@@ -259,7 +259,7 @@ def email_provider_booking(data: dict) -> Optional[dict]:
 
 def email_provider_cancel(data: dict) -> Optional[dict]:
     address = data['address'] 
-    short_address = address['streetNumber'] + ' ' + address['street']
+    short_address = address['street_number'] + ' ' + address['street']
     provider_message = {
         'recipient_id': data['recipient_id'],
         'email': data['email'],
@@ -335,7 +335,7 @@ def payment_received(data: dict) -> Optional[dict]:
 
 def notify_of_review(data: dict) -> Optional[dict]:
     address = data['address'] 
-    short_address = address['streetNumber'] + ' ' + address['street']
+    short_address = address['street_number'] + ' ' + address['street']
     provider_msg = {
         'recipient_id': data['recipient_id'],
         'email': data['email'],

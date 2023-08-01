@@ -40,7 +40,7 @@ LISTING_STUB = {
     "provider": TEST_UID,
     "address": {
         "formatted_address": "123 Pitt Street, Sydney NSW 2000, Australia",
-        "streetNumber": "123",
+        "street_number": "123",
         "street": "Pitt Street",
         "city": "Sydney",
         "state": "NSW",

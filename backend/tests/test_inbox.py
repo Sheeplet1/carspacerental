@@ -40,7 +40,7 @@ def test_get_specific_message(client, mock_db, user_token):
     msg.pop('timestamp')
     
     address = conftest.LISTING_STUB['address']
-    short_address = f"{address['streetNumber']} {address['street']}"
+    short_address = f"{address['street_number']} {address['street']}"
     assert msg == {
         '_id': str(message['_id']),
         'sender': 'noreply@sfcars.com.au',
@@ -99,7 +99,7 @@ def test_delete_specific_message(client, mock_db, user_token):
     msg.pop('timestamp')
     
     address = conftest.LISTING_STUB['address']
-    short_address = f"{address['streetNumber']} {address['street']}"
+    short_address = f"{address['street_number']} {address['street']}"
     assert msg == {
         '_id': str(message['_id']),
         'sender': 'noreply@sfcars.com.au',

@@ -7,85 +7,67 @@ import CancelBookingModal from "@components/CancelBookingModal";
 import EditBookingModal from "@components/EditBookingModal";
 import ReviewModal from "@components/ReviewModal";
 import { makeRequest } from "@utils/utils";
+import { useUser } from "@contexts/UserProvider";
+import Loading from "@components/Loading";
 
 const ManageBooking = () => {
-  const user = {
-    bookings: [
-      {
-        _id: "60fdb79d8a32fe168d8a63f3",
-        consumer: "60fdb79d8a32fe168d8a63f4",
-        listing_id: "60fdb79d8a32fe168d8a63f5",
-        start_time: "2023-08-03T01:00:00",
-        end_time: "2023-08-03T03:00:00",
-        price: 100.0,
-        parent: "60fdb79d8a32fe168d8a63f6",
-        child: "60fdb79d8a32fe168d8a63f7",
-        exclusions: ["60fdb79d8a32fe168d8a63f8", "60fdb79d8a32fe168d8a63f9"],
-      },
-      {
-        _id: "60fdb79d8a32fe168d8a63fa",
-        consumer: "60fdb79d8a32fe168d8a63fb",
-        listing_id: "60fdb79d8a32fe168d8a63fc",
-        start_time: "2023-08-03T01:00:00",
-        end_time: "2023-08-03T03:00:00",
-        price: 100.0,
-        parent: "60fdb79d8a32fe168d8a63fd",
-        child: "60fdb79d8a32fe168d8a63fe",
-        exclusions: ["60fdb79d8a32fe168d8a63ff", "60fdb79d8a32fe168d8a6400"],
-      },
-    ],
-  };
-  const [finishedBookings, setFinishedBookings] = useState([
-    {
-      _id: "60fdb79d8a32fe168d8a63f3",
-      consumer: "60fdb79d8a32fe168d8a63f4",
-      listing_id: "60fdb79d8a32fe168d8a63f5",
-      start_time: "2022-01-01T00:00:00",
-      end_time: "2022-01-23T00:00:00",
-      price: 100.0,
-      parent: "60fdb79d8a32fe168d8a63f6",
-      child: "60fdb79d8a32fe168d8a63f7",
-      exclusions: ["60fdb79d8a32fe168d8a63f8", "60fdb79d8a32fe168d8a63f9"],
-    },
-    {
-      _id: "60fdb79d8a32fe168d8a63fa",
-      consumer: "60fdb79d8a32fe168d8a63fb",
-      listing_id: "60fdb79d8a32fe168d8a63fc",
-      start_time: "2022-01-01T00:00:00",
-      end_time: "2022-01-23T00:00:00",
-      price: 100.0,
-      parent: "60fdb79d8a32fe168d8a63fd",
-      child: "60fdb79d8a32fe168d8a63fe",
-      exclusions: ["60fdb79d8a32fe168d8a63ff", "60fdb79d8a32fe168d8a6400"],
-    },
-  ]);
+  const { user } = useUser();
+  const [bookings, setBookings] = useState([]);
+  const [finishedBookings, setFinishedBookings] = useState([]);
   const [showCancelBookingModal, setShowCancelBookingModal] = useState(
     user.bookings.map(() => false)
   );
   const [showEditBookingModal, setShowEditBookingModal] = useState(
     user.bookings.map(() => false)
   );
-  const [showReviewModal, setShowReviewModal] = useState([false, false]);
+  const [showReviewModal, setShowReviewModal] = useState([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
+  const [finishedBookingsLoading, setFinishedBookingsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      const userBookings = [];
+      for (const id of user.bookings) {
+        setBookingsLoading(true);
+        const response = await makeRequest(`/bookings/${id}`, "GET");
+        if (response.error) {
+          throw new Error(response.error);
+        } else {
+          if (new Date(response.end_time) > new Date()) {
+            userBookings.push(response);
+          }
+        }
+      }
+      setBookings(userBookings);
+      setBookingsLoading(false);
+    };
+    fetchBookings();
+  }, [user.bookings]);
 
   useEffect(() => {
     setShowEditBookingModal(user.bookings.map(() => false));
-  }, [user.bookings.length]);
+  }, [user.bookings]);
 
   useEffect(() => {
     setShowCancelBookingModal(user.bookings.map(() => false));
-  }, [user.bookings.length]);
+  }, [user.bookings]);
+
+  useEffect(() => {
+    setShowReviewModal(user.bookings.map(() => false));
+  }, [finishedBookings]);
 
   useEffect(() => {
     const fetchFinishedBookings = async () => {
+      setFinishedBookingsLoading(true);
       const response = await makeRequest("/profile/completed-bookings", "GET");
       if (response.error) {
         throw new Error(response.error);
       } else {
         if (response.length > 0) {
           setFinishedBookings(response);
-          setShowReviewModal(response.map(() => false));
         }
       }
+      setFinishedBookingsLoading(false);
     };
     fetchFinishedBookings();
   }, []);
@@ -99,7 +81,7 @@ const ManageBooking = () => {
     let hour = date.getHours();
     const ampm = hour >= 12 ? "PM" : "AM";
     hour = hour % 12;
-    hour = hour ? hour : 12; // the hour '0' should be '12'
+    hour = hour ? hour : 12;
     const minute = date.getMinutes();
     const paddedMinute = minute < 10 ? "0" + minute : minute;
 
@@ -117,8 +99,12 @@ const ManageBooking = () => {
       >
         <div className="w-1/2 pr-2 my-8 overflow-y-auto">
           <h1 className="text-2xl font-bold mb-4">Current Bookings</h1>
-          {user.bookings.length > 0 ? (
-            user.bookings.map((booking, index) => (
+          {bookingsLoading ? (
+            <div className="border rounded p-4 mb-4">
+              <Loading width={100} height={100} />
+            </div>
+          ) : bookings.length > 0 ? (
+            bookings.map((booking, index) => (
               <Card key={index} className="border rounded p-4 mb-4">
                 <div className="flex justify-between">
                   <span className="font-bold">Start Time:</span>
@@ -165,7 +151,11 @@ const ManageBooking = () => {
 
         <div className="w-1/2 pl-2 my-8 overflow-y-auto">
           <h1 className="text-2xl font-bold mb-4">Finished Bookings</h1>
-          {finishedBookings.length > 0 ? (
+          {finishedBookingsLoading ? (
+            <div className="border rounded p-4 mb-4">
+              <Loading width={100} height={100} />
+            </div>
+          ) : finishedBookings.length > 0 ? (
             finishedBookings.map((booking, index) => (
               <Card key={index} className="border rounded p-4 mb-4">
                 <div className="flex justify-between">
