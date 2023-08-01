@@ -16,14 +16,14 @@ const EditBookingModal = ({
   const [startTime, setStartTime] = useState(
     new Date(booking.start_time).getHours()
   );
-  const [endTime, setEndTime] = useState(
-    new Date(booking.end_time).getHours()
-  );
+  const [endTime, setEndTime] = useState(new Date(booking.end_time).getHours());
   const [price, setPrice] = useState(booking.price);
 
   const [startDate, setStartDate] = useState(new Date(booking.start_time));
   const [endDate, setEndDate] = useState(new Date(booking.end_time));
-  const [minStartTime, setMinStartTime] = useState(startDate.getDate() == new Date().getDate() ? getNextHour() : 0);
+  const [minStartTime, setMinStartTime] = useState(
+    startDate.getDate() == new Date().getDate() ? getNextHour() : 0
+  );
   const [minEndTime, setMinEndTime] = useState(
     minStartTime + 1 > 23 ? 0 : minStartTime + 1
   );
@@ -50,7 +50,6 @@ const EditBookingModal = ({
     }
 
     calculatePrice();
-
   }, [startDate, endDate]);
 
   useEffect(() => {
@@ -83,14 +82,16 @@ const EditBookingModal = ({
   };
 
   const calculatePrice = () => {
-    const days = (new Date(booking.end_time) - new Date(booking.start_time)) / (1000 * 60 * 60 * 24);
+    const days =
+      (new Date(booking.end_time) - new Date(booking.start_time)) /
+      (1000 * 60 * 60 * 24);
     const pricePerDay = booking.price / days;
 
     const newDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
     const newPrice = newDays * pricePerDay;
 
     setPrice(newPrice);
-  }
+  };
 
   const handleEditBooking = async () => {
     // start date and start time in iso format
@@ -104,7 +105,7 @@ const EditBookingModal = ({
       price: price,
       start_time: start.toISOString(),
       end_time: end.toISOString(),
-    }
+    };
     const response = await makeRequest(`/bookings/${booking._id}`, "PUT", body);
 
     if (response.error) {
@@ -161,26 +162,28 @@ const EditBookingModal = ({
               </div>
             </div>
             <div className="flex justify-between space-x-4 mb-4 pr-4">
-            <div className="w-1/2">
-              <TimePicker
-                minTime={minStartTime}
-                maxTime={23}
-                value={startTime}
-                onChange={setStartTime}
-              />
+              <div className="w-1/2">
+                <TimePicker
+                  minTime={minStartTime}
+                  maxTime={23}
+                  value={startTime}
+                  onChange={setStartTime}
+                />
+              </div>
+              <div className="w-1/2">
+                <TimePicker
+                  minTime={minEndTime}
+                  maxTime={23}
+                  value={endTime}
+                  onChange={setEndTime}
+                />
+              </div>
             </div>
-            <div className="w-1/2">
-              <TimePicker
-                minTime={minEndTime}
-                maxTime={23}
-                value={endTime}
-                onChange={setEndTime}
-              />
+            <div>
+              <h3 className="font-bold text-sm text-gray-500 mb-1">
+                Total Price: ${price}
+              </h3>
             </div>
-          </div>
-          <div>
-            <h3 className="font-bold text-sm text-gray-500 mb-1">Total Price: ${price}</h3>
-          </div>
           </div>
         </Modal.Body>
         <Modal.Footer>

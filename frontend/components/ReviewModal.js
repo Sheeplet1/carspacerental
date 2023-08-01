@@ -1,15 +1,11 @@
 "use client";
 
-import { Button, Modal} from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useUser } from "@contexts/UserProvider";
 import { useState } from "react";
 
-const ReviewModal = ({
-  showReviewModal,
-  setShowReviewModal,
-  booking,
-}) => {
+const ReviewModal = ({ showReviewModal, setShowReviewModal, booking }) => {
   const { fetchUser } = useUser();
   const [review, setReview] = useState("");
   const [rating, setRating] = useState("");
@@ -18,7 +14,7 @@ const ReviewModal = ({
     const body = {
       rating: parseInt(rating),
       message: review,
-    }
+    };
 
     const response = await fetch(`/bookings/${booking.id}/review`, body);
     if (response.error) {
@@ -37,17 +33,14 @@ const ReviewModal = ({
       >
         Leave a Review
       </Button>
-      <Modal
-        show={showReviewModal}
-        onClose={() => setShowReviewModal(false)}
-      >
+      <Modal show={showReviewModal} onClose={() => setShowReviewModal(false)}>
         <Modal.Header className="bg-custom-orange text-white">
-            Leave a Review
+          Leave a Review
         </Modal.Header>
         <Modal.Body>
           <div className="flex flex-col space-y-4">
             <div>
-            <h3 className="font-bold text-sm text-gray-500 mb-1">Review</h3>
+              <h3 className="font-bold text-sm text-gray-500 mb-1">Review</h3>
               <input
                 type="text"
                 placeholder="Review"
@@ -57,23 +50,30 @@ const ReviewModal = ({
               />
             </div>
             <div>
-            <h3 className="font-bold text-sm text-gray-500 mb-1">Rating</h3>
+              <h3 className="font-bold text-sm text-gray-500 mb-1">Rating</h3>
               <input
                 type="text"
                 placeholder="Rating"
                 value={rating}
                 onChange={(e) => {
                   const val = e.target.value;
-                  if (val === "" || (/^\d*$/.test(val) && parseInt(val) <= 5 && parseInt(val) >= 0)) {
+                  if (
+                    val === "" ||
+                    (/^\d*$/.test(val) &&
+                      parseInt(val) <= 5 &&
+                      parseInt(val) >= 0)
+                  ) {
                     setRating(val);
                   }
                 }}
                 maxLength={1}
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
-              <p className="text-sm text-gray-500">Rating must be between 0 and 5</p>
+              <p className="text-sm text-gray-500">
+                Rating must be between 0 and 5
+              </p>
             </div>
-          </div>  
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex flex-row justify-end space-x-4">

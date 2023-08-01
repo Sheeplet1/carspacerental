@@ -65,7 +65,7 @@ const ManageBooking = () => {
   const [showEditBookingModal, setShowEditBookingModal] = useState(
     user.bookings.map(() => false)
   );
-  const [showReviewModal, setShowReviewModal] = useState([false, false])
+  const [showReviewModal, setShowReviewModal] = useState([false, false]);
 
   useEffect(() => {
     setShowEditBookingModal(user.bookings.map(() => false));
@@ -83,7 +83,7 @@ const ManageBooking = () => {
       } else {
         if (response.length > 0) {
           setFinishedBookings(response);
-          setShowReviewModal(response.map(() => false))
+          setShowReviewModal(response.map(() => false));
         }
       }
     };
