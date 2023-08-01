@@ -64,6 +64,9 @@ def test_successful_pay(client, mock_db, user_token):
         'balance': 85
     }
     
+    # check provider's inbox for payment received email
+    assert len(provider_acc['inbox']) == 1
+    
     # check payee's transaction history for correct transaction
     transaction = mock_db['UserAccount'].find_one({
         '_id': payee
@@ -76,6 +79,11 @@ def test_successful_pay(client, mock_db, user_token):
         'amount': -100,
         'balance': 0
     }
+    
+    # check payee's inbox for payment receipt
+    payee = mock_db['UserAccount'].find_one({'_id': payee})
+    receipt = payee['inbox'][-1]
+    assert receipt['subject'] == f"Payment Receipt #{b_id}"
     
     # assert bill was added to the bookings[bills]
     assert len(mock_db['Bookings'].find_one({'_id': booking['_id']})['bills']) == 1

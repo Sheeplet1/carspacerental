@@ -39,7 +39,16 @@ LISTING_STUB = {
     "_id": TEST_LID,
     "provider": TEST_UID,
     "address": {
-        "street": "unsw"
+        "formatted_address": "123 Pitt Street, Sydney NSW 2000, Australia",
+        "streetNumber": "123",
+        "street": "Pitt Street",
+        "city": "Sydney",
+        "state": "NSW",
+        "postcode": "2000",
+        "country": "Australia",
+        "lat": -33.8688197,
+        "lng": 151.2092955,
+        "place_id": "ChIJP3Sa8ziYEmsRUKgyFmh9AQM"
     },
     "hourly_rate": 4.2,
     "monthly_rate": 100,
@@ -58,7 +67,7 @@ LISTING_STUB = {
         "end_time": "time",
         "available_days": [],
     },
-    "rating": None,
+    "rating": 0,
 }
 
 BOOKING_STUB = {
@@ -66,7 +75,7 @@ BOOKING_STUB = {
     "listing_id": TEST_LID,
     "start_time": TEST_START,
     "end_time": TEST_END,
-    "price": 100,
+    "price": 100.0,
     "recurring": '',
 }
 

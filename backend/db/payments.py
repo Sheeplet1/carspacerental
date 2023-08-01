@@ -1,6 +1,7 @@
 from typing import Optional
 from bson import ObjectId
-from ..db import db
+from ..db import db, inbox, user as user_db, listings, bookings
+from .. import helpers
 from datetime import datetime as dt
 
 ''' cx_pay
@@ -13,9 +14,9 @@ def cx_pay(bill_id: ObjectId, payee_id: ObjectId, use_wallet: bool) -> Optional[
     
     database = db.get_database()
     bill = database['Bills'].find_one({'_id': bill_id })
-    booking = database['Bookings'].find_one({'_id': bill['booking_id']})
-    listing = database['Listings'].find_one({'_id': booking['listing_id']})
-    payee = database['UserAccount'].find_one({'_id': payee_id})
+    booking = bookings.get(bill['booking_id'])
+    listing = listings.get(booking['listing_id'])
+    payee = user_db.get_user(payee_id)
     
     # edge case: if bank acc was not initialised in database yet
     bank_db = database['BankAccount']
@@ -32,7 +33,6 @@ def cx_pay(bill_id: ObjectId, payee_id: ObjectId, use_wallet: bool) -> Optional[
     # user chooses to deduct from wallet - check and deduct amt from wallet
     # otherwise direct debited, mock payment, so skip.
     if payee['wallet'] >= booking['price'] and use_wallet:
-        print("using wallet")
         database['UserAccount'].update_one(
             { '_id': payee_id },
             { "$inc": { "wallet": -booking['price'] }}
@@ -93,6 +93,30 @@ def cx_pay(bill_id: ObjectId, payee_id: ObjectId, use_wallet: bool) -> Optional[
             {'$set': {'paid': True}}
         )
         
+        # payee receives receipt in inbox
+        receipt = helpers.payment_receipt({
+            'recipient_id': payee_id,
+            'email': payee['email'],
+            'payment_id': bill_id,
+            'first_name': payee['first_name'],
+            'payment_date': dt.now(),
+            'price': -booking['price'],
+            'payment_status': True
+        })
+        inbox.create(receipt)
+        
+        # provider receives notification of payment from booking
+        provider = user_db.get_user(listing['provider'])
+        receipt = helpers.payment_received({
+            'recipient_id': provider['_id'],
+            'email': provider['email'],
+            'payment_id': ObjectId(),
+            'first_name': provider['first_name'],
+            'payment_date': dt.now(),
+            'price': received_amt,
+            'payment_status': 'Transferred'
+        })
+        
         return { 'amount_received': booking['price'] - service_fee }
     else:
         # TODO: Add recurring payments consideration here.
@@ -104,7 +128,7 @@ def cx_pay(bill_id: ObjectId, payee_id: ObjectId, use_wallet: bool) -> Optional[
 def cx_withdraw(user_id: ObjectId, amt: float) -> bool:
     user_id = ObjectId(user_id)
     database = db.get_database()
-    user = database['UserAccount'].find_one({ '_id': user_id })
+    user = user_db.get_user(user_id)
     
     if user['wallet'] < amt:
         # user cannot withdraw this amount from their wallet, shouldn't make it
@@ -122,6 +146,17 @@ def cx_withdraw(user_id: ObjectId, amt: float) -> bool:
         'balance': database['UserAccount'].find_one( {'_id': user_id } )['wallet']
     })
     
+    receipt = helpers.payment_receipt({
+        'recipient_id': user['_id'],
+        'email': user['email'],
+        'payment_id': ObjectId(),
+        'first_name': user['first_name'],
+        'payment_date': dt.now(),
+        'price': -amt,
+        'payment_status': True
+    })
+    inbox.create(receipt)
+    
     # confirmation that money has been withdrawed
     return True
 
@@ -131,6 +166,7 @@ def cx_withdraw(user_id: ObjectId, amt: float) -> bool:
 def cx_topup(user_id: ObjectId, amt: float) -> None:
     user_id = ObjectId(user_id)
     database = db.get_database()
+    user = user_db.get_user(user_id)
     
     database['UserAccount'].update_one(
         { '_id': user_id },
@@ -142,6 +178,18 @@ def cx_topup(user_id: ObjectId, amt: float) -> None:
         'amount': amt,
         'balance': database['UserAccount'].find_one( {'_id': user_id } )['wallet']
     })
+    
+    # put payment receipt into user inbox
+    receipt = helpers.payment_receipt({
+        'recipient_id': user['_id'],
+        'email': user['email'],
+        'payment_id': ObjectId(),
+        'first_name': user['first_name'],
+        'payment_date': dt.now(),
+        'price': amt,
+        'payment_status': True
+    })
+    inbox.create(receipt)
     
 ''' add_transaction
     Adds transaction (withdrawal, payment, topup) to user's recent transactions
@@ -163,7 +211,7 @@ def add_transaction(user_id: ObjectId, data: dict) -> None:
         { '_id': user_id },
         { '$push': { 'recent_transactions': document }}
     )
-    
+        
 ''' cx_bill
     Creates bill for customer to pay for
 '''

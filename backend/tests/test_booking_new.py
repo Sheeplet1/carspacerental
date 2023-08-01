@@ -1,5 +1,7 @@
 from ..tests import conftest
 from .. import helpers
+import textwrap
+from datetime import datetime as dt
 
 def test_successful_booking(client, mock_db, user_token):
     """
@@ -8,11 +10,12 @@ def test_successful_booking(client, mock_db, user_token):
     THEN check that a '200' (OK) status code is returned and booking is added
          to the user's acc and the listing
     """
+    payee = mock_db['UserAccount'].find_one()
     # register Provider and insert listing into mock_db
-    user_stub = conftest.USER_STUB.copy()
-    user_stub['listings'] = [conftest.TEST_LID]
+    provider = conftest.USER_STUB.copy()
+    provider['listings'] = [conftest.TEST_LID]
 
-    mock_db['UserAccount'].insert_one(user_stub)
+    mock_db['UserAccount'].insert_one(provider)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
     
     stub = conftest.BOOKING_STUB.copy()
@@ -33,10 +36,71 @@ def test_successful_booking(client, mock_db, user_token):
     assert booking["price"] == 100
 
     # check booking was added to user account
-    acc = mock_db['UserAccount'].find_one()
+    acc = mock_db['UserAccount'].find_one( {'_id': payee['_id'] })
     assert acc is not None
     assert acc['_id'] == booking['consumer']
     assert acc['bookings'] == [id]
+    
+    # Check consumer's inbox contains confirmation email
+    address = conftest.LISTING_STUB['address']
+    short_address = f"{address['streetNumber']} {address['street']}"
+    message = acc['inbox'][0]
+    message.pop('_id')
+    message.pop('sender')
+    message.pop('timestamp')
+    expected_message = {
+        'recipient_id': payee['_id'],
+        'recipient': payee['email'],
+        'subject': f"Booking Confirmation @ {short_address}",
+        'body': textwrap.dedent(f"""Dear {payee['first_name']},
+        
+            We are pleased to inform you that your parking space booking has been confirmed!
+                  
+            Details:
+            - Booking ID: {booking['_id']}
+            - Address: {address['formatted_address']}
+            - Start Time: {dt.fromisoformat(booking['start_time'])}
+            - End Time: {dt.fromisoformat(booking['end_time'])}
+            - Total Price: {booking['price']}
+            
+            Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
+
+            Best regards, 
+            SFCars Team"""
+        )
+    }
+    assert message == expected_message
+    
+    # Check provider's inbox contains notification email
+    provider = mock_db['UserAccount'].find_one( {'_id': provider['_id']} )
+    msg = provider['inbox'][0]
+    msg.pop('_id')
+    msg.pop("sender")
+    msg.pop('timestamp')
+    expected_msg = {
+        'recipient_id': provider['_id'],
+        'recipient': provider['email'],
+        'subject': 'Your listing has been booked!',
+        'body': textwrap.dedent(f"""Dear {provider['first_name']},
+            
+            We are pleased to inform you that your listing @ {address['streetNumber']} {address['street']} has been booked!
+            
+            Details:
+            - Listing: {booking['listing_id']},
+            - Address: {address['formatted_address']},
+            - Start Time: {dt.fromisoformat(booking['start_time'])},
+            - End Time: {dt.fromisoformat(booking['end_time'])},
+            - Price: {booking['price']}
+            
+            Once the booking has been paid, payment will be transferred into your wallet.
+            
+            Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
+
+            Best regards,
+            SFCars Team"""
+        )
+    }
+    assert msg == expected_msg
 
 def test_overlapping_bookings(client, mock_db, user_token):
     """

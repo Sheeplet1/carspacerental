@@ -38,6 +38,9 @@ def test_successful_withdraw(client, mock_db, user_token):
         'balance': 0
     }
     
+    # check payee's inbox for receipt
+    assert len(payee['inbox']) == 1
+    
 def test_unsuccessful_withdraw(client, mock_db, user_token):
     """
     GIVEN a Flask application configured for testing

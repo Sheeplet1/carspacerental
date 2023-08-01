@@ -1,114 +1,7 @@
 from bson import ObjectId
 from ..tests import conftest
-
-def test_new_message(client, user_token, mock_db):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the ('/inbox/new') is posted to (POST)
-    THEN check that a '200' (OK) status code is returned
-    """
-    id = mock_db['UserAccount'].find_one()['_id']
-    user_stub = conftest.USER_STUB.copy()
-    mock_db['UserAccount'].insert_one(user_stub)
-    
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': user_stub['_id'],
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.OK
-    
-    # checking that message was pushed into recipient's inbox
-    user = mock_db['UserAccount'].find_one({'_id': user_stub['_id']})
-
-    message = user['inbox'][0]
-    message.pop('_id')
-    message.pop('timestamp')
-
-    assert message == {
-        'sender': ObjectId(id),
-        'recipient': ObjectId(user_stub['_id']),
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    }
-    
-def test_invalid_recipient(client, user_token, mock_db):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the ('/inbox/new') is posted to with an invalid recipient (POST)
-    THEN check that a '400' (BAD_REQUEST) status code is returned
-    """
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': 'invalid!',
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.BAD_REQUEST
-    assert resp.json == {
-        'error': 'Valid recipient is required'
-    }
-    
-def test_invalid_subject(client, user_token):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the ('/inbox/new') is posted to with an invalid subject line (POST)
-    THEN check that a '400' (BAD_REQUEST) status code is returned
-    """
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': conftest.TEST_UID,
-        'subject': '',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.BAD_REQUEST
-    assert resp.json == {
-        'error': 'Subject line is required'
-    }
-    
-def test_invalid_body(client, user_token):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the ('/inbox/new') is posted to with an invalid body (POST)
-    THEN check that a '400' (BAD_REQUEST) status code is returned
-    """
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': conftest.TEST_UID,
-        'subject': 'Send help',
-        'body': ''
-    })
-    assert resp.status_code == conftest.BAD_REQUEST
-    assert resp.json == {
-        'error': 'Message body is required'
-    }
-    
-def test_missing_subject(client, user_token):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the ('/inbox/new') is posted to with an missing subject line (POST)
-    THEN check that a '400' (BAD_REQUEST) status code is returned
-    """
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': conftest.TEST_UID,
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.BAD_REQUEST
-    assert resp.json == {
-        'error': 'Subject line is required'
-    }
-
-def test_missing_body(client, user_token):
-    """
-    GIVEN a Flask application configured for testing
-    WHEN the ('/inbox/new') is posted to with an invalid body (POST)
-    THEN check that a '400' (BAD_REQUEST) status code is returned
-    """
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': conftest.TEST_UID,
-        'subject': 'Send help',
-    })
-    assert resp.status_code == conftest.BAD_REQUEST
-    assert resp.json == {
-        'error': 'Message body is required'
-    }
+import textwrap
+from datetime import datetime as dt
 
 ################################### SPECIFIC ###################################
 
@@ -118,46 +11,58 @@ def test_get_specific_message(client, mock_db, user_token):
     WHEN the ('/inbox/<message_id>') is requested for (GET)
     THEN check that a '200' (OK) status code is returned
     """
-    id = mock_db['UserAccount'].find_one()['_id']
-    user_stub = conftest.USER_STUB.copy()
-    mock_db['UserAccount'].insert_one(user_stub)
-    
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': user_stub['_id'],
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.OK
-    
-    # checking that message was pushed into recipient's inbox
-    user = mock_db['UserAccount'].find_one({'_id': user_stub['_id']})
+    payee = mock_db['UserAccount'].find_one()
+    # register Provider and insert listing into mock_db
+    provider = conftest.USER_STUB.copy()
+    provider['listings'] = [conftest.TEST_LID]
 
-    message = user['inbox'][0]
-    message_id = message.pop('_id')
-    message.pop('timestamp')
-
-    assert message == {
-        'sender': id,
-        'recipient': ObjectId(user_stub['_id']),
-        'subject': 'Testing Email',
-        'body': 'Send help'
+    mock_db['UserAccount'].insert_one(provider)
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
+    
+    stub = conftest.BOOKING_STUB.copy()
+    
+    # create booking which will put a message into the inbox
+    response = client.post('/listings/book', headers=user_token, json=stub)
+    assert response.status_code == conftest.OK
+    booking = mock_db['Bookings'].find_one()
+    assert response.json == {
+        'booking_id': str(booking['_id'])
     }
     
-    resp = client.get(f'/inbox/{message_id}', headers=user_token, json={
-        'user_id': user_stub['_id'],
-        'message_id': message_id
-    })
+    # get the message
+    acc = mock_db['UserAccount'].find_one( {'_id': payee['_id'] })
+    message = acc['inbox'][0]
+    
+    resp = client.get(f"/inbox/{message['_id']}", headers=user_token, json={})
     assert resp.status_code == conftest.OK
     
-    # get message and assert data
     msg = resp.json.copy()
     msg.pop('timestamp')
+    
+    address = conftest.LISTING_STUB['address']
+    short_address = f"{address['streetNumber']} {address['street']}"
     assert msg == {
-        '_id': str(message_id),
-        'sender': str(id),
-        'recipient': str(user_stub['_id']),
-        'subject': 'Testing Email',
-        'body': 'Send help'
+        '_id': str(message['_id']),
+        'sender': 'noreply@sfcars.com.au',
+        'recipient_id': str(payee['_id']),
+        'recipient': payee['email'],
+        'subject': f'Booking Confirmation @ {short_address}',
+        'body': textwrap.dedent(f"""Dear {payee['first_name']},
+        
+            We are pleased to inform you that your parking space booking has been confirmed!
+                  
+            Details:
+            - Booking ID: {booking['_id']}
+            - Address: {address['formatted_address']}
+            - Start Time: {dt.fromisoformat(booking['start_time'])}
+            - End Time: {dt.fromisoformat(booking['end_time'])}
+            - Total Price: {booking['price']}
+            
+            Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
+
+            Best regards, 
+            SFCars Team"""
+        )
     }
     
 def test_delete_specific_message(client, mock_db, user_token):
@@ -166,58 +71,66 @@ def test_delete_specific_message(client, mock_db, user_token):
     WHEN the ('/inbox/<message_id>') is deleted (DELETE)
     THEN check that a '200' (OK) status code is returned
     """
-    id = mock_db['UserAccount'].find_one()['_id']
-    user_stub = conftest.USER_STUB.copy()
-    mock_db['UserAccount'].insert_one(user_stub)
-    
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': user_stub['_id'],
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.OK
-    
-    # checking that message was pushed into recipient's inbox
-    user = mock_db['UserAccount'].find_one({'_id': user_stub['_id']})
+    payee = mock_db['UserAccount'].find_one()
+    # register Provider and insert listing into mock_db
+    provider = conftest.USER_STUB.copy()
+    provider['listings'] = [conftest.TEST_LID]
 
-    message = user['inbox'][0]
-    message_id = message.pop('_id')
-    message.pop('timestamp')
-
-    assert message == {
-        'sender': id,
-        'recipient': ObjectId(user_stub['_id']),
-        'subject': 'Testing Email',
-        'body': 'Send help'
+    mock_db['UserAccount'].insert_one(provider)
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
+    
+    stub = conftest.BOOKING_STUB.copy()
+    
+    # create booking which will put a message into the inbox
+    response = client.post('/listings/book', headers=user_token, json=stub)
+    assert response.status_code == conftest.OK
+    booking = mock_db['Bookings'].find_one()
+    assert response.json == {
+        'booking_id': str(booking['_id'])
     }
     
-    resp = client.get(f'/inbox/{message_id}', headers=user_token, json={
-        'user_id': user_stub['_id'],
-        'message_id': message_id
-    })
-    assert resp.status_code == conftest.OK
+    # get the message
+    acc = mock_db['UserAccount'].find_one( {'_id': payee['_id'] })
+    message = acc['inbox'][0]
     
-    # get message and assert data
+    resp = client.get(f"/inbox/{message['_id']}", headers=user_token, json={})
+    assert resp.status_code == conftest.OK
     msg = resp.json.copy()
     msg.pop('timestamp')
+    
+    address = conftest.LISTING_STUB['address']
+    short_address = f"{address['streetNumber']} {address['street']}"
     assert msg == {
-        '_id': str(message_id),
-        'sender': str(id),
-        'recipient': str(user_stub['_id']),
-        'subject': 'Testing Email',
-        'body': 'Send help'
+        '_id': str(message['_id']),
+        'sender': 'noreply@sfcars.com.au',
+        'recipient_id': str(payee['_id']),
+        'recipient': payee['email'],
+        'subject': f'Booking Confirmation @ {short_address}',
+        'body': textwrap.dedent(f"""Dear {payee['first_name']},
+        
+            We are pleased to inform you that your parking space booking has been confirmed!
+                  
+            Details:
+            - Booking ID: {booking['_id']}
+            - Address: {address['formatted_address']}
+            - Start Time: {dt.fromisoformat(booking['start_time'])}
+            - End Time: {dt.fromisoformat(booking['end_time'])}
+            - Total Price: {booking['price']}
+            
+            Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
+
+            Best regards, 
+            SFCars Team"""
+        )
     }
     
     # delete inbox message
-    resp = client.delete(f'/inbox/{message_id}', headers=user_token, json={
-        'user_id': user_stub['_id'],
-        'message_id': message_id
-    })
+    resp = client.delete(f"/inbox/{message['_id']}", headers=user_token, json={})
     assert resp.status_code == conftest.OK
     
     # check inbox and assert message is not there anymore
-    user = mock_db['UserAccount'].find_one({'_id': user_stub['_id']})
-    assert user['inbox'] == []
+    payee = mock_db['UserAccount'].find_one({'_id': payee['_id']})
+    assert payee['inbox'] == []
     
 def test_specific_invalid_user(client, mock_db, user_token):
     """
@@ -225,85 +138,90 @@ def test_specific_invalid_user(client, mock_db, user_token):
     WHEN the ('/inbox/<message_id>') is (GET) with an invalid user_id
     THEN check that a '200' (OK) status code is returned
     """
-    user_stub = conftest.USER_STUB.copy()
-    mock_db['UserAccount'].insert_one(user_stub)
-    
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': user_stub['_id'],
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.OK
-    
-    # checking that message was pushed into recipient's inbox
-    user = mock_db['UserAccount'].find_one({'_id': user_stub['_id']})
+    payee = mock_db['UserAccount'].find_one()
+    # register Provider and insert listing into mock_db
+    provider = conftest.USER_STUB.copy()
+    provider['listings'] = [conftest.TEST_LID]
 
-    message = user['inbox'][0]
-    message_id = message.pop('_id')
-    message.pop('timestamp')
+    mock_db['UserAccount'].insert_one(provider)
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
     
-    resp = client.get(f'/inbox/{message_id}', headers=user_token, json={
-        'user_id': 'invalid!',
-        'message_id': message_id
-    })
+    stub = conftest.BOOKING_STUB.copy()
+    
+    # create booking which will put a message into the inbox
+    response = client.post('/listings/book', headers=user_token, json=stub)
+    assert response.status_code == conftest.OK
+    booking = mock_db['Bookings'].find_one()
+    assert response.json == {
+        'booking_id': str(booking['_id'])
+    }
+    
+    # Create another user which cannot open the inbox message in user_token
+    register_data = {
+        "email": "invalid@email.com",
+        "password": conftest.TEST_PW,
+        "first_name": conftest.TEST_FIRST_NAME,
+        "last_name": conftest.TEST_LAST_NAME,
+        "phone_number": "0400023646",
+    }
+
+    resp = client.post('/auth/register', json=register_data)
+    token_head = {
+       "Authorization": "Bearer " + resp.get_json()["token"]
+    }
+    
+    # get the message id
+    acc = mock_db['UserAccount'].find_one( {'_id': payee['_id'] })
+    message = acc['inbox'][0]
+    
+    # Change token to the new user, should return bad_request since message
+    # does not exist in this user's inbox
+    resp = client.get(f"/inbox/{message['_id']}", headers=token_head, json={})
     assert resp.status_code == conftest.BAD_REQUEST
     assert resp.json == {
-        'error': 'Invalid user id'
+        'error': 'Invalid message'
     }
     
 def test_specific_missing_user(client, mock_db, user_token):
     """
     GIVEN a Flask application configured for testing
-    WHEN the ('/inbox/<message_id>') is (GET) with an missing user_id
-    THEN check that a '200' (OK) status code is returned
+    WHEN the ('/inbox/<message_id>') is (GET) with an missing token
+    THEN check that a '401' (UNAUTHORIZED) status code is returned
     """
-    user_stub = conftest.USER_STUB.copy()
-    mock_db['UserAccount'].insert_one(user_stub)
-    
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': user_stub['_id'],
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.OK
-    
-    # checking that message was pushed into recipient's inbox
-    user = mock_db['UserAccount'].find_one({'_id': user_stub['_id']})
+    payee = mock_db['UserAccount'].find_one()
+    # register Provider and insert listing into mock_db
+    provider = conftest.USER_STUB.copy()
+    provider['listings'] = [conftest.TEST_LID]
 
-    message = user['inbox'][0]
-    message_id = message.pop('_id')
-    message.pop('timestamp')
+    mock_db['UserAccount'].insert_one(provider)
+    mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
     
-    resp = client.get(f'/inbox/{message_id}', headers=user_token, json={
-        'message_id': message_id
-    })
-    assert resp.status_code == conftest.BAD_REQUEST
-    assert resp.json == {
-        'error': 'Invalid user id'
+    stub = conftest.BOOKING_STUB.copy()
+    
+    # create booking which will put a message into the inbox
+    response = client.post('/listings/book', headers=user_token, json=stub)
+    assert response.status_code == conftest.OK
+    booking = mock_db['Bookings'].find_one()
+    assert response.json == {
+        'booking_id': str(booking['_id'])
     }
+    
+    # get the message id
+    acc = mock_db['UserAccount'].find_one( {'_id': payee['_id'] })
+    message = acc['inbox'][0]
+    
+    # Change token to missing
+    resp = client.get(f"/inbox/{message['_id']}", headers='', json={})
+    assert resp.status_code == conftest.UNAUTHORIZED
 
-def test_specific_invalid_message(client, mock_db, user_token):
+def test_specific_invalid_message(client, user_token):
     """
     GIVEN a Flask application configured for testing
     WHEN the ('/inbox/<message_id>') is (GET) with an missing message_id
-    THEN check that a '200' (OK) status code is returned
-    """
-    user_stub = conftest.USER_STUB.copy()
-    mock_db['UserAccount'].insert_one(user_stub)
+    THEN check that a '400' (BAD_REQUEST) status code is returned
+    """            
+    resp = client.get('/inbox/invalid', headers=user_token, json={})
     
-    resp = client.post('/inbox/new', headers=user_token, json={
-        'recipient': user_stub['_id'],
-        'subject': 'Testing Email',
-        'body': 'Send help'
-    })
-    assert resp.status_code == conftest.OK
-    
-    # checking that message was pushed into recipient's inbox
-    user = mock_db['UserAccount'].find_one({'_id': user_stub['_id']})
-    
-    resp = client.get('/inbox/invalid', headers=user_token, json={
-        'user_id': user_stub['_id'],
-    })
     assert resp.status_code == conftest.BAD_REQUEST
     assert resp.json == {
         'error': 'Invalid message'

@@ -53,6 +53,8 @@ def test_successful_topup(client, mock_db, user_token):
         'balance': 1500
     }
     
+    assert len(payee['inbox']) == 2
+    
     
 def test_invalid_amt(client, mock_db, user_token):
     """

@@ -38,8 +38,14 @@ def new(user_id: ObjectId, data: dict) -> ObjectId:
     return id
 
 def get(listing_id: ObjectId) -> Optional[dict]:
+    listing_id = ObjectId(listing_id)
     listings = db.get_database()["Listings"]
     return listings.find_one({ "_id": listing_id })
+
+def get_all(user_id: ObjectId) -> Optional[dict]:
+    user_id = ObjectId(user_id)
+    listings = db.get_database()['Listings']
+    return listings.find({'provider': user_id})
 
 def update_listing(listing_id: ObjectId, body: dict) -> None:
     listings = db.get_database()["Listings"]
