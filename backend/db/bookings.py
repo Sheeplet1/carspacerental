@@ -33,13 +33,12 @@ def new(data: dict) -> ObjectId:
         {'$push': {'bookings': booking_id}},
         return_document=ReturnDocument.AFTER
     )
-    
+
     # add booking confirmation message to user's inbox
     start_time = dt.fromisoformat(data['start_time'])
     end_time = dt.fromisoformat(data['end_time'])
     listing = listings.get(data['listing_id'])
 
-    print(listing)
     consumer_message = helpers.email_cx_booking_confirmation({
         'recipient_id': consumer['_id'],
         'email': consumer['email'],
@@ -51,7 +50,7 @@ def new(data: dict) -> ObjectId:
         'price': data['price']
     })
     inbox.create(consumer_message)
-    
+
     # add booking notification to provider's inbox
     provider = user.get_user(listing['provider'])
     provider_message = helpers.email_provider_booking({
@@ -114,7 +113,7 @@ def cancel(booking_id: ObjectId, data: dict) -> None:
             {'_id': booking_id},
             {'$unset': {'child': 1}}
         )
-        
+
     consumer = user.get_user(consumer)
     listing = listings.get(booking['listing_id'])
     # Email the consumer to confirm their cancellation of the booking
@@ -125,7 +124,7 @@ def cancel(booking_id: ObjectId, data: dict) -> None:
         'first_name': consumer['first_name'],
     })
     inbox.create(message)
-    
+
     # Email the provider to notify them that the booking has been cancelled
     provider = user.get_user(listing['provider'])
     msg = helpers.email_provider_cancel({
@@ -173,7 +172,7 @@ def update(booking_id: ObjectId, body: dict) -> None:
         dup_id = create_duplicate(booking_id, body)
         return [exc_id, dup_id]
     # TODO: Add inbox message for creation of exclusion
-    
+
 ''' create_duplicate
     Given the booking_id of the original recurring booking and the start and end
     times for the new booking.

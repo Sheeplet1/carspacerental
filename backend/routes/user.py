@@ -101,7 +101,7 @@ def analytics():
 
     # Bookings Per Listing (Total)
     total_bookings = [{
-        "listing_id": listing_ids[idx],
+        "listing_id": listings_db.get(listing_ids[idx])["address"],
         "bookings": len(listing)
     } for idx, listing in enumerate(listing_bookings)]
 
