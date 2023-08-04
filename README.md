@@ -42,7 +42,7 @@ The project uses Docker Compose volumes to enable hot reloading. Any changes you
 To stop the Docker containers, press `CTRL+C` in the terminal where you ran `docker-compose up`. If that doesn't work, you can stop the containers with:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ## ⚙️ Built With
