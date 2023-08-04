@@ -5,4 +5,4 @@ CONNECTION_STRING = "mongodb+srv://z5320020:z5320020@comp3900-testing-enviro.h7v
 def get_database():
     client = pymongo.MongoClient(CONNECTION_STRING)
     return client["comp3900"]
-    
+

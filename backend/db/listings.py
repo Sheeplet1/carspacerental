@@ -55,7 +55,7 @@ def remove_listing(listing_id: ObjectId) -> None:
     listings = db.get_database()["Listings"]
 
     # delete listing from user's profile
-    listing = listings.find_one({'_id': listing_id})
+    listing = get(listing_id)
     user_id = ObjectId(listing['provider'])
     db.get_database()['UserAccount'].find_one_and_update(
         {'_id': user_id},

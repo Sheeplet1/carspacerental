@@ -21,21 +21,18 @@ def new(user_id: ObjectId, booking_id: ObjectId, data: dict) -> ObjectId:
         "timestamp": datetime.now().isoformat(),
     }
 
-    collection = db.get_database()["Reviews"]
-    collection.insert_one(review_doc)
+    reviews = db.get_database()["Reviews"]
+    reviews.insert_one(review_doc)
 
     all_reviews = get_all(listing_id)
     listing_rating = sum(review["rating"] for review in all_reviews) / len(all_reviews)
-    collection = db.get_database()["Listings"]
-    collection.update_one({ "_id": listing_id }, { "$set": { "rating": listing_rating } })
+    set_listing_rating(listing_id, listing_rating)
 
-    provider_id = collection.find_one({ "_id": listing_id })["provider"]
+    provider_id = listings.get(listing_id)["provider"]
 
     provider_listings = list(listings.get_all(provider_id))
     user_rating = sum(listing["rating"] for listing in provider_listings) / len(provider_listings)
-
-    collection = db.get_database()["UserAccount"]
-    collection.update_one({ "_id": provider_id }, { "$set": { "rating": user_rating } })
+    set_user_rating(provider_id, user_rating)
 
     # notify provider of review
     provider = user.get_user(provider_id)
@@ -50,7 +47,7 @@ def new(user_id: ObjectId, booking_id: ObjectId, data: dict) -> ObjectId:
         'message': data['message']
     })
     inbox.create(notification)
-    
+
     return id
 
 def get(booking_id: ObjectId) -> Optional[dict]:
@@ -69,3 +66,15 @@ def delete(review_id: ObjectId) -> None:
 def get_all(listing_id: ObjectId) -> list:
     reviews = db.get_database()["Reviews"]
     return list(reviews.find({ "listing_id": listing_id }))
+
+def set_user_rating(provider_id: ObjectId, user_rating: float) -> None:
+    db.get_database()['UserAccount'].update_one(
+        {'_id': provider_id},
+        { '$set': {'rating': user_rating}}
+    )
+
+def set_listing_rating(listing_id: ObjectId, listing_rating: float) -> None:
+    db.get_database()["Listings"].update_one(
+        { "_id": listing_id },
+        { "$set": { "rating": listing_rating } }
+    )

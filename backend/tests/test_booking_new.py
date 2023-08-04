@@ -17,7 +17,7 @@ def test_successful_booking(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(provider)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    
+
     stub = conftest.BOOKING_STUB.copy()
     # create booking
     response = client.post('/listings/book', headers=user_token, json=stub)
@@ -40,7 +40,7 @@ def test_successful_booking(client, mock_db, user_token):
     assert acc is not None
     assert acc['_id'] == booking['consumer']
     assert acc['bookings'] == [id]
-    
+
     # Check consumer's inbox contains confirmation email
     address = conftest.LISTING_STUB['address']
     short_address = f"{address['street_number']} {address['street']}"
@@ -53,24 +53,24 @@ def test_successful_booking(client, mock_db, user_token):
         'recipient': payee['email'],
         'subject': f"Booking Confirmation @ {short_address}",
         'body': textwrap.dedent(f"""Dear {payee['first_name']},
-        
+
             We are pleased to inform you that your parking space booking has been confirmed!
-                  
+
             Details:
             - Booking ID: {booking['_id']}
             - Address: {address['formatted_address']}
             - Start Time: {dt.fromisoformat(booking['start_time'])}
             - End Time: {dt.fromisoformat(booking['end_time'])}
             - Total Price: {booking['price']}
-            
+
             Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
 
-            Best regards, 
+            Best regards,
             SFCars Team"""
         )
     }
     assert message == expected_message
-    
+
     # Check provider's inbox contains notification email
     provider = mock_db['UserAccount'].find_one( {'_id': provider['_id']} )
     msg = provider['inbox'][0]
@@ -82,18 +82,18 @@ def test_successful_booking(client, mock_db, user_token):
         'recipient': provider['email'],
         'subject': 'Your listing has been booked!',
         'body': textwrap.dedent(f"""Dear {provider['first_name']},
-            
+
             We are pleased to inform you that your listing @ {address['street_number']} {address['street']} has been booked!
-            
+
             Details:
             - Listing: {booking['listing_id']},
             - Address: {address['formatted_address']},
             - Start Time: {dt.fromisoformat(booking['start_time'])},
             - End Time: {dt.fromisoformat(booking['end_time'])},
             - Price: {booking['price']}
-            
+
             Once the booking has been paid, payment will be transferred into your wallet.
-            
+
             Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
 
             Best regards,
@@ -114,7 +114,7 @@ def test_overlapping_bookings(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(user_stub)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    
+
     stub = conftest.BOOKING_STUB.copy()
     stub['start_time'] = '2022-01-01T00:00:00'
     stub['end_time'] = '2024-01-01T00:00:00'
@@ -257,16 +257,16 @@ def test_missing_end_time(client, user_token):
     assert response.json == {
         "error": "Valid end time is required"
     }
-    
+
 def test_user_books_own_listing(client, user_token, mock_db):
     exist_user = mock_db['UserAccount'].find_one()
-    
+
     exist_user['listings'] = [conftest.TEST_LID]
-    
+
     listing_stub = conftest.LISTING_STUB.copy()
     listing_stub['provider'] = exist_user['_id']
     mock_db['Listings'].insert_one(listing_stub)
-        
+
     stub = conftest.BOOKING_STUB.copy()
     resp = client.post('/listings/book', headers=user_token, json=stub)
     assert resp.status_code == conftest.BAD_REQUEST

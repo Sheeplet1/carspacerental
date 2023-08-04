@@ -46,3 +46,20 @@ Week 7
 Worked on implementing admin users, added testing, implementation and
 documentation for registering an admin user and admin bypass for updating and
 deleting any bookings or listings
+
+Week 8
+
+Worked on About page for the frontend, fixed css for the sidebar on the faq,
+register and login pages. Fixed last minute bug with bookings call on frontend
+and backend so that it'd work for the demo.
+
+Week 9
+
+Implemented analytics functionality in the backend as well as the rating and
+reviews routes and testing. Made small changes to listing creation to better
+suit frontend.
+
+Week 10
+
+Worked on slides for the final demo, system architecture information for the
+report and doing a final cleanup of the documentation and code in the backend.

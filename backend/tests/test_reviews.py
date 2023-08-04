@@ -89,7 +89,7 @@ def test_post_success(client, mock_db, user_token, list_book):
     # User has two listiings so account rating should be 1
     provider = mock_db["UserAccount"].find_one({ "_id": provider_id })
     assert provider["rating"] == 1.0
-    
+
     # CHECK provider's inbox for notification of review (should have booking and review)
     assert len(provider['inbox']) == 2
 

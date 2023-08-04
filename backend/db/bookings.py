@@ -1,17 +1,16 @@
 from typing import Optional
 from bson.objectid import ObjectId
-from . import db, inbox, user, listings
+from . import db
+from . import inbox, user as user_db, listings
 from .. import helpers
 from pymongo import ReturnDocument
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta as rd
 
-from ..db.listings import get_user_listing_ids
-
 def new(data: dict) -> ObjectId:
     bookings = db.get_database()["Bookings"]
 
-    consumer = user.get_user(data['consumer'])
+    consumer = user_db.get_user(data['consumer'])
     end_time = '{:%m-%dT%H:%M:%S}'.format(dt.strptime(data['end_time'], '%Y-%m-%dT%H:%M:%S'))
     end_time = ('9998-' + end_time) if data['recurring'] != '' else data['end_time']
 
@@ -52,7 +51,7 @@ def new(data: dict) -> ObjectId:
     inbox.create(consumer_message)
 
     # add booking notification to provider's inbox
-    provider = user.get_user(listing['provider'])
+    provider = user_db.get_user(listing['provider'])
     provider_message = helpers.email_provider_booking({
         'recipient_id': provider['_id'],
         'email': provider['email'],
@@ -85,7 +84,7 @@ def cancel(booking_id: ObjectId, data: dict) -> None:
 
     if not data.get('type', ''):
         # delete booking from Bookings and UserAccount, not recurring.
-        bookings_db.delete_one({"_id": booking_id})
+        delete_booking(booking_id)
         users.find_one_and_update(
             {"_id": consumer},
             {"$pull": {'bookings': booking_id}},
@@ -97,24 +96,23 @@ def cancel(booking_id: ObjectId, data: dict) -> None:
         e_id = create_exclusion(booking_id, data)
         dup_id = create_duplicate(booking_id, data)
 
-        bookings_db.delete_one({'_id': e_id})
+        delete_booking(e_id)
         bookings_db.update_one(
             {'_id': booking_id},
             {'$pull': {'exclusions': e_id}}
         )
 
     elif data['type'] == 'future':
-        # TODO: Change this to be simpler and more efficient
         # wants to delete all future instances
         dup_id = create_duplicate(booking_id, data)
 
-        bookings_db.delete_one({'_id': dup_id})
+        delete_booking(dup_id)
         bookings_db.update_one(
             {'_id': booking_id},
             {'$unset': {'child': 1}}
         )
 
-    consumer = user.get_user(consumer)
+    consumer = user_db.get_user(consumer)
     listing = listings.get(booking['listing_id'])
     # Email the consumer to confirm their cancellation of the booking
     message = helpers.email_cx_booking_cancellation({
@@ -126,7 +124,7 @@ def cancel(booking_id: ObjectId, data: dict) -> None:
     inbox.create(message)
 
     # Email the provider to notify them that the booking has been cancelled
-    provider = user.get_user(listing['provider'])
+    provider = user_db.get_user(listing['provider'])
     msg = helpers.email_provider_cancel({
         'address': listing['address'],
         'recipient_id': provider['_id'],
@@ -143,14 +141,14 @@ def get(booking_id: ObjectId) -> Optional[dict]:
 
 def get_completed(user_id: ObjectId) -> list:
     user_id = ObjectId(user_id)
-    user = db.get_database()['UserAccount'].find_one({ '_id': user_id })
+    user = user_db.get_user(user_id)
     if not user:
         return []
 
     res = []
     # add each completed booking to return result
     for bkn in user['bookings']:
-        info = db.get_database()['Bookings'].find_one({'_id': bkn})
+        info = get(bkn)
         if not info:
             return []
         if info['end_time'] < dt.now().isoformat():
@@ -162,7 +160,7 @@ def update(booking_id: ObjectId, body: dict) -> None:
     booking_id = ObjectId(booking_id)
     bookings = db.get_database()['Bookings']
 
-    booking = bookings.find_one({'_id': booking_id})
+    booking = get(booking_id)
 
     if booking['recurring'] == '':
         bookings.update_one({'_id': booking_id}, {"$set": body})
@@ -171,7 +169,6 @@ def update(booking_id: ObjectId, body: dict) -> None:
         exc_id = create_exclusion(booking_id, body)
         dup_id = create_duplicate(booking_id, body)
         return [exc_id, dup_id]
-    # TODO: Add inbox message for creation of exclusion
 
 ''' create_duplicate
     Given the booking_id of the original recurring booking and the start and end
@@ -183,7 +180,7 @@ def create_duplicate(booking_id: ObjectId, body: dict):
     booking_id = ObjectId(booking_id)
     bookings = db.get_database()['Bookings']
 
-    booking = bookings.find_one({'_id': booking_id})
+    booking = get(booking_id)
 
     # Create duplicate record which continues at the next starting date of the
     # original recurring booking
@@ -255,7 +252,7 @@ def create_exclusion(booking_id: ObjectId, body: dict):
     booking_id = ObjectId(booking_id)
     bookings = db.get_database()['Bookings']
 
-    booking = bookings.find_one({'_id': booking_id})
+    booking = get(booking_id)
     exclusion = booking.copy()
     new_data = {
         '_id': ObjectId(),
@@ -279,3 +276,5 @@ def get_listing_bookings(listing_id: ObjectId) -> list:
 
     return list(bookings.find({"listing_id": listing_id}))
 
+def delete_booking(booking_id: ObjectId) -> None:
+    db.get_database()['Bookings'].delete_one({'_id': booking_id})

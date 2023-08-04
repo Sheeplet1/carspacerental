@@ -38,6 +38,7 @@ def new():
     if listing['provider'] == consumer['_id']:
         return { 'error': 'User cannot book their own listing' }, BAD_REQUEST
 
+    # check for time overlaps with existing bookings
     resp = helpers.check_for_overlaps(data['start_time'], data['end_time'])
     if resp is not None:
         return resp
@@ -48,7 +49,7 @@ def new():
     response = {
         "booking_id": booking_id
     }
-        
+
     return response, OK
 
 @bp.route('/bookings/<booking_id>', methods=['GET', 'DELETE', 'PUT'])
@@ -71,7 +72,6 @@ def info(booking_id):
     if booking['consumer'] != consumer and not helpers.is_admin(consumer):
         raise Forbidden
 
-    
     if request.method == 'PUT':
         update_data = request.get_json()
 
@@ -85,14 +85,14 @@ def info(booking_id):
                 return { 'error': 'Update value has invalid typing' }, BAD_REQUEST
 
         new_id = bookings.update(booking_id, update_data)
-        
+
         return { 'booking_id': new_id }, OK
-    
-    elif request.method == 'DELETE':        
+
+    elif request.method == 'DELETE':
         data = request.get_json()
-        
+
         bookings.cancel(booking_id, data)
-        
+
     return {}, OK
 
 @bp.route('/profile/completed-bookings', methods=['GET'])
@@ -152,7 +152,6 @@ def review(booking_id):
         for key in ["_id", "user_id", "booking_id", "listing_id", "name", "timestamp"]:
             if key in data:
                 return { 'error': 'Cannot update ' + key }, BAD_REQUEST
-
 
         for key, val in data.items():
             if key not in review.keys():

@@ -39,7 +39,7 @@ def test_get_exists(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(provider)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    
+
     stub = conftest.BOOKING_STUB.copy()
     # create booking
     response = client.post('/listings/book', headers=user_token, json=stub)
@@ -62,7 +62,7 @@ def test_get_exists(client, mock_db, user_token):
     assert acc is not None
     assert acc['_id'] == booking['consumer']
     assert acc['bookings'] == [id]
-    
+
     resp = client.get(f"/bookings/{booking['_id']}", headers=user_token, json={})
     assert resp.status_code == conftest.OK
     assert resp.json == {
@@ -74,9 +74,9 @@ def test_get_exists(client, mock_db, user_token):
         'recurring': '',
         'exclusions': [],
         'paid': False,
-        '_id': str(booking['_id']) 
-    }    
-    
+        '_id': str(booking['_id'])
+    }
+
 def test_put_invalid_user(client, user_token, mock_db):
     """
     GIVEN a Flask application configured for testing
@@ -86,9 +86,9 @@ def test_put_invalid_user(client, user_token, mock_db):
     id = mock_db['UserAccount'].find_one()['_id']
     listing = conftest.LISTING_STUB.copy()
     listing['provider'] = id
-    
+
     mock_db['Listings'].insert_one(listing)
-    
+
     resp = client.post('/auth/register', json={
         "email": "randomuser@gmail.com",
         "password": conftest.TEST_PW,
@@ -99,7 +99,7 @@ def test_put_invalid_user(client, user_token, mock_db):
     alternate_head = {
         "Authorization": "Bearer " + resp.get_json()['token']
     }
-    
+
     stub = conftest.BOOKING_STUB.copy()
     resp = client.post('listings/book', headers=alternate_head, json=stub)
     booking_id = resp.json['booking_id']
@@ -119,7 +119,7 @@ def test_put_valid(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(provider)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    
+
     stub = conftest.BOOKING_STUB.copy()
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
@@ -130,7 +130,7 @@ def test_put_valid(client, mock_db, user_token):
     })
     assert resp.status_code == conftest.OK
     assert mock_db['Bookings'].find_one()['price'] == 200
-    
+
 def test_put_invalid_key(client, user_token, mock_db):
     # register Provider and insert listing into mock_db
     provider = conftest.USER_STUB.copy()
@@ -138,7 +138,7 @@ def test_put_invalid_key(client, user_token, mock_db):
 
     mock_db['UserAccount'].insert_one(provider)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    
+
     stub = conftest.BOOKING_STUB.copy()
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
@@ -158,7 +158,7 @@ def test_put_invalid_value(client, mock_db, user_token):
 
     mock_db['UserAccount'].insert_one(provider)
     mock_db['Listings'].insert_one(conftest.LISTING_STUB.copy())
-    
+
     stub = conftest.BOOKING_STUB.copy()
     resp = client.post('listings/book', headers=user_token, json=stub)
     booking_id = resp.json['booking_id']
@@ -200,7 +200,7 @@ def test_cancel_booking(client, mock_db, user_token):
     # check its not in user profile, check its not in database
     assert mock_db['Bookings'].find_one() == None
     assert mock_db['UserAccount'].find_one()['bookings'] == []
-    
+
     # check that cancellation email was placed into consumer's inbox
     address = conftest.LISTING_STUB['address']
     short_address = f"{address['street_number']} {address['street']}"
@@ -213,19 +213,19 @@ def test_cancel_booking(client, mock_db, user_token):
         'recipient': payee['email'],
         'subject': f"Booking Cancellation @ {short_address}",
         'body': textwrap.dedent(f"""Dear {payee['first_name']},
-        
+
             We have confirmed your cancellation of your booking @ {short_address}.
-            
+
             Additional Note: refunds are not offered as part of cancellations.
 
             Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
 
-            Best regards, 
+            Best regards,
             SFCars Team"""
         )
     }
     assert message == expected_message
-    
+
     # check that provider has been notified
     msg = mock_db['UserAccount'].find_one({'_id': provider['_id']})['inbox'][1]
     msg.pop('_id')
@@ -236,11 +236,11 @@ def test_cancel_booking(client, mock_db, user_token):
         'recipient': provider['email'],
         'subject': f"Booking Cancellation @ {short_address}",
         'body': textwrap.dedent(f"""Dear {provider['first_name']},
-            
+
             Unfortunately, we have to inform you that a booking at your listing has been cancelled.
-            
+
             But do not worry, your money is safe and sound and no refund is required!
-            
+
             Thank you for choosing SFCars. If you have any questions or need further assistance, please don't hesitate to contact us.
 
             Best regards,

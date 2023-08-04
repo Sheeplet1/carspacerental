@@ -106,7 +106,7 @@ def test_delete(client, mock_db, user_token):
 
     user_acc = mock_db['UserAccount'].find_one({'_id': ObjectId(listing['provider'])})
     assert len(user_acc['listings']) == 1
-    
+
     resp = client.delete(f'/listings/{listing_id}', headers=user_token)
     assert resp.status_code == conftest.OK
 

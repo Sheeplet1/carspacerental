@@ -27,8 +27,7 @@ def user_register(data: dict) -> ObjectId:
         "recent_transactions": []
     }
 
-    collection = db.get_database()["UserAccount"]
-    collection.insert_one(user_doc)
+    db.get_database()["UserAccount"].insert_one(user_doc)
     return user_id
 
 def admin_register(data: dict) -> ObjectId:
@@ -54,8 +53,7 @@ def admin_register(data: dict) -> ObjectId:
         "recent_transcations": []
     }
 
-    collection = db.get_database()["UserAccount"]
-    collection.insert_one(user_doc)
+    db.get_database()["UserAccount"].insert_one(user_doc)
     return user_id
 
 

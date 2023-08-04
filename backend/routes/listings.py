@@ -14,8 +14,7 @@ def get_all():
     listings = listings_db.all()
     for listing in listings:
         listing["reviews"] = reviews_db.get_all(listing["_id"])
-    #    listing["_id"] = listing["_id"]
-    #    listing["provider"] = listing["provider"]
+
     return { "listings": listings }, 200
 
 @bp.route('/new', methods=['POST'])

@@ -156,9 +156,21 @@
 >     "email": "example@gmail.com",
 >     "first_name": "example_first",
 >     "last_name": "example_last",
->     "payment_details": {
->       TODO
->     },
+>     "payment_details": [
+>         {
+>             "card_number": "1234 5678 9012 3456",
+>             "expiry_date": "09/23",
+>             "cvv": "123",
+>         }
+>     ],
+>     "vehicle_details": [
+>         {
+>             "registration_number": "ABC123",
+>             "vehicle_type": "Sedan",
+>             "vehicle_make": "Honda",
+>             "vehicle_model": "Civic",
+>         }
+>     ],
 >     "listings": [],
 >     "phone_number": [
 >         "0412345678"
@@ -344,7 +356,16 @@
 > ```
 > {
 >     "address": {
->         TODO
+>         "formatted_address": "1 George St, Parramatta NSW 2150, Australia",
+>         "street_number": "1",
+>         "street": "George Street",
+>         "city": "Parramatta",
+>         "state": "NSW",
+>         "postcode": "2150",
+>         "country": "Australia",
+>         "lat": -33.8133727,
+>         "lng": 151.0005189,
+>         "place_id": "ChIJveAk1h-jEmsRUuA6kM2-8_c",
 >     },
 >     "price": 100,
 >     "space_type": "Driveway",
@@ -394,7 +415,16 @@
 >     "_id": str(ObjectId())
 >     "provider": str(ObjectId())
 >     "address": {
->         TODO
+>         "formatted_address": "1 George St, Parramatta NSW 2150, Australia",
+>         "street_number": "1",
+>         "street": "George Street",
+>         "city": "Parramatta",
+>         "state": "NSW",
+>         "postcode": "2150",
+>         "country": "Australia",
+>         "lat": -33.8133727,
+>         "lng": 151.0005189,
+>         "place_id": "ChIJveAk1h-jEmsRUuA6kM2-8_c",
 >     },
 >     "hourly_price": 5,
 >     "daily_price": 120,
@@ -838,20 +868,25 @@
 
 ### UserAccount
 
-| Field             | Type     | Example                              |
-| ----------------- | -------- | ------------------------------------ |
-| `_id`             | ObjectId | ObjectId(6496e8e2876de3535cf3aa02)   |
-| `email`           | string   | "user@email.com"                     |
-| `password`        | string   | _hashed password string_             |
-| `first_name`      | string   | "first"                              |
-| `last_name`       | string   | "last"                               |
-| `phone_number`    | string   | "0412345678"                         |
-| `payment_details` | Array    | [TODO]                               |
-| `bookings`        | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `listings`        | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
-| `revenue`         | float    | 200.0                                |
-| `is_admin`        | bool     | False                                |
-| `vehicle_details` | Array    | ['Toyota Corolla']                   |
+| Field                | Type     | Example                              |
+| -------------------- | -------- | ------------------------------------ |
+| `_id`                | ObjectId | ObjectId(6496e8e2876de3535cf3aa02)   |
+| `email`              | string   | "user@email.com"                     |
+| `password`           | string   | _hashed password string_             |
+| `first_name`         | string   | "first"                              |
+| `last_name`          | string   | "last"                               |
+| `phone_number`       | string   | "0412345678"                         |
+| `vehicle_details`    | Array    | [Vehicle Details Object]             |
+| `payment_details`    | Array    | [Payment Details Object]             |
+| `bookings`           | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `listings`           | Array    | [ObjectId(6496e8e2876de3535cf3aa02)] |
+| `revenue`            | float    | 200.0                                |
+| `is_admin`           | bool     | False                                |
+| `rating`             | float    | 5.0                                  |
+| `inbox`              | Array    | [Message Object]                     |
+| `pfp`                | Array    | Base64 String                        |
+| `wallet`             | Array    | 0                                    |
+| `recent_transactions`| Array    | [Transaction Object]                 |
 
 ### Listings
 
@@ -859,7 +894,7 @@
 | -------------- | -------- | ---------------------------------- |
 | `_id`          | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
 | `provider`     | ObjectId | ObjectId(6496e8e2876de3535cf3aa02) |
-| `address`      | Object   | {TODO}                             |
+| `address`      | Object   | Address Object                     |
 | `hourly_price` | float    | 5.0                                |
 | `daily_price`  | float    | 100.0                              |
 | `space_type`   | string   | "Driveway"                         |
@@ -884,7 +919,7 @@
 | `exclusions` | [ObjectId] | [ObjectId(), ObjectId()]           |
 | `paid`       | bool       | False                              |
 
-### Reviews (TODO)
+### Reviews
 
 | Field        | Type     | Example                            |
 | ------------ | -------- | ---------------------------------- |
