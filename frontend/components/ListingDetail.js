@@ -169,7 +169,10 @@ const ListingDetail = () => {
             {listingUser ? (
               <div className="flex items-center space-x-6 my-4">
                 <Image
-                  src={user.pfp || "/assets/icons/profile.svg"}
+                  src={
+                    (listingUser && listingUser.pfp) ||
+                    "/assets/icons/profile.svg"
+                  }
                   alt="Listing Image"
                   className="rounded-full"
                   width={80}

@@ -27,10 +27,16 @@ const PreviewListingDetails = ({
   edit,
 }) => {
   const { fetchUser } = useUser();
+
   const formatTime = (time) => {
     if (time === 0) return "12:00 AM";
     if (time === 12) return "12:00 PM";
     return time < 12 ? `${time}:00 AM` : `${time - 12}:00 PM`;
+  };
+
+  const formatTimeBody = (time) => {
+    if (time < 10) return `0${time}:00`;
+    return `${time}:00`;
   };
 
   const handleConfirmClick = async () => {
@@ -45,8 +51,8 @@ const PreviewListingDetails = ({
       photos,
       availability: {
         is_24_7: isAvailble24Hours,
-        start_time: startTime,
-        end_time: endTime,
+        start_time: formatTimeBody(startTime),
+        end_time: formatTimeBody(endTime),
         available_days: availableDays,
       },
       safety_features: safetyFeatures,

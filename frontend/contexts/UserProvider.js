@@ -40,10 +40,10 @@ const UserProvider = ({ children }) => {
   };
 
   const logout = () => {
+    router.push("/");
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
-    router.push("/");
   };
 
   const fetchUser = async () => {
