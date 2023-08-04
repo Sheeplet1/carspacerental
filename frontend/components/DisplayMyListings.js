@@ -13,10 +13,13 @@ const DisplayMyListings = ({ nextStep, handleEditListing, resetFields }) => {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // time is in 24 hour format: 00:00 - 23:00
+  // returns time in 12 hour format: 12:00 AM - 11:00 PM
   const formatTime = (time) => {
-    if (time === 0) return "12:00 AM";
-    if (time === 12) return "12:00 PM";
-    return time < 12 ? `${time}:00 AM` : `${time - 12}:00 PM`;
+    const hour = parseInt(time.split(":")[0]);
+    if (hour === 0) return "12:00 AM";
+    if (hour === 12) return "12:00 PM";
+    return hour < 12 ? `${hour}:00 AM` : `${hour - 12}:00 PM`;
   };
 
   const handleDeleteListing = async (listing) => {

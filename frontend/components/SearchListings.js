@@ -97,9 +97,7 @@ const SearchListings = () => {
 
           const listingDays = listing.availability.available_days;
 
-          const dateIsValid = selectedDays.every((day) =>
-            listingDays.includes(day)
-          );
+          const dateIsValid = selectedDays.every((day) => listingDays[day]);
 
           const startTimeIsValid =
             startTime >= getTime(listing.availability.start_time) &&

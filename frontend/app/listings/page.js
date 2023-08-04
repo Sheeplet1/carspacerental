@@ -83,8 +83,8 @@ const MyListings = () => {
       listing.monthly_rate ? listing.monthly_rate.toString() : ""
     );
     setIsAvailble24Hours(listing.availability.is_24_7);
-    setStartTime(listing.availability.start_time);
-    setEndTime(listing.availability.end_time);
+    setStartTime(parseInt(listing.availability.start_time.split(":")[0]));
+    setEndTime(parseInt(listing.availability.end_time.split(":")[0]));
     setAvailableDays(listing.availability.available_days);
     setPhotos(listing.photos);
     setSafetyFeatures(listing.safety_features);
