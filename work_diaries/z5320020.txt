@@ -74,5 +74,18 @@ WEEK 7
 -------------------------------------------------------------------------------
 WEEK 8
 
-- Finished recurring bookings
+- Continued working on recurring bookings
 - Starting on recurring payments
+
+-------------------------------------------------------------------------------
+WEEK 9
+
+- Finished backend for recurring bookings
+- Planning recurring payments further
+
+-------------------------------------------------------------------------------
+WEEK 10
+
+- Finished profile pictures for users
+- Automated inbox messages for user's payments, bookings, reviews.
+- Cleaning up backend code for final submission, left recurring payments.
