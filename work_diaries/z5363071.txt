@@ -26,3 +26,36 @@ Week 3:
     -> System Architecture diagram done
     -> Started adding child issues to tickets
     -> Submitted Report
+
+Week 4:
+    -> Finished Landing Page
+    -> Finished Registration Page
+    -> Started the Template for the Search Page
+    -> Editted Login Page, and connected it with the Backend
+
+Week 5:
+    -> Sprint Demo
+    -> Finished Search Page
+    -> Finished Details Page
+    -> Finished Payments Page
+    -> Implemented Google Maps API for Map and Autocomplete searching
+
+Week 6:
+    -> Vehicle Details Page
+    -> Edit Vehicle Details
+    -> Payment Details Page
+    -> Edit Payment Details
+
+Week 7:
+    -> Profile Page
+    -> Edit Your Profile
+
+Week 8:
+    -> Manage your bookings Page
+    -> Inbox Page
+Week 9:
+    -> Analytics Page
+    -> Clean up of Code
+    -> Docker Setup
+Week 10:
+    -> Final Report
