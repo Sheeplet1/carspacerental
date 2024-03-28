@@ -1,4 +1,4 @@
-# COMP3900 Project
+# Car Space Rental
 
 This project serves as a demonstration of deploying a full-stack application using Docker. The frontend is built using Nextjs and the backend is built with Python.
 
